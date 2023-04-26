@@ -1,0 +1,5 @@
+c:\users\vladi\documents\s&box projects\hide_seek\code\obj\Debug\hide_seek.csproj.AssemblyReference.cache
+c:\users\vladi\documents\s&box projects\hide_seek\code\obj\Debug\hide_seek.GeneratedMSBuildEditorConfig.editorconfig
+c:\users\vladi\documents\s&box projects\hide_seek\code\obj\Debug\hide_seek.AssemblyInfoInputs.cache
+c:\users\vladi\documents\s&box projects\hide_seek\code\obj\Debug\hide_seek.AssemblyInfo.cs
+c:\users\vladi\documents\s&box projects\hide_seek\code\obj\Debug\hide_seek.csproj.CoreCompileInputs.cache
