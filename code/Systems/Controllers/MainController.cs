@@ -13,6 +13,7 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 	public float CurrentEyeHeight { get; set; } = 64f;
 	public float MoveScale { get; set; } = 1f;
 	public float CurrentGroundAngle { get; set; }
+	public Vector3 GroundNormal { get; set; }
 	public Vector3 Mins { get; set; }
 	public Vector3 Maxs { get; set; }
 	protected float BodyGirth = 32f;
@@ -41,7 +42,7 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 		}
 	}
 
-	public void Simulate()
+	public void Simulate( IClient client )
 	{
 		ExecuteMechanics();
 	}
@@ -85,7 +86,7 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 	//Simple Move
 	public void Move()
 	{
-		MoveHelperProcess( out MoveHelper helper, out float stepSize );
+		ProcessMoveHelper( out MoveHelper helper, out float stepSize );
 
 		if ( helper.TryMove( Time.Delta ) > 0 )
 		{
@@ -97,7 +98,7 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 	//Move with steps
 	public void StepMove()
 	{
-		MoveHelperProcess( out MoveHelper helper, out float stepSize );
+		ProcessMoveHelper( out MoveHelper helper, out float stepSize );
 
 		if ( helper.TryMoveWithStep( Time.Delta, stepSize ) > 0 )
 		{
@@ -107,7 +108,7 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 	}
 
 	//This method is called from both StepMove() and Move()
-	private void MoveHelperProcess( out MoveHelper helper, out float stepSize )
+	private void ProcessMoveHelper( out MoveHelper helper, out float stepSize )
 	{
 		float groundAngle = ThisPawn.GroundAngle;
 		stepSize = ThisPawn.StepSize;
@@ -142,7 +143,7 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 
 	/// <summary>
 	/// Traces the bbox and returns the trace result.
-	/// LiftFeet will MoveHelperProcess the start position up by this amount, while keeping the top of the bbox at the same 
+	/// LiftFeet will ProcessMoveHelper the start position up by this amount, while keeping the top of the bbox at the same 
 	/// position. This is good when tracing down because you won't be tracing through the ceiling above.
 	/// </summary>
 	public virtual TraceResult TraceBBox( Vector3 start, Vector3 end, Vector3 mins, Vector3 maxs, float liftFeet = 0.0f, float liftHead = 0.0f )

@@ -1,7 +1,6 @@
 ﻿using HideAndSeek.Systems.Controllers;
-using Sandbox;
 using HideAndSeek.Systems.Controllers.Movement;
-using System.ComponentModel;
+using Sandbox;
 
 namespace HideAndSeek;
 
@@ -24,6 +23,7 @@ public partial class Pawn : AnimatedEntity
 	{
 		SetModel( "models/citizen/citizen.vmdl" );
 
+
 		Predictable = true;
 		EnableDrawing = true;
 		EnableHideInFirstPerson = true;
@@ -36,35 +36,49 @@ public partial class Pawn : AnimatedEntity
 	public void Respawn()
 	{
 		SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, new Vector3( 16, 16, 0 ), new Vector3( 16, 16, 72 ) );
-		
-		EnableAllCollisions= true;
+
+		EnableAllCollisions = true;
 		EnableHitboxes = true;
 		EnableShadowCasting = true;
 
+
 		Components.Create<MainController>();
+
+		Components.RemoveAny<MechanicBaseClass>();
+
+		Components.Create<WalkingController>();
+		Components.Create<AirMove>();
+
 		Components.Create<CameraController>();
 		Components.Create<PawnAnimator>();
-		Components.Create<WalkingController>();
 
-		//CollisionBounds = Controller.Hull;
+		GameManager.Current?.MoveToSpawnpoint( this );
+		ResetInterpolation();
+		DressUp(Client);
 	}
 
-
+	private void DressUp( IClient client )
+	{
+		ClothingContainer clothes = new();
+		clothes.LoadFromClient( client );
+		clothes.DressEntity( this );
+	}
 
 	/// <summary>
 	/// Called every tick, clientside and serverside.
 	/// </summary>
-	public override void Simulate( IClient cl )
+	public override void Simulate( IClient client )
 	{
-		
+
 		Rotation = ViewAngles.WithPitch( 0f ).ToRotation();
-		PawnAnimations?.Update( this );
+
 
 		LocalEyePosition = Vector3.Up * (64f * Scale);
 		EyeRotation = ViewAngles.ToRotation();
-		
 
-		Controller?.Simulate();
+
+		Controller?.Simulate( client );
+		PawnAnimations?.Simulate( client );
 
 		// If we're running serverside and Attack1 was just pressed, spawn a ragdoll
 		if ( Game.IsServer && Input.Pressed( "attack1" ) )
