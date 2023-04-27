@@ -4,11 +4,14 @@ namespace HideAndSeek;
 
 public partial class CameraController : EntityComponent<Pawn>, ISingletonComponent
 {
-	public Vector3 ViewPosition { get; set; }
+	private Vector3 ViewPosition { get; set; }
+	private Rotation PrevRotation { get; set; }
+	private TimeSince SinceRotation { get; set; }
 
 
 	public void Update( Pawn pawn )
 	{
+		PrevRotation = Camera.Rotation;
 		Camera.Rotation = pawn.ViewAngles.ToRotation();
 		Camera.FieldOfView = Screen.CreateVerticalFieldOfView( Game.Preferences.FieldOfView );
 
@@ -26,11 +29,15 @@ public partial class CameraController : EntityComponent<Pawn>, ISingletonCompone
 		{
 			Vector3 targetPosition;
 			Rotation viewRotation = Camera.Rotation;
-			float distance = 80.0f * pawn.Scale;
 
 			ViewPosition = ViewPosition.LerpTo( pawn.Position + Vector3.Up * 64, Time.Delta * 8 );
+
+
+
 			targetPosition = ViewPosition;// + viewRotation.Right * ((CollisionBounds.Mins.x + 50) * Scale);
+			float distance = 80.0f * pawn.Scale;
 			targetPosition += viewRotation.Forward * -distance;
+
 
 			TraceResult rayTrace = Trace.Ray( ViewPosition, targetPosition )
 				.WithAnyTags( "solid" )
@@ -40,7 +47,10 @@ public partial class CameraController : EntityComponent<Pawn>, ISingletonCompone
 
 
 			Camera.FirstPersonViewer = null;
+
 			Camera.Position = rayTrace.EndPosition;
+
+			//DebugOverlay.ScreenText( Camera.Rotation.Angles().ToString(), 10 );
 		}
 		else
 		{

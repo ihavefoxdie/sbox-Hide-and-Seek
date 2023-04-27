@@ -10,6 +10,10 @@ public partial class Pawn : AnimatedEntity
 	/// Called when the entity is first created 
 	/// </summary>
 
+	Vector3 LastPos { get; set; }
+	bool Changed { get; set; }
+	public Rotation LastRotation { get; set; }
+	public bool Rotated { get; set; }
 	public bool ThirdPerson { get; set; } = true;
 	public float GroundAngle { get; set; } = 46f;
 	public float StepSize { get; set; } = 18f;
@@ -54,7 +58,7 @@ public partial class Pawn : AnimatedEntity
 
 		GameManager.Current?.MoveToSpawnpoint( this );
 		ResetInterpolation();
-		DressUp(Client);
+		DressUp( Client );
 	}
 
 	private void DressUp( IClient client )
@@ -64,22 +68,47 @@ public partial class Pawn : AnimatedEntity
 		clothes.DressEntity( this );
 	}
 
+	protected void SimulateRotation( bool turn = true )
+	{
+		EyeRotation = ViewAngles.ToRotation();
+		//This value makes pawn model stand straight
+		if ( turn )
+			Rotation = Rotation.Lerp( Rotation, ViewAngles.WithPitch( 0f ).ToRotation(), Time.Delta * 8 );
+	}
+
 	/// <summary>
 	/// Called every tick, clientside and serverside.
 	/// </summary>
 	public override void Simulate( IClient client )
 	{
+		if ( LastRotation == Camera.Rotation )
+			Rotated = false;
+		else
+			Rotated = true;
 
-		Rotation = ViewAngles.WithPitch( 0f ).ToRotation();
+		if ( LastPos.Equals( Position ) )
+			Changed = false;
+		else
+		{
+			Changed = true;
+			LastPos = Position;
+		}
+		if ( Changed )
+		{
+			SimulateRotation();
+		}
+		else
+		{
+			SimulateRotation( false );
+		}
 
 
 		LocalEyePosition = Vector3.Up * (64f * Scale);
-		EyeRotation = ViewAngles.ToRotation();
 
 
 		Controller?.Simulate( client );
 		PawnAnimations?.Simulate( client );
-
+		LastRotation = Camera.Rotation;
 		// If we're running serverside and Attack1 was just pressed, spawn a ragdoll
 		if ( Game.IsServer && Input.Pressed( "attack1" ) )
 		{
@@ -97,6 +126,13 @@ public partial class Pawn : AnimatedEntity
 	/// </summary>
 	public override void FrameSimulate( IClient cl )
 	{
+		if ( Changed )
+		{
+			SimulateRotation();
+		}
+		else
+			SimulateRotation( false );
+
 		DebugOverlay.ScreenText( Position.ToString(), 1 );
 		DebugOverlay.ScreenText( CollisionBounds.ToString(), 2 );
 		DebugOverlay.ScreenText( Time.Delta.ToString(), 3 );
