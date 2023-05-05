@@ -4,7 +4,7 @@ namespace HideAndSeek;
 
 public partial class CameraController : EntityComponent<Pawn>, ISingletonComponent
 {
-	private Vector3 ViewPosition { get; set; }
+	private Vector3 _viewPosition { get; set; }
 	private Rotation PrevRotation { get; set; }
 	private TimeSince SinceRotation { get; set; }
 
@@ -30,16 +30,16 @@ public partial class CameraController : EntityComponent<Pawn>, ISingletonCompone
 			Vector3 targetPosition;
 			Rotation viewRotation = Camera.Rotation;
 
-			ViewPosition = ViewPosition.LerpTo( pawn.Position + Vector3.Up * 64, Time.Delta * 8 );
+			_viewPosition = _viewPosition.LerpTo( pawn.Position + Vector3.Up * 64, Time.Delta * 8 );
 
 
 
-			targetPosition = ViewPosition;// + viewRotation.Right * ((CollisionBounds.Mins.x + 50) * Scale);
+			targetPosition = _viewPosition;// + viewRotation.Right * ((CollisionBounds.Mins.x + 50) * Scale);
 			float distance = 80.0f * pawn.Scale;
 			targetPosition += viewRotation.Forward * -distance;
 
 
-			TraceResult rayTrace = Trace.Ray( ViewPosition, targetPosition )
+			TraceResult rayTrace = Trace.Ray( _viewPosition, targetPosition )
 				.WithAnyTags( "solid" )
 				.Ignore( pawn )
 				.Radius( 8 )

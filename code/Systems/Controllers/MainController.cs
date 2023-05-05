@@ -1,8 +1,6 @@
 ﻿using HideAndSeek.Systems.Controllers;
-using Sandbox;
-using System.Collections.Generic;
-using System.Linq;
 using HideAndSeek.Systems.Controllers.Movement;
+using Sandbox;
 
 namespace HideAndSeek;
 
@@ -13,14 +11,27 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 	public float CurrentEyeHeight { get; set; } = 64f;
 	public float MoveScale { get; set; } = 1f;
 	public float CurrentGroundAngle { get; set; }
+	protected float _bodyGirth = 32f;
 	public Vector3 GroundNormal { get; set; }
 	public Vector3 Mins { get; set; }
 	public Vector3 Maxs { get; set; }
-	protected float BodyGirth = 32f;
 
-	public MechanicBaseClass BestMechanic
+	public float MaxGroundVelocity { get; private set; } = 150f;
+	public float StepSize { get; private set; } = 12f;
+	public float GroundAngle { get; private set; } = 45f;
+	public float SurfaceFriciton { get; set; } = 1f;
+	public Entity GroundEntity { get; set; }
+
+	public MechanicBase CurrentMechanic;
+	public MechanicFactory Mechanics;
+
+
+
+	public MainController() : base()
 	{
-		get { return AllMechanics.OrderByDescending( mechainc => mechainc.SortOrder ).FirstOrDefault(); }
+		GroundEntity = null;
+		Mechanics = new MechanicFactory( this );
+		CurrentMechanic = Mechanics.Gravity();
 	}
 
 	public Pawn ThisPawn
@@ -28,37 +39,114 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 		get { return Entity; }
 	}
 
-
-	public IEnumerable<MechanicBaseClass> AllMechanics
-	{
-		get { return ThisPawn.Components.GetAll<MechanicBaseClass>(); }
-	}
-
 	private void ExecuteMechanics()
 	{
-		foreach ( MechanicBaseClass mechanic in AllMechanics )
+		if ( CurrentMechanic != null )
 		{
-			mechanic.Simulate();
+			CurrentMechanic.SimulateMechanics();
 		}
+		else
+			DebugOverlay.ScreenText( "NULL", 10 );
 	}
 
 	public void Simulate( IClient client )
 	{
+		CategorizePosition( GroundEntity != null );
 		ExecuteMechanics();
+		if ( GroundEntity != null )
+			DebugOverlay.ScreenText( GroundEntity.ToString(), 10 );
 	}
 
+
+
+	#region Ground Related Logic
+	public void SetGroundEntity( Entity entity )
+	{
+		GroundEntity = entity;
+		if ( GroundEntity != null )
+		{
+			ThisPawn.Velocity = ThisPawn.Velocity.WithZ( 0 );
+			ThisPawn.BaseVelocity = GroundEntity.Velocity;
+		}
+	}
+
+	public void CategorizePosition( bool stayOnGround )
+	{
+		SurfaceFriciton = 1f;
+
+		Vector3 point = ThisPawn.Position - Vector3.Up * 2;
+		Vector3 bumpOrigin = ThisPawn.Position;
+		bool rapidlyMovingUp = ThisPawn.Velocity.z > MaxGroundVelocity;
+		bool moveToEndPosition = false;
+
+		//if we leave the ground, there's no need to process anything else
+		if ( rapidlyMovingUp )
+		{
+			ClearGorundEntity();
+			return;
+		}
+
+		if ( GroundEntity != null || stayOnGround )
+		{
+			moveToEndPosition = true;
+			point.z -= StepSize;
+		}
+
+		TraceResult trace = TraceBBox( bumpOrigin, point, 4.0f );
+
+		float angle = Vector3.GetAngle( Vector3.Up, trace.Normal );
+		CurrentGroundAngle = angle;
+
+		if ( trace.Entity == null || angle > GroundAngle )
+		{
+			ClearGorundEntity();
+			moveToEndPosition = false;
+
+			if ( ThisPawn.Velocity.z > 0 )
+				SurfaceFriciton = 0.25f;
+		}
+		else
+		{
+			CheckGoundEntity( trace );
+		}
+
+		if ( moveToEndPosition && !trace.StartedSolid && trace.Fraction > 0f && trace.Fraction < 1f )
+		{
+			ThisPawn.Position = trace.EndPosition;
+		}
+	}
+
+	public void ClearGorundEntity()
+	{
+		if ( GroundEntity == null ) return;
+
+		GroundEntity = null;
+		SurfaceFriciton = 1.0f;
+	}
+
+	//This method determines the ground entity. It also can tell us if there is no ground at all
+	private void CheckGoundEntity( TraceResult trace )
+	{
+		GroundNormal = trace.Normal;
+
+		SurfaceFriciton = trace.Surface.Friction * 1.25f;
+		if ( SurfaceFriciton > 1f ) SurfaceFriciton = 1f;
+
+		SetGroundEntity( trace.Entity );
+	}
+	#endregion
 
 
 
 	#region Movement related code
 	public void Accelerate( Vector3 desiredDirection, float desiredSpeed, float speedLimit, float acceleration )
 	{
-		ThisPawn.Velocity = PawnMovementPhysics.CalculateAcceleration(ThisPawn.Velocity, desiredDirection, desiredSpeed, speedLimit, acceleration );
+		ThisPawn.Velocity = PawnMovementPhysics.CalculateAcceleration( ThisPawn.Velocity, desiredDirection, desiredSpeed, speedLimit, acceleration );
 	}
 
 	public void ApplyFriction( float stopSpeed, float friction = 1f )
 	{
-		ThisPawn.Velocity = PawnMovementPhysics.Friction(ThisPawn.Velocity, stopSpeed, friction );
+		ThisPawn.Velocity = PawnMovementPhysics.Friction( ThisPawn.Velocity, stopSpeed, friction );
 	}
 
 	public Vector3 GetInputVelocity( bool zeroPitch = false )
@@ -75,12 +163,13 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 		result = result.Normal * inMovement;
 		result *= GetDesiredSpeed();
 
-		return result *= CurrentGroundAngle.Remap(0, 45, 1, 0.6f);
+		return result *= CurrentGroundAngle.Remap( 0, 45, 1, 0.6f );
 	}
+
 
 	public virtual float GetDesiredSpeed()
 	{
-		return BestMechanic?.DesiredSpeed ?? 180f;
+		return CurrentMechanic?.DesiredSpeed ?? 180f;
 	}
 
 	//Simple Move
@@ -126,12 +215,13 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 	#endregion
 
 
+
 	#region Collisions
 	public BBox Hull
 	{
 		get
 		{
-			float coordinates = BodyGirth * 0.45f;
+			float coordinates = _bodyGirth * 0.45f;
 			float height = CurrentEyeHeight;
 
 			Vector3 mins = new( -coordinates, -coordinates, 0 );

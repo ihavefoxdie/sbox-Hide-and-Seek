@@ -35,7 +35,7 @@ public partial class PawnAnimator : EntityComponent<Pawn>, ISingletonComponent
 		
 		animHelper.AimAngle = Entity.EyeRotation;
 		animHelper.HoldType = CitizenAnimationHelper.HoldTypes.None;
-		animHelper.IsGrounded = Entity.GroundEntity != null;
+		animHelper.IsGrounded = Entity.Controller.GroundEntity.IsValid();
 		animHelper.MoveStyle = CitizenAnimationHelper.MoveStyles.Auto;
 		animHelper.FootShuffle = 0f;
 	}

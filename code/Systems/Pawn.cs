@@ -20,7 +20,7 @@ public partial class Pawn : AnimatedEntity
 	[BindComponent] public CameraController PawnCamera { get; }
 	[BindComponent] public PawnAnimator PawnAnimations { get; }
 	[BindComponent] public MainController Controller { get; }
-	[BindComponent] public WalkingController Walking { get; }
+	/*[BindComponent] public WalkingMechanic Walking { get; }*/
 
 
 	public override void Spawn()
@@ -45,14 +45,7 @@ public partial class Pawn : AnimatedEntity
 		EnableHitboxes = true;
 		EnableShadowCasting = true;
 
-
 		Components.Create<MainController>();
-
-		Components.RemoveAny<MechanicBaseClass>();
-
-		Components.Create<WalkingController>();
-		Components.Create<AirMove>();
-
 		Components.Create<CameraController>();
 		Components.Create<PawnAnimator>();
 
