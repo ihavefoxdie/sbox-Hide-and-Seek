@@ -26,7 +26,7 @@ public partial class MyGame : GameManager
 		base.ClientJoined( client );
 
 		// Create a pawn for this client to play with
-		var pawn = new Pawn();
+		Pawn pawn = new();
 		client.Pawn = pawn;
 		pawn.Respawn();
 

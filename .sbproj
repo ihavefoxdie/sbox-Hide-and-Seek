@@ -7,7 +7,8 @@
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
-  "ResourcePaths": [],
+  "Resources": null,
+  "MenuResources": null,
   "HasCode": true,
   "CodePath": "/code/",
   "PackageReferences": [],
@@ -23,6 +24,20 @@
     "RankType": "None",
     "PerMapRanking": false,
     "LeaderboardType": "None",
-    "ProjectTemplate": null
+    "ProjectTemplate": null,
+    "TickRate": 50,
+    "CsProjName": "",
+    "LaunchConfigs": [
+      {
+        "Name": "My New Config",
+        "GameIdent": "local.hide_seek#local",
+        "MapName": "facepunch.construct23",
+        "MaxPlayers": 1,
+        "GameSettings": {},
+        "Addons": "",
+        "PreLaunchCommand": "",
+        "PostLaunchCommand": ""
+      }
+    ]
   }
 }

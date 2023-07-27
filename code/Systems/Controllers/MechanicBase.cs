@@ -2,7 +2,6 @@
 
 public abstract class MechanicBase
 {
-
 	protected bool _isMainMechanic = false;
 	public virtual float? DesiredSpeed { get; set; } = null;
 	//public virtual float? EyeHeight { get; set; } = null;
@@ -60,5 +59,10 @@ public abstract class MechanicBase
 	{
 		_currentSubMechanic = subMechanic;
 		subMechanic.SetSuperMechanic( this );
+	}
+
+	private void MechanicSwitchHandler()
+	{
+
 	}
 }

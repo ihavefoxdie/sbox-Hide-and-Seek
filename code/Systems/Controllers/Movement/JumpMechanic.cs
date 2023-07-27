@@ -4,7 +4,6 @@ namespace HideAndSeek.Systems.Controllers.Movement;
 
 public partial class JumpMechanic : MechanicBase
 {
-	//public override int SortOrder => 25;
 	private float Gravity => 700f;
 
 	public JumpMechanic( MainController currentContext, MechanicFactory mechanicFactory ) : base( currentContext, mechanicFactory )
@@ -36,7 +35,7 @@ public partial class JumpMechanic : MechanicBase
 
 	public override void ExitMechanic()
 	{
-
+		
 	}
 
 	public override void CheckSwitchMechanic()

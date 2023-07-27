@@ -1,6 +1,7 @@
 ﻿using HideAndSeek.Systems.Controllers;
 using HideAndSeek.Systems.Controllers.Movement;
 using Sandbox;
+using System.Collections.Generic;
 
 namespace HideAndSeek;
 
@@ -23,16 +24,19 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 	public Entity GroundEntity { get; set; }
 
 	public MechanicBase CurrentMechanic;
-	public MechanicFactory Mechanics;
+	public MechanicFactory Factory;
+	public List<MechanicBase> Mechanics { get; private set; }
 
 
 
 	public MainController() : base()
 	{
 		GroundEntity = null;
-		Mechanics = new MechanicFactory( this );
-		CurrentMechanic = Mechanics.Gravity();
+		Factory = new MechanicFactory( this );
+		Mechanics = new List<MechanicBase>();
+		CurrentMechanic = Factory.Gravity();
 	}
+
 
 	public Pawn ThisPawn
 	{

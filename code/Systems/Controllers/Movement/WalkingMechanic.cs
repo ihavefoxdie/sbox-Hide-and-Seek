@@ -99,8 +99,8 @@ public sealed class WalkingMechanic : MechanicBase
 
 	public override void SimulateMechanic()
 	{
-		CheckSwitchMechanic();
 		Simulate();
+		CheckSwitchMechanic();
 	}
 
 	public override void ExitMechanic()

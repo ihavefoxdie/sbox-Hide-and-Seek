@@ -1,4 +1,5 @@
 ﻿using HideAndSeek.Systems.Controllers.Movement;
+using System.Linq;
 
 namespace HideAndSeek.Systems.Controllers;
 
@@ -14,18 +15,42 @@ public class MechanicFactory
 
 	public MechanicBase Gravity()
 	{
-		return new GravityMechanic( _context, this );
+		for ( int i = 0; i < _context.Mechanics.Count; i++ )
+		{
+			if ( _context.Mechanics[i] is GravityMechanic )
+				return _context.Mechanics[i];
+		}
+		_context.Mechanics.Add( new GravityMechanic( _context, this ) );
+		return Gravity();
 	}
 	public MechanicBase Walk()
 	{
-		return new WalkingMechanic( _context, this );
+		for ( int i = 0; i < _context.Mechanics.Count; i++ )
+		{
+			if ( _context.Mechanics[i] is WalkingMechanic )
+				return _context.Mechanics[i];
+		}
+		_context.Mechanics.Add( new WalkingMechanic( _context, this ) );
+		return Walk();
 	}
 	public MechanicBase Jump()
 	{
-		return new JumpMechanic( _context, this );
+		for ( int i = 0; i < _context.Mechanics.Count; i++ )
+		{
+			if ( _context.Mechanics[i] is JumpMechanic )
+				return _context.Mechanics[i];
+		}
+		_context.Mechanics.Add( new JumpMechanic( _context, this ) );
+		return Jump();
 	}
 	public MechanicBase Ground()
 	{
-		return new OnGroundMechanic( _context, this );
+		for ( int i = 0; i < _context.Mechanics.Count; i++ )
+		{
+			if ( _context.Mechanics[i] is OnGroundMechanic )
+				return _context.Mechanics[i];
+		}
+		_context.Mechanics.Add( new OnGroundMechanic( _context, this ) );
+		return Ground();
 	}
 }
