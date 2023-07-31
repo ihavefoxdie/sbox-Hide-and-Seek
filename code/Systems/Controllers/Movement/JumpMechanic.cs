@@ -23,12 +23,12 @@ public partial class JumpMechanic : MechanicBase
 
 	public override void EnterMechanic()
 	{
-		_context.ClearGorundEntity();
+		_context.GroundHandler.ClearGorundEntity();
 	}
 
 	public override void SimulateMechanic()
 	{
-		if ( _context.GroundEntity.IsValid() )
+		if ( _context.GroundHandler.GroundEntity.IsValid() )
 			Simulate();
 		CheckSwitchMechanic();
 	}
@@ -40,7 +40,7 @@ public partial class JumpMechanic : MechanicBase
 
 	public override void CheckSwitchMechanic()
 	{
-		if ( _context.GroundEntity.IsValid() )
+		if ( _context.GroundHandler.GroundEntity.IsValid() )
 		{
 			SwitchMechanic( _factory.Ground() );
 		}

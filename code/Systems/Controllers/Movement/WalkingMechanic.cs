@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Systems.Classes;
 
 namespace HideAndSeek.Systems.Controllers.Movement;
 
@@ -17,7 +18,7 @@ public sealed class WalkingMechanic : MechanicBase
 
 	public override void Simulate()
 	{
-		if ( _context.GroundEntity.IsValid() )
+		if ( _context.GroundHandler.GroundEntity.IsValid() )
 			Walk();
 	}
 
@@ -32,10 +33,10 @@ public sealed class WalkingMechanic : MechanicBase
 		Vector3 beginAt = ThisPawn.Position;
 		Vector3 finishAt = ThisPawn.Position + Vector3.Down * ThisPawn.StepSize;
 
-		TraceResult trace = Controller.TraceBBox( ThisPawn.Position, beginAt );
+		TraceResult trace = CollisionHandler.TraceBBox( ThisPawn, _context.Hull, ThisPawn.Position, beginAt );
 		beginAt = trace.EndPosition;
 
-		trace = Controller.TraceBBox( beginAt, finishAt );
+		trace = CollisionHandler.TraceBBox( ThisPawn, _context.Hull, beginAt, finishAt );
 
 		if ( trace.Fraction <= 0 || trace.Fraction >= 1 ||
 			trace.StartedSolid || Vector3.GetAngle( Vector3.Up, trace.Normal ) > ThisPawn.GroundAngle )
@@ -51,7 +52,7 @@ public sealed class WalkingMechanic : MechanicBase
 		Vector3 desiredVelocity = Controller.GetInputVelocity();
 		Vector3 desiredDirection = desiredVelocity.Normal;
 		float desiredSpeed = desiredVelocity.Length;
-		float friction = GroundFriciton * _context.SurfaceFriciton;
+		float friction = GroundFriciton * _context.GroundHandler.SurfaceFriciton;
 
 		ThisPawn.Velocity = ThisPawn.Velocity.WithZ( 0 );
 		Controller.ApplyFriction( StopSpeed, friction );
@@ -71,7 +72,7 @@ public sealed class WalkingMechanic : MechanicBase
 			}
 
 			Vector3 destination = (ThisPawn.Position + ThisPawn.Velocity * Time.Delta).WithZ( ThisPawn.Position.z );
-			TraceResult trace = Controller.TraceBBox( ThisPawn.Position, destination );
+			TraceResult trace = CollisionHandler.TraceBBox( ThisPawn, _context.Hull, ThisPawn.Position, destination );
 
 			if ( trace.Fraction == 1 )
 			{

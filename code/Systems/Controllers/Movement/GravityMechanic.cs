@@ -40,7 +40,7 @@ public class GravityMechanic : MechanicBase
 		ThisPawn.Velocity -= new Vector3( 0, 0, ThisPawn.BaseVelocity.z ) * Time.Delta;
 		ThisPawn.BaseVelocity = ThisPawn.BaseVelocity.WithZ( 0 );
 
-		if ( _context.GroundEntity.IsValid() ) return;
+		if ( _context.GroundHandler.GroundEntity.IsValid() ) return;
 
 		Vector3 desiredVelocity = Controller.GetInputVelocity( true );
 		Vector3 desiredDirection = desiredVelocity.Normal;
