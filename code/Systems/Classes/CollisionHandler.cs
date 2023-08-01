@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HideAndSeek;
+using Sandbox.Systems.Interfaces;
 
 namespace Sandbox.Systems.Classes
 {
-	public static class CollisionHandler
+	public class CollisionHandler: ICollisionHandler
 	{
 		/// <summary>
 		/// Traces the bbox and returns the trace result.
 		/// LiftFeet will ProcessMoveHelper the start position up by this amount, while keeping the top of the bbox at the same 
 		/// position. This is good when tracing down because you won't be tracing through the ceiling above.
 		/// </summary>
-		public static TraceResult TraceBBox(Entity Pawn, Vector3 start, Vector3 end, Vector3 mins, Vector3 maxs, float liftFeet = 0.0f, float liftHead = 0.0f )
+		public TraceResult TraceBBox( Vector3 start, Vector3 end, Vector3 mins, Vector3 maxs, Entity toIgnore, float liftFeet = 0.0f, float liftHead = 0.0f )
 		{
 			if ( liftFeet > 0 )
 			{
@@ -29,7 +26,7 @@ namespace Sandbox.Systems.Classes
 			var tr = Trace.Ray( start, end )
 						.Size( mins, maxs )
 						.WithAnyTags( "solid", "playerclip", "passbullets" )
-						.Ignore( Pawn )
+						.Ignore( toIgnore )
 						.Run();
 
 			return tr;
@@ -39,10 +36,10 @@ namespace Sandbox.Systems.Classes
 		/// This calls TraceBBox with the right sized bbox. You should derive this in your controller if you 
 		/// want to use the built in functions
 		/// </summary>
-		public static TraceResult TraceBBox( Entity pawn, BBox Hull, Vector3 start, Vector3 end, float liftFeet = 0.0f, float liftHead = 0.0f )
+		/*public TraceResult TraceBBox( Vector3 start, Vector3 end, float liftFeet = 0.0f, float liftHead = 0.0f )
 		{
-			var hull = Hull;
-			return TraceBBox( pawn, start, end, hull.Mins, hull.Maxs, liftFeet, liftHead );
-		}
+			var hull = _context.Hull;
+			return TraceBBox( start, end, hull.Mins, hull.Maxs, liftFeet, liftHead );
+		}*/
 	}
 }

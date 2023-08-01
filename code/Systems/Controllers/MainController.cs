@@ -1,8 +1,8 @@
-﻿using HideAndSeek.Systems.Controllers;
-using HideAndSeek.Systems.Controllers.Movement;
+﻿using System.Collections.Generic;
 using Sandbox;
 using Sandbox.Systems.Classes;
-using System.Collections.Generic;
+using Sandbox.Systems.Interfaces;
+using HideAndSeek.Systems.Controllers;
 
 namespace HideAndSeek;
 
@@ -12,37 +12,36 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 	[Net, Predicted]
 	public float CurrentEyeHeight { get; set; } = 64f;
 	public float MoveScale { get; set; } = 1f;
+	public float MaxGroundVelocity { get; private set; } = 150f;
+	public float StepSize { get; private set; } = 12f;
 	protected float _bodyGirth = 32f;
 	public float BodyGirth
 	{
-		get
-		{
-			return _bodyGirth;
-		}
+		get { return _bodyGirth; }
 	}
-	public float MaxGroundVelocity { get; private set; } = 150f;
-	public float StepSize { get; private set; } = 12f;
+	public Pawn Pawn
+	{
+		get { return Entity; }
+	}
 
 	public MechanicBase CurrentMechanic;
 	public MechanicFactory Factory;
 	public List<MechanicBase> Mechanics { get; private set; }
 	public GroundHandler GroundHandler { get; private set; }
-
-
+	public ICollisionHandler Collisions { get; private set; }
+	public IMovementPhysics MovementPhysics { get; private set; }
 
 	public MainController() : base()
 	{
+		MovementPhysics = new PawnMovementPhysics();
 		GroundHandler = new( this );
+		Collisions = new CollisionHandler();
 		Factory = new MechanicFactory( this );
 		Mechanics = new List<MechanicBase>();
 		CurrentMechanic = Factory.Gravity();
 	}
 
 
-	public Pawn ThisPawn
-	{
-		get { return Entity; }
-	}
 
 	private void ExecuteMechanics()
 	{
@@ -56,37 +55,31 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 
 	public void Simulate( IClient client )
 	{
-		GroundHandler.CategorizePosition( GroundHandler.GroundEntity != null );
+		GroundHandler.CategorizePosition();
 		ExecuteMechanics();
 	}
-
-
-
-	#region Ground Related Logic
-	
-	#endregion
 
 
 
 	#region Movement related code
 	public void Accelerate( Vector3 desiredDirection, float desiredSpeed, float speedLimit, float acceleration )
 	{
-		ThisPawn.Velocity = PawnMovementPhysics.CalculateAcceleration( ThisPawn.Velocity, desiredDirection, desiredSpeed, speedLimit, acceleration );
+		Pawn.Velocity = MovementPhysics.CalculateAcceleration( Pawn.Velocity, desiredDirection, desiredSpeed, speedLimit, acceleration );
 	}
 
 	public void ApplyFriction( float stopSpeed, float friction = 1f )
 	{
-		ThisPawn.Velocity = PawnMovementPhysics.Friction( ThisPawn.Velocity, stopSpeed, friction );
+		Pawn.Velocity = MovementPhysics.Friction( Pawn.Velocity, stopSpeed, friction );
 	}
 
 	public Vector3 GetInputVelocity( bool zeroPitch = false )
 	{
-		Vector3 result = new( ThisPawn.InputDirection.x, ThisPawn.InputDirection.y, 0 );
+		Vector3 result = new( Pawn.InputDirection.x, Pawn.InputDirection.y, 0 );
 		result *= MoveScale;
 
 		Vector3 inMovement = result.Length.Clamp( 0f, 1f );
 
-		result *= ThisPawn.ViewAngles.WithPitch( 0f ).ToRotation();
+		result *= Pawn.ViewAngles.WithPitch( 0f ).ToRotation();
 
 		if ( zeroPitch ) result.z = 0f;
 
@@ -105,12 +98,12 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 	//Simple Move
 	public void Move()
 	{
-		ProcessMoveHelper( out MoveHelper helper, out float stepSize );
+		ProcessMoveHelper( out MoveHelper helper, out _ );
 
 		if ( helper.TryMove( Time.Delta ) > 0 )
 		{
-			ThisPawn.Position = helper.Position;
-			ThisPawn.Velocity = helper.Velocity;
+			Pawn.Position = helper.Position;
+			Pawn.Velocity = helper.Velocity;
 		}
 	}
 
@@ -121,25 +114,25 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 
 		if ( helper.TryMoveWithStep( Time.Delta, stepSize ) > 0 )
 		{
-			ThisPawn.Position = helper.Position;
-			ThisPawn.Velocity = helper.Velocity;
+			Pawn.Position = helper.Position;
+			Pawn.Velocity = helper.Velocity;
 		}
 	}
 
 	//This method is called from both StepMove() and Move()
 	private void ProcessMoveHelper( out MoveHelper helper, out float stepSize )
 	{
-		float groundAngle = ThisPawn.GroundAngle;
-		stepSize = ThisPawn.StepSize;
+		float groundAngle = Pawn.GroundAngle;
+		stepSize = Pawn.StepSize;
 
-		helper = new( ThisPawn.Position, ThisPawn.Velocity )
+		helper = new( Pawn.Position, Pawn.Velocity )
 		{
 			MaxStandableAngle = groundAngle
 		};
 
 
 		helper.Trace = helper.Trace.Size( Hull )
-			.Ignore( ThisPawn )
+			.Ignore( Pawn )
 			.WithoutTags( "player" );
 	}
 	#endregion
@@ -160,11 +153,5 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 			return new BBox( mins, maxs );
 		}
 	}
-
-	/// <summary>
-	/// Traces the bbox and returns the trace result.
-	/// LiftFeet will ProcessMoveHelper the start position up by this amount, while keeping the top of the bbox at the same 
-	/// position. This is good when tracing down because you won't be tracing through the ceiling above.
-	/// </summary>
 	#endregion
 }

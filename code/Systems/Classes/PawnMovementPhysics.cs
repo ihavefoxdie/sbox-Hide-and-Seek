@@ -1,11 +1,12 @@
 ﻿using System;
 using Sandbox;
+using Sandbox.Systems.Interfaces;
 
-namespace HideAndSeek.Systems.Controllers.Movement;
+namespace Sandbox.Systems.Classes;
 
-static public class PawnMovementPhysics
+public class PawnMovementPhysics : IMovementPhysics
 {
-	public static Vector3 CalculateAcceleration( Vector3 velocity, Vector3 desiredDirection, float desiredSpeed, float speedLimit, float acceleration )
+	public Vector3 CalculateAcceleration( Vector3 velocity, Vector3 desiredDirection, float desiredSpeed, float speedLimit, float acceleration )
 	{
 		if ( speedLimit > 0 && desiredSpeed > speedLimit )
 			desiredSpeed = speedLimit;
@@ -23,18 +24,18 @@ static public class PawnMovementPhysics
 	}
 
 
-	public static Vector3 Friction( Vector3 velocity, float stopSpeed, float friction = 1f )
+	public Vector3 Friction( Vector3 velocity, float stopSpeed, float friction = 1f )
 	{
 		float speed = velocity.Length;
 		if ( speed.AlmostEqual( 0f ) ) return velocity;
 
 		float control = speed;
 		if ( speed < stopSpeed ) control = stopSpeed;
-		
+
 		float frictionedSpeed = speed - control * friction * Time.Delta;
 		if ( frictionedSpeed < 0 ) frictionedSpeed = 0;
 
-		if (frictionedSpeed != speed)
+		if ( frictionedSpeed != speed )
 		{
 			frictionedSpeed /= speed;
 			velocity *= frictionedSpeed;

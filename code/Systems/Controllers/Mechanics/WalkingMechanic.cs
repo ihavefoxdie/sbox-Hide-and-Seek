@@ -33,10 +33,10 @@ public sealed class WalkingMechanic : MechanicBase
 		Vector3 beginAt = ThisPawn.Position;
 		Vector3 finishAt = ThisPawn.Position + Vector3.Down * ThisPawn.StepSize;
 
-		TraceResult trace = CollisionHandler.TraceBBox( ThisPawn, _context.Hull, ThisPawn.Position, beginAt );
+		TraceResult trace = _context.Collisions.TraceBBox( ThisPawn.Position, beginAt, _context.Hull.Mins, _context.Hull.Maxs, ThisPawn );
 		beginAt = trace.EndPosition;
 
-		trace = CollisionHandler.TraceBBox( ThisPawn, _context.Hull, beginAt, finishAt );
+		trace = _context.Collisions.TraceBBox(beginAt, finishAt, _context.Hull.Mins, _context.Hull.Maxs, ThisPawn );
 
 		if ( trace.Fraction <= 0 || trace.Fraction >= 1 ||
 			trace.StartedSolid || Vector3.GetAngle( Vector3.Up, trace.Normal ) > ThisPawn.GroundAngle )
@@ -72,7 +72,7 @@ public sealed class WalkingMechanic : MechanicBase
 			}
 
 			Vector3 destination = (ThisPawn.Position + ThisPawn.Velocity * Time.Delta).WithZ( ThisPawn.Position.z );
-			TraceResult trace = CollisionHandler.TraceBBox( ThisPawn, _context.Hull, ThisPawn.Position, destination );
+			TraceResult trace = _context.Collisions.TraceBBox(ThisPawn.Position, destination, _context.Hull.Mins, _context.Hull.Maxs, ThisPawn);
 
 			if ( trace.Fraction == 1 )
 			{
