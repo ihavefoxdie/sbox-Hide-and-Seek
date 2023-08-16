@@ -10,7 +10,10 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 {
 	//We need to setup basic stuff like collisions and such
 	[Net, Predicted]
-	public float CurrentEyeHeight { get; set; } = 64f;
+	public float CurrentEyeHeight { get; set; } = 72f;
+	public float EyeHeight => MainMechanic.EyeHeight ?? 72f;
+	
+
 	public float MoveScale { get; set; } = 1f;
 	public float MaxGroundVelocity { get; private set; } = 150f;
 	public float StepSize { get; private set; } = 12f;
@@ -24,7 +27,7 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 		get { return Entity; }
 	}
 
-	public MechanicBase CurrentMechanic;
+	public MechanicBase MainMechanic;
 	public MechanicFactory Factory;
 	public List<MechanicBase> Mechanics { get; private set; }
 	public GroundHandler GroundHandler { get; private set; }
@@ -38,27 +41,51 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 		Collisions = new CollisionHandler();
 		Factory = new MechanicFactory( this );
 		Mechanics = new List<MechanicBase>();
-		CurrentMechanic = Factory.Gravity();
+		MainMechanic = Factory.Gravity();
 	}
 
 
 
 	private void ExecuteMechanics()
 	{
-		if ( CurrentMechanic != null )
+		if ( MainMechanic != null )
 		{
-			CurrentMechanic.SimulateMechanics();
+			MainMechanic.SimulateMechanics();
+		}
+	}
+
+	protected void SimulateEyes()
+	{
+		DebugOverlay.ScreenText( CurrentEyeHeight.ToString(), 12 );
+		var target = EyeHeight;
+		DebugOverlay.ScreenText( target.ToString(), 13 );
+		// Magic number :sad:
+		var trace = Collisions.TraceBBox( Pawn.Position, Pawn.Position, Hull.Mins, Hull.Maxs, Pawn, 0, 10f);
+		if ( trace.Hit && target > CurrentEyeHeight )
+		{
+			// We hit something, that means we can't increase our eye height because something's in the way.
+			int a = 0;
 		}
 		else
-			DebugOverlay.ScreenText( "NULL", 10 );
+		{
+			CurrentEyeHeight = CurrentEyeHeight.LerpTo( target, Time.Delta * 10f );
+		}
+
+		Pawn.EyeRotation = Pawn.ViewAngles.ToRotation();
+		Pawn.LocalEyePosition = Vector3.Up * CurrentEyeHeight;
 	}
 
 	public void Simulate( IClient client )
 	{
 		GroundHandler.CategorizePosition();
 		ExecuteMechanics();
+		SimulateEyes();
 	}
 
+	public void FrameSimulate( IClient client )
+	{
+		SimulateEyes();
+	}
 
 
 	#region Movement related code
@@ -72,7 +99,7 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 		Pawn.Velocity = MovementPhysics.Friction( Pawn.Velocity, stopSpeed, friction );
 	}
 
-	public Vector3 GetInputVelocity( bool zeroPitch = false )
+	public Vector3 GetInputVelocity( bool zeroPitch, float desiredSpeed = 180f )
 	{
 		Vector3 result = new( Pawn.InputDirection.x, Pawn.InputDirection.y, 0 );
 		result *= MoveScale;
@@ -84,16 +111,16 @@ public partial class MainController : EntityComponent<Pawn>, ISingletonComponent
 		if ( zeroPitch ) result.z = 0f;
 
 		result = result.Normal * inMovement;
-		result *= GetDesiredSpeed();
+		result *= desiredSpeed;
 
 		return result *= GroundHandler.CurrentGroundAngle.Remap( 0, 45, 1, 0.6f );
 	}
 
 
-	public virtual float GetDesiredSpeed()
+	/*public float GetDesiredSpeed()
 	{
-		return CurrentMechanic?.DesiredSpeed ?? 180f;
-	}
+		return MainMechanic?.DesiredSpeed ?? 180f;
+	}*/
 
 	//Simple Move
 	public void Move()

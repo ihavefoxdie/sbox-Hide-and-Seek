@@ -1,15 +1,43 @@
 ﻿using Sandbox;
-using Sandbox.Systems.Classes;
 
-namespace HideAndSeek.Systems.Controllers.Movement;
+namespace HideAndSeek.Systems.Controllers.Mechanics;
 
 public sealed class WalkingMechanic : MechanicBase
 {
-	public float StopSpeed { get; private set; } = 150f;
-	public float Acceleration { get; private set; } = 6f;
+	public float StopSpeed { get; private set; } = 200f;
+	public float Acceleration
+	{
+		get
+		{
+			if ( _context.CurrentEyeHeight <= 40 )
+				return 18f;
+			return 8f;
+		}
+		private set { }
+	}
 	public float GroundFriciton { get; private set; } = 4f;
+	public override float? EyeHeight
+	{
+		get
+		{
+			if ( Input.Down( "duck" ) )
+				return 32f;
+			return 72f;
+		}
+		set { }
+	}
 
-	public override float? DesiredSpeed { get { return 200f; } }
+	public override float DesiredSpeed
+	{
+		get
+		{
+			if ( _context.CurrentEyeHeight <= 40 )
+				return 60f;
+			if ( Input.Down( "run" ) && ( _context.CurrentEyeHeight >= 70) )
+				return 250f;
+			return 140f;
+		}
+	}
 
 	public WalkingMechanic( MainController currentContext, MechanicFactory mechanicFactory ) : base( currentContext, mechanicFactory )
 	{
@@ -36,7 +64,7 @@ public sealed class WalkingMechanic : MechanicBase
 		TraceResult trace = _context.Collisions.TraceBBox( ThisPawn.Position, beginAt, _context.Hull.Mins, _context.Hull.Maxs, ThisPawn );
 		beginAt = trace.EndPosition;
 
-		trace = _context.Collisions.TraceBBox(beginAt, finishAt, _context.Hull.Mins, _context.Hull.Maxs, ThisPawn );
+		trace = _context.Collisions.TraceBBox( beginAt, finishAt, _context.Hull.Mins, _context.Hull.Maxs, ThisPawn );
 
 		if ( trace.Fraction <= 0 || trace.Fraction >= 1 ||
 			trace.StartedSolid || Vector3.GetAngle( Vector3.Up, trace.Normal ) > ThisPawn.GroundAngle )
@@ -49,7 +77,7 @@ public sealed class WalkingMechanic : MechanicBase
 
 	private void Walk()
 	{
-		Vector3 desiredVelocity = Controller.GetInputVelocity();
+		Vector3 desiredVelocity = Controller.GetInputVelocity( false, DesiredSpeed );
 		Vector3 desiredDirection = desiredVelocity.Normal;
 		float desiredSpeed = desiredVelocity.Length;
 		float friction = GroundFriciton * _context.GroundHandler.SurfaceFriciton;
@@ -72,7 +100,7 @@ public sealed class WalkingMechanic : MechanicBase
 			}
 
 			Vector3 destination = (ThisPawn.Position + ThisPawn.Velocity * Time.Delta).WithZ( ThisPawn.Position.z );
-			TraceResult trace = _context.Collisions.TraceBBox(ThisPawn.Position, destination, _context.Hull.Mins, _context.Hull.Maxs, ThisPawn);
+			TraceResult trace = _context.Collisions.TraceBBox( ThisPawn.Position, destination, _context.Hull.Mins, _context.Hull.Maxs, ThisPawn );
 
 			if ( trace.Fraction == 1 )
 			{

@@ -6,9 +6,10 @@ namespace HideAndSeek;
 public partial class Pawn
 {
 	//First off, we need eyes.
-	[Net, Predicted, Browsable( false )] protected Vector3 LocalEyePosition { get; set; }
-	[Net, Predicted, Browsable( false )] protected Rotation LocalEyeRotation { get; set; }
+	[Net, Predicted, Browsable( false )] public Vector3 LocalEyePosition { get; set; }
+	[Net, Predicted, Browsable( false )] public Rotation LocalEyeRotation { get; set; }
 
+	[Browsable( false )]
 	public Vector3 EyePosition
 	{
 		get
@@ -20,6 +21,7 @@ public partial class Pawn
 			LocalEyePosition = Transform.PointToLocal( value );
 		}
 	}
+	[Browsable( false )]
 	public Rotation EyeRotation
 	{
 		get
@@ -38,7 +40,7 @@ public partial class Pawn
 	}
 
 	// An example BuildInput method within a player's Pawn class.
-	[ClientInput] public Vector3 InputDirection { get; protected set; }
+	[ClientInput] public Vector2 InputDirection { get; protected set; }
 	[ClientInput] public Angles ViewAngles { get; set; }
 
 	public override void BuildInput()

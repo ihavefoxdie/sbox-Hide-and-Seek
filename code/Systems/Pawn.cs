@@ -1,5 +1,5 @@
 ﻿using HideAndSeek.Systems.Controllers;
-using HideAndSeek.Systems.Controllers.Movement;
+using HideAndSeek.Systems.Controllers.Mechanics;
 using Sandbox;
 
 namespace HideAndSeek;
@@ -9,9 +9,9 @@ public partial class Pawn : AnimatedEntity
 	/// <summary>
 	/// Called when the entity is first created 
 	/// </summary>
-
 	Vector3 LastPos { get; set; }
-	bool Changed { get; set; }
+	bool ChangedPosition { get; set; }
+	[Net, Predicted]
 	public Rotation LastRotation { get; set; }
 	public bool Rotated { get; set; }
 	public bool ThirdPerson { get; set; } = true;
@@ -26,7 +26,6 @@ public partial class Pawn : AnimatedEntity
 	public override void Spawn()
 	{
 		SetModel( "models/citizen/citizen.vmdl" );
-
 
 		Predictable = true;
 		EnableDrawing = true;
@@ -80,13 +79,13 @@ public partial class Pawn : AnimatedEntity
 			Rotated = true;
 
 		if ( LastPos.Equals( Position ) )
-			Changed = false;
+			ChangedPosition = false;
 		else
 		{
-			Changed = true;
+			ChangedPosition = true;
 			LastPos = Position;
 		}
-		if ( Changed )
+		if ( ChangedPosition )
 		{
 			SimulateRotation();
 		}
@@ -96,21 +95,19 @@ public partial class Pawn : AnimatedEntity
 		}
 
 
-		LocalEyePosition = Vector3.Up * (64f * Scale);
-
-
 		Controller?.Simulate( client );
 		PawnAnimations?.Simulate( client );
-		LastRotation = Camera.Rotation;
+
+
 		// If we're running serverside and Attack1 was just pressed, spawn a ragdoll
 		if ( Game.IsServer && Input.Pressed( "attack1" ) )
 		{
 			var ragdoll = new ModelEntity();
-			ragdoll.SetModel( "models/citizen/citizen.vmdl" );
+			ragdoll.SetModel( "models/citizen_props/chair03.vmdl_c" );
 			ragdoll.Position = Position + Rotation.Forward * 40;
 			ragdoll.Rotation = Rotation.LookAt( Vector3.Random.Normal );
 			ragdoll.SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
-			ragdoll.PhysicsGroup.Velocity = Rotation.Forward * 1000;
+			ragdoll.PhysicsGroup.Velocity = EyeRotation.Forward * 1000 + Vector3.Up*100;
 		}
 	}
 
@@ -119,7 +116,9 @@ public partial class Pawn : AnimatedEntity
 	/// </summary>
 	public override void FrameSimulate( IClient cl )
 	{
-		if ( Changed )
+		LastRotation = Camera.Rotation;
+
+		if ( ChangedPosition )
 		{
 			SimulateRotation();
 		}
@@ -130,18 +129,8 @@ public partial class Pawn : AnimatedEntity
 		DebugOverlay.ScreenText( CollisionBounds.ToString(), 2 );
 		DebugOverlay.ScreenText( Time.Delta.ToString(), 3 );
 		DebugOverlay.ScreenText( Velocity.ToString(), 4 );
-		PawnCamera?.Update( this );
-
-		/*// Simulate rotation every frame, to keep things smooth
-		Rotation = ViewAngles.ToRotation();
-
-		PawnCamera.Position = Position;
-		PawnCamera.Rotation = Rotation;
-
-		// Set field of view to whatever the user chose in options
-		PawnCamera.FieldOfView = Screen.CreateVerticalFieldOfView( Game.Preferences.FieldOfView );
-
-		// Set the first person viewer to this, so it won't render our model
-		PawnCamera.FirstPersonViewer = this;*/
+		PawnCamera?.Update( cl );
+		Controller.FrameSimulate( cl );
+		PawnAnimations?.Simulate( cl );
 	}
 }

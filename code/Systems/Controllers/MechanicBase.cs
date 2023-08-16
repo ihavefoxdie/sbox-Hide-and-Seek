@@ -3,13 +3,13 @@
 public abstract class MechanicBase
 {
 	protected bool _isMainMechanic = false;
-	public virtual float? DesiredSpeed { get; set; } = null;
-	//public virtual float? EyeHeight { get; set; } = null;
+	public virtual float DesiredSpeed { get; set; } = 180;
+	public virtual float? EyeHeight { get; set; } = null;
 
 	protected MainController _context;
 	protected MechanicFactory _factory;
-	private MechanicBase _currentSuperMechanic;
-	private MechanicBase _currentSubMechanic;
+	protected MechanicBase _currentSuperMechanic;
+	protected MechanicBase _currentSubMechanic;
 
 	public MechanicBase( MainController currentContext, MechanicFactory factory ) : base()
 	{
@@ -47,7 +47,7 @@ public abstract class MechanicBase
 
 		newMechanic.EnterMechanic();
 		if ( _isMainMechanic )
-			_context.CurrentMechanic = newMechanic;
+			_context.MainMechanic = newMechanic;
 		else
 			_currentSuperMechanic?.SetSubMechanic( newMechanic );
 	}

@@ -1,12 +1,14 @@
 ﻿using Sandbox;
 
-namespace HideAndSeek.Systems.Controllers.Movement;
+namespace HideAndSeek.Systems.Controllers.Mechanics;
 
 public class GravityMechanic : MechanicBase
 {
 	private float _gravity { get { return 800f; } }
 	private float _airControl { get { return 30f; } }
 	private float _airAcceleration { get { return 35f; } }
+
+	public override float? EyeHeight => _currentSubMechanic.EyeHeight;
 
 	public GravityMechanic( MainController currentContext, MechanicFactory factory ) : base( currentContext, factory )
 	{

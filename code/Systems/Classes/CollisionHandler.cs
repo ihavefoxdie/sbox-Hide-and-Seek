@@ -1,5 +1,4 @@
-﻿using HideAndSeek;
-using Sandbox.Systems.Interfaces;
+﻿using Sandbox.Systems.Interfaces;
 
 namespace Sandbox.Systems.Classes
 {
@@ -31,15 +30,5 @@ namespace Sandbox.Systems.Classes
 
 			return tr;
 		}
-
-		/// <summary>
-		/// This calls TraceBBox with the right sized bbox. You should derive this in your controller if you 
-		/// want to use the built in functions
-		/// </summary>
-		/*public TraceResult TraceBBox( Vector3 start, Vector3 end, float liftFeet = 0.0f, float liftHead = 0.0f )
-		{
-			var hull = _context.Hull;
-			return TraceBBox( start, end, hull.Mins, hull.Maxs, liftFeet, liftHead );
-		}*/
 	}
 }
