@@ -7,14 +7,15 @@ public sealed class CameraMovement : Component
 	[Property] public PawnMovement Pawn { get; set; }
 	[Property]
 	[Range( 0f, 100f, 0.01f, true, true )]
-	public float Distance { get; set; } = 0f;
+	public float Distance { get; set; } = 25f;
 	[Property] public GameObject Head { get { return Pawn.Head; } }
 	[Property] public GameObject Model { get { return Pawn.Model; } }
 	[Property] public ModelRenderer PawnRenderer { get { return _pawnRenderer; } }
 	[Property] public CameraComponent Camera { get { return _camera; } }
+	[Property] public bool FloatyCamera {  get; set; } = true;
 	[Property]
 	[Range( 0f, 2f, 0.01f, true, true )]
-	public float Sensitivity { get; set; } = 1f;
+	public float Sensitivity { get; set; } = 0.05f;
 	[Property]
 	public bool IsFirstPerson
 	{
@@ -61,7 +62,7 @@ public sealed class CameraMovement : Component
 		eyeAngles.pitch += Input.MouseDelta.y * Sensitivity;
 		eyeAngles.yaw -= Input.MouseDelta.x * Sensitivity;
 		eyeAngles.roll = 0f;
-		eyeAngles.pitch = eyeAngles.pitch.Clamp( -90f, 90f );
+		eyeAngles.pitch = eyeAngles.pitch.Clamp( -89f, 89f );
 		Head.Transform.Rotation = Rotation.From( eyeAngles );
 	}
 	
@@ -71,7 +72,13 @@ public sealed class CameraMovement : Component
 
 		if(!IsFirstPerson)
 		{
-			_cameraPosition = _cameraPosition.LerpTo( Head.Transform.Position, Time.Delta * 8);
+			if ( FloatyCamera )
+				_cameraPosition = _cameraPosition.LerpTo( Head.Transform.Position, Time.Delta * 8 );
+			else
+			{
+				_cameraPosition = Head.Transform.Position;
+				//Distance *= 10;
+			}
 			Vector3 forward = Head.Transform.Rotation.Forward;
 			SceneTraceResult cameraTrace = Scene.Trace.Ray( _cameraPosition, _cameraPosition - (forward * Distance) )
 				.WithoutTags( "pawn", "trigger" )
@@ -93,7 +100,7 @@ public sealed class CameraMovement : Component
 			PawnRenderer.RenderType = ModelRenderer.ShadowRenderType.ShadowsOnly;
 		}
 
-		if ( Vector3.DistanceBetween( _cameraPosition, Head.Transform.Position ) < 20 )
+		if ( Vector3.DistanceBetween( _cameraPosition, Model.Transform.Position ) < 20 || Vector3.DistanceBetween( _cameraPosition, Head.Transform.Position ) < 20 )
 		{
 			PawnRenderer.RenderType = ModelRenderer.ShadowRenderType.ShadowsOnly;
 		}

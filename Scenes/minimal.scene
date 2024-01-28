@@ -199,7 +199,7 @@
             {
               "__type": "CameraMovement",
               "Camera": null,
-              "Distance": 100,
+              "Distance": 20,
               "Head": null,
               "IsFirstPerson": false,
               "Model": null,
@@ -208,7 +208,8 @@
                 "go": "3b38457d-ab69-4fd8-969d-e897e7cce045",
                 "component_type": "PawnMovement"
               },
-              "Sensitivity": 0.2
+              "PawnRenderer": null,
+              "Sensitivity": 0.05
             }
           ]
         }

@@ -1,3 +1,4 @@
+using HideAndSeek.PawnComponents.Modules;
 using Sandbox;
 using Sandbox.Citizen;
 
@@ -9,10 +10,13 @@ public sealed class PawnMovement : Component
 	[Property] public float WalkingSpeed { get; set; } = 100f;
 	[Property] public float SpritDelta { get; set; } = 100f;
 	[Property] public float CrouchDelta { get; set; } = -50f;
+	[Property] public float JumpForce { get; set; } = 300f;
 	[Property] public float Friction { get; set; } = 1f;
-	[Property] public CharacterController CharacterController { get { return _characterController; } }
+	[Property] public CharacterController PawnController { get { return _characterController; } }
+	[Property] public CitizenAnimationHelper AnimationHelper { get { return _animationHelper; } }
 	[Property] public GameObject Head { get { return _head; } }
 	[Property] public GameObject Model { get { return _model; } }
+	[Property] public bool Rotated { get; private set; }
 	#endregion
 
 	#region References
@@ -22,10 +26,11 @@ public sealed class PawnMovement : Component
 
 	#region Member Variables
 	public Vector3 DesiredVelocity { get; set; }
-	[Property] public bool IsCrouching { get; set; }
+	[Property] public bool IsDucking { get; set; }
 	[Property] public bool IsRunning { get; set; }
 	private CharacterController _characterController;
 	private CitizenAnimationHelper _animationHelper;
+	private Rotation _lastRotation;
 	#endregion
 
 
@@ -48,23 +53,69 @@ public sealed class PawnMovement : Component
 		}
 
 		_characterController = Components.Get<CharacterController>();
-		_animationHelper = Components.Get<CitizenAnimationHelper>();
+		_animationHelper = Components.GetInChildren<CitizenAnimationHelper>();
+		_lastRotation = Head.Transform.Rotation;
 		base.OnAwake();
 	}
 
 	protected override void OnUpdate()
 	{
-		IsCrouching = Input.Down( "Duck" );
+		PawnAnimator.AnimationUpdate( this );
 		IsRunning = Input.Down( "Run" );
+		if ( Input.Pressed( "Jump" ) )
+		{
+			Jump();
+		}
 	}
 
 	protected override void OnFixedUpdate()
 	{
+		DuckCheck();
+		RotationCheck();
 		CalculateDesiredVelocity();
 		Move();
+		RotateModel();
 	}
 
 	#region Methods
+	private void DuckCheck()
+	{
+		if ( Input.Down( "Duck" ) && !IsDucking )
+		{
+			PawnController.Height /= 1.5f;
+			IsDucking = true;
+			Head.Transform.LocalPosition = Vector3.Zero.WithZ(40f);
+
+		}
+		if ( !Input.Down( "Duck" ) && IsDucking )
+		{
+			SceneTraceResult collision = Scene.Trace.Ray( Head.Transform.Position, Head.Transform.Position + Vector3.Up * PawnController.Height * 0.4f )
+				.WithoutTags( "pawn", "trigger" )
+				.Radius( 20f )
+				.Run();
+
+			if ( !collision.Hit )
+			{
+				PawnController.Height *= 1.5f;
+				IsDucking = false;
+				Head.Transform.LocalPosition = Vector3.Zero.WithZ( 60f);
+			}
+		}
+	}
+
+	private void RotationCheck()
+	{
+		if ( Rotation.Difference( _lastRotation, Head.Transform.Rotation ).Angle() > 1f )
+		{
+			Rotated = true;
+			_lastRotation = Head.Transform.Rotation;
+		}
+		else
+		{
+			Rotated = false;
+		}
+	}
+
 	private void CalculateDesiredVelocity()
 	{
 		DesiredVelocity = 0;
@@ -84,7 +135,7 @@ public sealed class PawnMovement : Component
 		if ( !DesiredVelocity.IsNearZeroLength )
 			DesiredVelocity = DesiredVelocity.Normal;
 
-		if ( IsCrouching )
+		if ( IsDucking )
 			DesiredVelocity *= WalkingSpeed + CrouchDelta;
 		else if ( IsRunning )
 			DesiredVelocity *= WalkingSpeed + SpritDelta;
@@ -96,52 +147,57 @@ public sealed class PawnMovement : Component
 	{
 		Vector3 gravity = Scene.PhysicsWorld.Gravity;
 
-		if ( CharacterController.IsOnGround )
+		if ( PawnController.IsOnGround )
 		{
-			CharacterController.Velocity = CharacterController.Velocity.WithZ( 0 );
-			CharacterController.Accelerate( DesiredVelocity );
-			CharacterController.ApplyFriction( Friction );
+			PawnController.Velocity = PawnController.Velocity.WithZ( 0 );
+			PawnController.Accelerate( DesiredVelocity );
+			PawnController.ApplyFriction( Friction );
 		}
 		else
 		{
-			CharacterController.Velocity += gravity * Time.Delta * 0.5f;
-			CharacterController.Accelerate( DesiredVelocity.ClampLength( AirSpeed ) );
-			CharacterController.ApplyFriction( AirFriction );
+			PawnController.Velocity += gravity * Time.Delta * 0.5f;
+			PawnController.Accelerate( DesiredVelocity.ClampLength( AirSpeed ) );
+			PawnController.ApplyFriction( AirFriction );
 		}
 
-		CharacterController.Move();
+		PawnController.Move();
 
-		if ( !CharacterController.IsOnGround )
+		if ( !PawnController.IsOnGround )
 		{
-			CharacterController.Velocity += gravity * Time.Delta * 0.5f;
+			PawnController.Velocity += gravity * Time.Delta * 0.5f;
 		}
 		else
 		{
-			CharacterController.Velocity = CharacterController.Velocity.WithZ( 0 );
+			PawnController.Velocity = PawnController.Velocity.WithZ( 0 );
 		}
+	}
+
+	private void Jump()
+	{
+		if ( !PawnController.IsOnGround )
+		{
+			return;
+		}
+		PawnController.Punch( Vector3.Up * JumpForce );
+		_animationHelper?.TriggerJump();
 	}
 
 	private void RotateModel()
 	{
+		if ( Model is null )
+		{ return; }
 
-	}
+		Angles targetAngle = new( 0, Head.Transform.Rotation.Yaw(), 0f );
+		float rotateDifference = Model.Transform.Rotation.Distance( targetAngle );
 
-	// Redundant function the older project used to rely on. It stays here for a while.
-	private Vector3 CalculateAcceleration( Vector3 velocity, Vector3 desiredDirection, float desiredSpeed, float speedLimit, float acceleration )
-	{
-		if ( speedLimit > 0 && desiredSpeed > speedLimit )
-			desiredSpeed = speedLimit;
-
-		float currentSpeed = velocity.Dot( desiredDirection );
-		float addSpeed = desiredSpeed - currentSpeed;
-
-		if ( addSpeed <= 0 ) return velocity;
-
-		float accelSpeed = acceleration * Time.Delta * desiredSpeed;
-
-		if ( accelSpeed > addSpeed ) accelSpeed = addSpeed;
-
-		return velocity += desiredDirection * accelSpeed;
+		if ( PawnController.Velocity.Length > 10f )
+		{
+			Model.Transform.Rotation = Rotation.Lerp( Model.Transform.Rotation, targetAngle, Time.Delta * 8f );
+		}
+		else if ( rotateDifference > 175f )
+		{
+			Model.Transform.Rotation = Rotation.Lerp( Model.Transform.Rotation, targetAngle, Time.Delta * 1f );
+		}
 	}
 	#endregion
 }
