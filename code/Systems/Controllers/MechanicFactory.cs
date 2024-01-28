@@ -1,4 +1,5 @@
-﻿using HideAndSeek.Systems.Controllers.Movement;
+﻿using HideAndSeek.Systems.Controllers.Mechanics;
+using Sandbox.Systems.Controllers.Mechanics;
 using System.Linq;
 
 namespace HideAndSeek.Systems.Controllers;
@@ -52,5 +53,16 @@ public class MechanicFactory
 		}
 		_context.Mechanics.Add( new OnGroundMechanic( _context, this ) );
 		return Ground();
+	}
+
+	public MechanicBase Crouch()
+	{
+		for ( int i = 0; i < _context.Mechanics.Count; i++ )
+		{
+			if ( _context.Mechanics[i] is CrouchMechanic )
+				return _context.Mechanics[i];
+		}
+		_context.Mechanics.Add( new CrouchMechanic( _context, this ) );
+		return Crouch();
 	}
 }

@@ -29,10 +29,20 @@
     "CsProjName": "",
     "LaunchConfigs": [
       {
-        "Name": "My New Config",
+        "Name": "Single Debug",
         "GameIdent": "local.hide_seek#local",
         "MapName": "facepunch.construct23",
         "MaxPlayers": 1,
+        "GameSettings": {},
+        "Addons": "",
+        "PreLaunchCommand": "",
+        "PostLaunchCommand": ""
+      },
+      {
+        "Name": "debug with people",
+        "GameIdent": "local.hide_seek#local",
+        "MapName": "facepunch.construct23",
+        "MaxPlayers": 2,
         "GameSettings": {},
         "Addons": "",
         "PreLaunchCommand": "",

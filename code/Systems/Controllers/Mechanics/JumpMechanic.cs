@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace HideAndSeek.Systems.Controllers.Movement;
+namespace HideAndSeek.Systems.Controllers.Mechanics;
 
 public partial class JumpMechanic : MechanicBase
 {
@@ -14,21 +14,21 @@ public partial class JumpMechanic : MechanicBase
 	public override void Simulate()
 	{
 		float flGroundFactor = 1.0f;
-		float flMul = 250f;
-		float startz = ThisPawn.Velocity.z;
+		float flMul = 300f;
+		float startZ = ThisPawn.Velocity.z;
 
-		ThisPawn.Velocity = ThisPawn.Velocity.WithZ( startz + flMul * flGroundFactor );
+		ThisPawn.Velocity = ThisPawn.Velocity.WithZ( startZ + flMul * flGroundFactor );
 		ThisPawn.Velocity -= new Vector3( 0, 0, Gravity * 0.5f ) * Time.Delta;
 	}
 
 	public override void EnterMechanic()
 	{
-		_context.ClearGorundEntity();
+		_context.GroundHandler.ClearGorundEntity();
 	}
 
 	public override void SimulateMechanic()
 	{
-		if ( _context.GroundEntity.IsValid() )
+		if ( _context.GroundHandler.GroundEntity.IsValid() )
 			Simulate();
 		CheckSwitchMechanic();
 	}
@@ -40,7 +40,7 @@ public partial class JumpMechanic : MechanicBase
 
 	public override void CheckSwitchMechanic()
 	{
-		if ( _context.GroundEntity.IsValid() )
+		if ( _context.GroundHandler.GroundEntity.IsValid() )
 		{
 			SwitchMechanic( _factory.Ground() );
 		}

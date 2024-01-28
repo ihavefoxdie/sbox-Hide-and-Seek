@@ -1,12 +1,14 @@
 ﻿using Sandbox;
 
-namespace HideAndSeek.Systems.Controllers.Movement;
+namespace HideAndSeek.Systems.Controllers.Mechanics;
 
 public class GravityMechanic : MechanicBase
 {
-	public float Gravity { get { return 800f; } }
-	public float AirControl { get { return 30f; } }
-	public float AirAcceleration { get { return 35f; } }
+	private float _gravity { get { return 800f; } }
+	private float _airControl { get { return 30f; } }
+	private float _airAcceleration { get { return 35f; } }
+
+	public override float? EyeHeight => _currentSubMechanic.EyeHeight;
 
 	public GravityMechanic( MainController currentContext, MechanicFactory factory ) : base( currentContext, factory )
 	{
@@ -36,21 +38,21 @@ public class GravityMechanic : MechanicBase
 
 	public override void Simulate()
 	{
-		ThisPawn.Velocity -= new Vector3( 0, 0, Gravity * 0.5f ) * Time.Delta;
+		ThisPawn.Velocity -= new Vector3( 0, 0, _gravity * 0.5f ) * Time.Delta;
 		ThisPawn.Velocity -= new Vector3( 0, 0, ThisPawn.BaseVelocity.z ) * Time.Delta;
 		ThisPawn.BaseVelocity = ThisPawn.BaseVelocity.WithZ( 0 );
 
-		if ( _context.GroundEntity.IsValid() ) return;
+		if ( _context.GroundHandler.GroundEntity.IsValid() ) return;
 
 		Vector3 desiredVelocity = Controller.GetInputVelocity( true );
 		Vector3 desiredDirection = desiredVelocity.Normal;
 		float desiredSpeed = desiredVelocity.Length;
 
-		Controller.Accelerate( desiredDirection, desiredSpeed, AirControl, AirAcceleration );
+		Controller.Accelerate( desiredDirection, desiredSpeed, _airControl, _airAcceleration );
 		ThisPawn.Velocity += ThisPawn.BaseVelocity;
 		Controller.Move();
 		ThisPawn.Velocity -= ThisPawn.BaseVelocity;
-		ThisPawn.Velocity -= new Vector3( 0, 0, Gravity * 0.5f ) * Time.Delta;
+		ThisPawn.Velocity -= new Vector3( 0, 0, _gravity * 0.5f ) * Time.Delta;
 	}
 
 	public override void SimulateMechanic()
