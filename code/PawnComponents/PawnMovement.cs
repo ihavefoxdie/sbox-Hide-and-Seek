@@ -2,7 +2,9 @@ using HideAndSeek.PawnComponents.Modules;
 using Sandbox;
 using Sandbox.Citizen;
 
-public sealed class PawnMovement : Component
+namespace HideAndSeek;
+
+public class PawnMovement : Component
 {
 	#region General Properties
 	[Property] public float AirSpeed { get; set; } = 50f;
@@ -11,12 +13,13 @@ public sealed class PawnMovement : Component
 	[Property] public float SpritDelta { get; set; } = 100f;
 	[Property] public float CrouchDelta { get; set; } = -50f;
 	[Property] public float JumpForce { get; set; } = 300f;
-	[Property] public float Friction { get; set; } = 1f;
+	[Property] public float Friction { get; set; } = 3f;
 	[Property] public CharacterController PawnController { get { return _characterController; } }
 	[Property] public CitizenAnimationHelper AnimationHelper { get { return _animationHelper; } }
 	[Property] public GameObject Head { get { return _head; } }
 	[Property] public GameObject Model { get { return _model; } }
 	[Property] public bool Rotated { get; private set; }
+	//[Property] public GameObject GroundFromController { get { return PawnController.GroundObject; } }
 	#endregion
 
 	#region References
@@ -37,6 +40,7 @@ public sealed class PawnMovement : Component
 
 	protected override void OnAwake()
 	{
+		base.OnAwake();
 		var elements = GameObject.Children;
 		foreach ( var element in elements )
 		{
@@ -60,9 +64,10 @@ public sealed class PawnMovement : Component
 
 	protected override void OnUpdate()
 	{
+		base.OnUpdate();
 		PawnAnimator.AnimationUpdate( this );
 		IsRunning = Input.Down( "Run" );
-		if ( Input.Pressed( "Jump" ) )
+		if ( Input.Down( "Jump" ) )
 		{
 			Jump();
 		}
@@ -70,6 +75,7 @@ public sealed class PawnMovement : Component
 
 	protected override void OnFixedUpdate()
 	{
+		base.OnUpdate();
 		DuckCheck();
 		RotationCheck();
 		CalculateDesiredVelocity();
@@ -84,7 +90,7 @@ public sealed class PawnMovement : Component
 		{
 			PawnController.Height /= 1.5f;
 			IsDucking = true;
-			Head.Transform.LocalPosition = Vector3.Zero.WithZ(40f);
+			Head.Transform.LocalPosition = Head.Transform.LocalPosition.LerpTo( Vector3.Zero.WithZ( 40 ), Time.Delta * 100 );
 
 		}
 		if ( !Input.Down( "Duck" ) && IsDucking )
@@ -98,7 +104,7 @@ public sealed class PawnMovement : Component
 			{
 				PawnController.Height *= 1.5f;
 				IsDucking = false;
-				Head.Transform.LocalPosition = Vector3.Zero.WithZ( 60f);
+				Head.Transform.LocalPosition = Head.Transform.LocalPosition.LerpTo( Vector3.Zero.WithZ( 60 ), Time.Delta * 100 );
 			}
 		}
 	}
@@ -192,7 +198,7 @@ public sealed class PawnMovement : Component
 
 		if ( PawnController.Velocity.Length > 10f )
 		{
-			Model.Transform.Rotation = Rotation.Lerp( Model.Transform.Rotation, targetAngle, Time.Delta * 8f );
+			Model.Transform.Rotation = Rotation.Lerp( Model.Transform.Rotation, targetAngle, Time.Delta * 16f );
 		}
 		else if ( rotateDifference > 175f )
 		{
