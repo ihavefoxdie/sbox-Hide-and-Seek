@@ -8,7 +8,7 @@
   "HasAssets": true,
   "AssetsPath": "",
   "Resources": null,
-  "MenuResources": "*",
+  "MenuResources": "GameUI/MenuUI.razor.scss\nScenes/main_menu.scene",
   "HasCode": true,
   "CodePath": "/code/",
   "PackageReferences": [],
@@ -26,7 +26,7 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "CsProjName": "",
-    "StartupScene": "scenes/minimal.scene",
+    "StartupScene": "scenes/main_menu.scene",
     "ProjectTemplate": null,
     "ControlModes": {
       "Keyboard": true,
@@ -206,6 +206,8 @@
           "GroupName": "Other"
         }
       ]
-    }
+    },
+    "MapStartupScene": null,
+    "LaunchMode": "Normal"
   }
 }

@@ -5,7 +5,7 @@ namespace HideAndSeek.PawnComponents.Modules;
 
 public static class PawnAnimator
 {
-	private static Vector3 RotationTilt(PawnMovement pawn)
+	private static Vector3 RotationTilt(PawnComponent pawn)
 	{
 		if ( pawn.PawnController.Velocity.Dot( Vector3.Left * pawn.Model.Transform.Rotation ) > 20 && pawn.Rotated )
 		{
@@ -18,7 +18,7 @@ public static class PawnAnimator
 		return 1;
 	}
 
-	public static void AnimationUpdate( PawnMovement pawn )
+	public static void AnimationUpdate( PawnComponent pawn )
 	{
 		if ( pawn == null ) { return; }
 		if ( pawn.AnimationHelper is null )
@@ -32,7 +32,7 @@ public static class PawnAnimator
 		pawn.AnimationHelper.HoldType = CitizenAnimationHelper.HoldTypes.None;
 		pawn.AnimationHelper.IsGrounded = pawn.PawnController.IsOnGround;
 		pawn.AnimationHelper.MoveStyle = CitizenAnimationHelper.MoveStyles.Auto;
-		//pawn.AnimationHelper.FootShuffle = 0.000001f;
+		//pawn.AnimationHelper.FootShuffle = 1f;
 	}
 
 }

@@ -1,0 +1,104 @@
+{
+  "Id": "6b11468a-f7ea-4125-ac83-25295fd93956",
+  "GameObjects": [
+    {
+      "Id": "8a7b8c25-dfb1-474b-9fef-c9cdfa179eb0",
+      "Name": "Terrain",
+      "Position": "-10000,-10000,0",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "Terrain",
+          "ClipMapLodExtentTexels": 128,
+          "ClipMapLodLevels": 7,
+          "DebugView": "None",
+          "RenderType": "On",
+          "TerrainDataFile": "new terrain 2.terrain",
+          "TerrainMaterial": "materials/core/terrain.vmat"
+        },
+        {
+          "__type": "TerrainCollider",
+          "IsTrigger": false,
+          "Static": true,
+          "Surface": null
+        },
+        {
+          "__type": "MapInstance",
+          "MapName": "thieves.skyscraper",
+          "OnMapLoaded": null,
+          "OnMapUnloaded": null,
+          "UseMapFromLaunch": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Id": "2eb9d41c-2473-4871-a839-e5a99abe3874",
+      "Name": "Physical cube",
+      "Position": "40.64451,47.21223,276.3796",
+      "Rotation": "0.00000001819328,-0.00000000000000008235059,0.3052325,0.952278",
+      "Scale": "0.5632889,0.5632889,0.5632889",
+      "Tags": "solid",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "ModelRenderer",
+          "BodyGroups": 18446744073709551615,
+          "MaterialGroup": null,
+          "MaterialOverride": "materials/dev/dev_metal_rough20.vmat",
+          "Model": "models/dev/box.vmdl",
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "BoxCollider",
+          "Center": "0,0,0",
+          "IsTrigger": false,
+          "Scale": "50,50,50",
+          "Static": false,
+          "Surface": null
+        },
+        {
+          "__type": "Rigidbody",
+          "AngularDamping": 0,
+          "Gravity": true,
+          "LinearDamping": 0,
+          "Locking": {},
+          "RigidbodyFlags": 0,
+          "StartAsleep": false
+        }
+      ]
+    },
+    {
+      "Id": "d7836028-cdc4-43d8-b0da-cfa3812e2fdf",
+      "Name": "NetworkHelper",
+      "Position": "133.4186,-2.464047,202.3937",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "NetworkHelper",
+          "PlayerPrefab": {
+            "_type": "gameobject",
+            "go": "7cacfe8b-e84b-4e23-a19b-da7c6db3b793",
+            "prefab": "prefabs/pawn.prefab"
+          },
+          "SpawnPoints": [],
+          "StartServer": true
+        }
+      ]
+    }
+  ],
+  "SceneProperties": {
+    "FixedUpdateFrequency": 50,
+    "Lerping": true,
+    "MaxFixedUpdates": 5,
+    "NetworkFrequency": 60,
+    "ThreadedAnimation": true,
+    "TimeScale": 1,
+    "UseFixedUpdate": true
+  },
+  "Title": "GameScene",
+  "Description": "",
+  "LastSaved": "2024-01-31T14:19:18.8090107\u002B03:00",
+  "__references": []
+}

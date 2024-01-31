@@ -1,0 +1,47 @@
+PawnHUD {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	//background-color: ;
+	//justify-content: center;
+	align-items: center;
+	font-weight: bold;
+	border-radius: 20px;
+
+	.player-stats {
+		display: flex;
+		flex-direction: row;
+		align-self: flex-end;
+		align-items: center;
+
+		.health, .stamina {
+			min-width: 3vw;
+			margin: 3vh;
+			font-size: 5vh;
+			font-family: Inter;
+			color: #fff;
+		}
+
+/*		.stamina {
+			height: 4.5vh;
+			border-radius: 100%;
+			background-color: lime;
+			transition: opacity .2s;
+			//backdrop-filter: blur( 10px );
+			//mask-image: linear-gradient(#000, transparent);
+			//mask-size: 12px 12px, 100%;
+			//mask-position: bottom left, center;
+			//mask-repeat: no-repeat, repeat;
+		}*/
+/*
+		.stamina-background {
+			height: 4.5vh;
+			border-radius: 100%;
+			background-color: #0004;
+			transition: opacity .2s;
+			backdrop-filter: blur( 10px );
+		}*/
+	}
+}

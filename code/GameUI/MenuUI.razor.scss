@@ -1,0 +1,30 @@
+MenuUI {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	//background-color: #444;
+	//justify-content: center;
+	align-items: center;
+	font-weight: bold;
+	border-radius: 20px;
+
+	.menu {
+		display: flex;
+		flex-direction: column;
+		align-self: flex-end;
+		margin-left: 6vw;
+		margin-bottom: 10vh;
+		.play-button, .sample-button, .exit-button {
+			//padding: 1vh;
+			font-size: 5vh;
+			font-family: Calibri;
+			color: #fff;
+		}
+
+		.exit-button {
+			margin-top: 5vh;
+		}
+	}
+}

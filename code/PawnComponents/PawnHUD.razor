@@ -1,0 +1,25 @@
+@using Sandbox;
+@using Sandbox.UI;
+@namespace HideAndSeek
+@inherits PanelComponent
+
+<root>
+    <div class="player-stats">
+	    <div class="health">HP: @Health</div>
+        <div class="health">STMN: @Stamina</div>
+    </div>
+    <div class="items">
+    </div>
+</root>
+
+@code
+{
+    [Property] public PawnComponent Pawn { get; set; }
+    [Property, TextArea] public int Health { get { if (Pawn is null || Pawn.Stats is null) return 0; else return Pawn.Stats.Health; } }
+    [Property, TextArea] public int Stamina { get { if (Pawn is null || Pawn.Stats is null) return 0; else return Pawn.Stats.Stamina; } }
+
+	/// <summary>
+    /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+    /// </summary>
+    protected override int BuildHash() => System.HashCode.Combine(Health, Stamina);
+}

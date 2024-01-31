@@ -5,7 +5,7 @@ namespace HideAndSeek;
 public class CameraMovement : Component
 {
 	#region Properties
-	[Property] public PawnMovement Pawn { get; private set; }
+	[Property] public PawnComponent Pawn { get; private set; }
 	[Property]
 	[Range( 0f, 150f, 0.01f, true, true )]
 	public float Distance { get; set; } = 150f;
@@ -37,9 +37,9 @@ public class CameraMovement : Component
 	protected override void OnAwake()
 	{
 		base.OnAwake();
-		Pawn = Components.GetInParent<PawnMovement>();
-		Head = Pawn.Head;
-		Model = Pawn.Model;
+		Pawn ??= Components.GetInParent<PawnComponent>();
+		Head ??= Pawn.Head;
+		Model ??= Pawn.Model;
 		_cameraPosition = Head.Transform.Position;
 		_pawnRenderer = Model.Components.Get<ModelRenderer>();
 		_camera = Components.Get<CameraComponent>();

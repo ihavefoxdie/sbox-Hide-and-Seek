@@ -1,0 +1,25 @@
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+
+<root>
+    <div class="menu">
+	    <button class="play-button" onclick=@Testi>Play</button>
+        <button class="sample-button">Sample button</button>
+        <button class="exit-button">Exit</button>
+    </div>
+</root>
+
+@code
+{
+
+    [Property, TextArea] public string MyStringValue { get; set; } = "Hello World!";
+    public void Testi()
+    {
+        
+    }
+    /// <summary>
+	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+	/// </summary>
+	protected override int BuildHash() => System.HashCode.Combine( MyStringValue );
+}
