@@ -1,8 +1,9 @@
 {
   "RootObject": {
-    "Id": "cdd32e9f-a33f-42ba-a32e-1bfd272259ca",
+    "Id": "c6683ab0-7577-4a45-b0a2-42c828ad91ce",
     "Name": "pawn",
     "Tags": "pawn",
+    "Networked": true,
     "Enabled": true,
     "Components": [
       {
@@ -18,6 +19,8 @@
         "__type": "PawnStats",
         "CurrentStatus": "Alive",
         "Health": 100,
+        "IsTired": false,
+        "MaxStamina": 100,
         "Stamina": 100
       },
       {
@@ -25,7 +28,8 @@
         "AirFriction": 0.25,
         "AirSpeed": 50,
         "AnimationHelper": null,
-        "CrouchDelta": -50,
+        "CrouchDelta": -125,
+        "DesiredVelocity": "0,0,0",
         "Friction": 3,
         "Head": null,
         "IsDucking": false,
@@ -34,14 +38,20 @@
         "Model": null,
         "PawnController": null,
         "Rotated": false,
+        "ShowingTime": 25895.086,
         "SpritDelta": 100,
         "Stats": null,
-        "WalkingSpeed": 100
+        "WalkingSpeed": 200
+      },
+      {
+        "__type": "SprintComponent",
+        "Pawn": null,
+        "RegenCooldown": 1
       }
     ],
     "Children": [
       {
-        "Id": "5dda9e23-584b-4fdd-83c9-779696049256",
+        "Id": "84b9cf05-9ad3-469c-8bda-6a43ee1b09e2",
         "Name": "Camera",
         "Position": "-162.8474,0,82.43507",
         "Rotation": "0.0003275964,0.07877897,-0.004145464,0.9968834",
@@ -71,16 +81,16 @@
             "FloatyCamera": false,
             "Head": {
               "_type": "gameobject",
-              "go": "7e5124fe-b0db-401f-9ed8-75e9aacc1a2e"
+              "go": "00e66be8-8882-48b0-93ca-cba777b1b972"
             },
             "IsFirstPerson": false,
             "Model": {
               "_type": "gameobject",
-              "go": "9b8a7730-b600-45e9-97b0-371c63f935de"
+              "go": "40d3ed52-1def-4995-98e9-e4413acfdf66"
             },
             "Pawn": {
               "_type": "component",
-              "go": "cdd32e9f-a33f-42ba-a32e-1bfd272259ca",
+              "go": "c6683ab0-7577-4a45-b0a2-42c828ad91ce",
               "component_type": "PawnComponent"
             },
             "PawnRenderer": null,
@@ -89,14 +99,14 @@
         ]
       },
       {
-        "Id": "7e5124fe-b0db-401f-9ed8-75e9aacc1a2e",
+        "Id": "00e66be8-8882-48b0-93ca-cba777b1b972",
         "Name": "Head",
         "Position": "0,0,62.13865",
         "Tags": "pawnhead",
         "Enabled": true
       },
       {
-        "Id": "9b8a7730-b600-45e9-97b0-371c63f935de",
+        "Id": "40d3ed52-1def-4995-98e9-e4413acfdf66",
         "Name": "Model",
         "Tags": "pawnmodel",
         "Enabled": true,
@@ -117,7 +127,7 @@
             "BodyWeight": 1,
             "EyeSource": {
               "_type": "gameobject",
-              "go": "7e5124fe-b0db-401f-9ed8-75e9aacc1a2e"
+              "go": "00e66be8-8882-48b0-93ca-cba777b1b972"
             },
             "EyesWeight": 1,
             "HeadWeight": 1,
@@ -130,14 +140,14 @@
             "LookAtEnabled": true,
             "Target": {
               "_type": "component",
-              "go": "9b8a7730-b600-45e9-97b0-371c63f935de",
+              "go": "40d3ed52-1def-4995-98e9-e4413acfdf66",
               "component_type": "SkinnedModelRenderer"
             }
           }
         ]
       },
       {
-        "Id": "fda1fb3f-ce2a-4821-ae4c-6adce798b947",
+        "Id": "79516cf3-1d6d-4c31-a6f4-7ddf4ef772f1",
         "Name": "PlayerUI",
         "Position": "133.4186,-2.464042,35.31419",
         "Enabled": true,
@@ -154,7 +164,7 @@
             "Health": 0,
             "Pawn": {
               "_type": "component",
-              "go": "cdd32e9f-a33f-42ba-a32e-1bfd272259ca",
+              "go": "c6683ab0-7577-4a45-b0a2-42c828ad91ce",
               "component_type": "PawnComponent"
             },
             "Stamina": 0

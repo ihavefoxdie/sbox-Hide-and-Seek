@@ -4,8 +4,8 @@
     {
       "Id": "daf78a65-6743-4d3b-a14b-12c704cbfdd7",
       "Name": "Main Camera",
-      "Position": "-2197.408,2642.107,-12131.13",
-      "Rotation": "0.01551278,0.05613522,-0.2659109,0.9622368",
+      "Position": "-2190,2640,-12130",
+      "Rotation": "0.01489867,0.05560258,-0.2583899,0.9643241",
       "Enabled": true,
       "Components": [
         {
@@ -38,6 +38,9 @@
           "Opacity": 1,
           "Scale": 1,
           "ZIndex": 100
+        },
+        {
+          "__type": "MenuUI"
         }
       ]
     },
@@ -85,6 +88,6 @@
   },
   "Title": "MainMenu",
   "Description": "Game\u0027s main menu",
-  "LastSaved": "2024-01-31T18:47:20.579198\u002B03:00",
+  "LastSaved": "2024-01-31T20:15:48.9048162\u002B03:00",
   "__references": []
 }

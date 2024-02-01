@@ -1,0 +1,52 @@
+{
+  "Id": "e7d37f95-b9c7-46bc-8e7b-fa5a43ef0c05",
+  "GameObjects": [
+    {
+      "Id": "9b229fc8-9c3d-41ed-adb8-a83bb3f37762",
+      "Name": "community pool",
+      "Position": "0,0,100",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "MapInstance",
+          "MapName": "thieves.community_pool",
+          "OnMapLoaded": null,
+          "OnMapUnloaded": null,
+          "UseMapFromLaunch": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Id": "473e9260-2ae7-489c-9eca-68ff8ad7db32",
+      "Name": "NetworkComponent",
+      "Position": "-52.07862,207.9259,1028.127",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "NetworkHelper",
+          "PlayerPrefab": {
+            "_type": "gameobject",
+            "go": "52d427fa-0fdf-4aad-8dd3-c592794adcdd",
+            "prefab": "prefabs/pawn.prefab"
+          },
+          "SpawnPoints": [],
+          "StartServer": true
+        }
+      ]
+    }
+  ],
+  "SceneProperties": {
+    "FixedUpdateFrequency": 50,
+    "Lerping": true,
+    "MaxFixedUpdates": 5,
+    "NetworkFrequency": 30,
+    "ThreadedAnimation": true,
+    "TimeScale": 1,
+    "UseFixedUpdate": true
+  },
+  "Title": "playing_scene_zero",
+  "Description": "",
+  "LastSaved": "2024-02-01T23:00:55.1726492\u002B03:00",
+  "__references": []
+}

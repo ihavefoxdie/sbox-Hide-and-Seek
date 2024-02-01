@@ -12,9 +12,10 @@ public class PawnComponent : Component
 	#region General Properties
 	[Property] public float AirSpeed { get; set; } = 50f;
 	[Property] public float AirFriction { get; } = 0.25f;
-	[Property] public float WalkingSpeed { get; set; } = 100f;
+	[Property] public float BaseSpeed { get; set; } = 200;
+	[Property] public float WalkingDelta { get; set; } = -100f;
 	[Property] public float SpritDelta { get; set; } = 100f;
-	[Property] public float CrouchDelta { get; set; } = -50f;
+	[Property] public float CrouchDelta { get; set; } = -125f;
 	[Property] public float JumpForce { get; set; } = 300f;
 	[Property] public float Friction { get; set; } = 3f;
 	[Property] public CharacterController PawnController { get { return _characterController; } }
@@ -24,8 +25,10 @@ public class PawnComponent : Component
 	[Property] public GameObject Model { get { return _model; } }
 	[Property] public bool Rotated { get; private set; }
 	[Property] public bool IsDucking { get; private set; }
-	[Property] public bool IsRunning { get; private set; }
-	public Vector3 DesiredVelocity { get; private set; }
+	[Property] public bool IsSprinting { get; private set; }
+	[Property] public bool IsWalking { get; private set; }
+	[Property] public Vector3 DesiredVelocity { get; set; }
+	[Property] public float ShowingTime { get { return Sandbox.Time.Now; } }
 	#endregion
 
 	#region References
@@ -47,7 +50,7 @@ public class PawnComponent : Component
 	{
 		base.OnAwake();
 
-		_spawnPoints = Scene.GetAllComponents<SpawnPoint>().ToList<SpawnPoint>();
+		_spawnPoints = Scene.GetAllComponents<SpawnPoint>().ToList();
 		var elements = this.GameObject.Children;
 		foreach ( var element in elements )
 		{
@@ -62,11 +65,12 @@ public class PawnComponent : Component
 				default: continue;
 			}
 		}
-		
+
 		_stats = Components.Get<PawnStats>();
 		_characterController = Components.Get<CharacterController>();
 		_animationHelper = Components.GetInChildren<CitizenAnimationHelper>();
 		_lastRotation = Head.Transform.Rotation;
+		Spawn();
 	}
 
 	protected override void OnUpdate()
@@ -74,7 +78,8 @@ public class PawnComponent : Component
 		base.OnUpdate();
 
 		PawnAnimator.AnimationUpdate( this );
-		IsRunning = Input.Down( "Run" );
+		IsSprinting = Input.Down( "Run" );
+		IsWalking = Input.Down( "Walk" );
 		if ( Input.Pressed( "Jump" ) )
 		{
 			Jump();
@@ -93,7 +98,7 @@ public class PawnComponent : Component
 	}
 
 	#region Methods
-	[ConCmd("respawn")]
+	[ConCmd( "respawn" )]
 	private void Spawn()
 	{
 		if ( _spawnPoints is null || _spawnPoints.Count < 1 )
@@ -160,11 +165,13 @@ public class PawnComponent : Component
 			DesiredVelocity = DesiredVelocity.Normal;
 
 		if ( IsDucking )
-			DesiredVelocity *= WalkingSpeed + CrouchDelta;
-		else if ( IsRunning )
-			DesiredVelocity *= WalkingSpeed + SpritDelta;
+			DesiredVelocity *= BaseSpeed + CrouchDelta;
+		else if ( IsSprinting && Stats.Stamina > 0 )
+			DesiredVelocity *= BaseSpeed + SpritDelta;
+		else if ( IsWalking )
+			DesiredVelocity *= BaseSpeed + WalkingDelta;
 		else
-			DesiredVelocity *= WalkingSpeed;
+			DesiredVelocity *= BaseSpeed;
 	}
 
 	private void Move()
@@ -216,12 +223,17 @@ public class PawnComponent : Component
 
 		if ( PawnController.Velocity.Length > 10f )
 		{
-			Model.Transform.Rotation = Rotation.Lerp( Model.Transform.Rotation, targetAngle, Time.Delta * 2f );
+			Model.Transform.Rotation = Rotation.Lerp( Model.Transform.Rotation, targetAngle, Time.Delta * 4f );
 		}
-		else if ( rotateDifference > 175f )
+		/*else if ( rotateDifference > 100f )
 		{
-			Model.Transform.Rotation = Rotation.Lerp( Model.Transform.Rotation, targetAngle, Time.Delta * 1f );
+			Model.Transform.Rotation = Rotation.Lerp( Model.Transform.Rotation, targetAngle, Time.Delta * 1f);
+			AnimationHelper.WithVelocity( 5f );
 		}
+		else
+		{
+			AnimationHelper.WithVelocity( 0f );
+		}*/
 	}
 	#endregion
 }

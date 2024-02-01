@@ -7,15 +7,28 @@ MenuUI {
 	//background-color: #444;
 	//justify-content: center;
 	align-items: center;
-	font-weight: bold;
+	//font-weight: bold;
 	border-radius: 20px;
 
 	.menu {
+		.title {
+			font-size: 10vh;
+			background-color: dodgerblue;
+			border-radius: 10%;
+			padding: 1vh;
+			padding-right: 10vh;
+			font-family: Inter;
+			margin-bottom: 5vh;
+			font-weight: bold;
+		}
+
+		pointer-events: all;
 		display: flex;
 		flex-direction: column;
 		align-self: flex-end;
 		margin-left: 6vw;
 		margin-bottom: 10vh;
+
 		.play-button, .sample-button, .exit-button {
 			//padding: 1vh;
 			font-size: 5vh;

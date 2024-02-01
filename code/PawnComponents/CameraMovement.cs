@@ -9,7 +9,7 @@ public class CameraMovement : Component
 	[Property]
 	[Range( 0f, 150f, 0.01f, true, true )]
 	public float Distance { get; set; } = 150f;
-	[Property] public GameObject Head { get; private set; }
+	[Property][Sync] public GameObject Head { get; private set; }
 	[Property] public GameObject Model { get; private set; }
 	[Property] public ModelRenderer PawnRenderer { get { return _pawnRenderer; } }
 	[Property] public CameraComponent Camera { get { return _camera; } }
@@ -104,7 +104,7 @@ public class CameraMovement : Component
 		{
 			PawnRenderer.RenderType = ModelRenderer.ShadowRenderType.ShadowsOnly;
 		}
-
+		//TODO: fix to avoid pawn dissappearing on for everyone on server
 		if ( Vector3.DistanceBetween( _cameraPosition, Model.Transform.Position ) < 20 || Vector3.DistanceBetween( _cameraPosition, Head.Transform.Position ) < 20 )
 		{
 			PawnRenderer.RenderType = ModelRenderer.ShadowRenderType.ShadowsOnly;

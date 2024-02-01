@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using Sandbox.Citizen;
+using System;
 
 namespace HideAndSeek.PawnComponents.Modules;
 
@@ -24,15 +25,22 @@ public static class PawnAnimator
 		if ( pawn.AnimationHelper is null )
 		{ return; }
 
-		pawn.AnimationHelper.WithWishVelocity( pawn.DesiredVelocity + Vector3.Zero.LerpTo(RotationTilt(pawn), Time.Delta * 3));
+		pawn.AnimationHelper.WithWishVelocity( pawn.DesiredVelocity + Vector3.Zero.LerpTo(RotationTilt(pawn), Time.Delta * 2));
 		pawn.AnimationHelper.WithVelocity( pawn.PawnController.Velocity);
-		pawn.AnimationHelper.WithLook( pawn.Head.Transform.Rotation.Forward, 1f, 0.8f, 1f );
+		Vector3 lookTowards = pawn.Head.Transform.Rotation.Forward;
+/*		float headWeight;
+		if ( Math.Abs( pawn.Head.Transform.Rotation.Angle().NormalizeDegrees() - pawn.Model.Transform.Rotation.Angle().NormalizeDegrees() ) > 60f )
+			headWeight = 0f;
+		else
+			headWeight = 0.5f;*/
+		
+		pawn.AnimationHelper.WithLook( lookTowards, 1f, 0f, 1f );
 		pawn.AnimationHelper.DuckLevel = pawn.IsDucking ? 1 : 0;
 		pawn.AnimationHelper.AimAngle = pawn.Head.Transform.Rotation;
 		pawn.AnimationHelper.HoldType = CitizenAnimationHelper.HoldTypes.None;
 		pawn.AnimationHelper.IsGrounded = pawn.PawnController.IsOnGround;
 		pawn.AnimationHelper.MoveStyle = CitizenAnimationHelper.MoveStyles.Auto;
-		//pawn.AnimationHelper.FootShuffle = 1f;
+		//pawn.AnimationHelper.FootShuffle = 100f;
 	}
 
 }

@@ -16,7 +16,7 @@
 {
     [Property] public PawnComponent Pawn { get; set; }
     [Property, TextArea] public int Health { get { if (Pawn is null || Pawn.Stats is null) return 0; else return Pawn.Stats.Health; } }
-    [Property, TextArea] public int Stamina { get { if (Pawn is null || Pawn.Stats is null) return 0; else return Pawn.Stats.Stamina; } }
+    [Property, TextArea] public int Stamina { get { if (Pawn is null || Pawn.Stats is null) return 0; else return (int)Pawn.Stats.Stamina; } }
 
 	/// <summary>
     /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
