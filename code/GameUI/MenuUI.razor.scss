@@ -36,6 +36,11 @@ MenuUI {
 			color: #fff;
 		}
 
+		.play-button:hover, .exit-button:hover {
+			font-size: 5vh;
+			font-weight: 1000;
+		}
+
 		.exit-button {
 			margin-top: 5vh;
 		}

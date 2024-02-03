@@ -7,7 +7,7 @@
     <div class="player-stats">
 	    <div class="health">@Health</div>
         <div class="stamina-background">
-            <div class="stamina" style="width: @(Stamina/5)vh; background-color: @Color"></div>
+            <div class="stamina" style="width: @(StaminaPercentage/5)vh; background-color: @Color"></div>
         </div>
     </div>
     <div class="items">
@@ -22,15 +22,16 @@
     {
         get
         {
-            if (Stamina < Pawn.Stats.MaxStamina * 0.20f ) return "red";
+            if (Stamina < Pawn.Stats.MaxStamina * 0.2f ) return "red";
             return "lime";
         }
     }
     [Property, TextArea] public int Health { get { if (Pawn is null || Pawn.Stats is null) return 0; else return Pawn.Stats.Health; } }
     [Property, TextArea] public float Stamina { get { if (Pawn is null || Pawn.Stats is null) return 0; else return Pawn.Stats.Stamina; } }
+    [Property, TextArea] public double StaminaPercentage { get { return Stamina / (Pawn.Stats.MaxStamina / 100); } }
 
 	/// <summary>
     /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
     /// </summary>
-    protected override int BuildHash() => System.HashCode.Combine(Health, Stamina);
+    protected override int BuildHash() => System.HashCode.Combine(Health, Stamina, StaminaPercentage);
 }

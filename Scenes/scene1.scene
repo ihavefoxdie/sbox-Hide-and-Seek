@@ -79,7 +79,6 @@
           "__type": "NetworkHelper",
           "PlayerPrefab": {
             "_type": "gameobject",
-            "go": "7cacfe8b-e84b-4e23-a19b-da7c6db3b793",
             "prefab": "prefabs/pawn.prefab"
           },
           "SpawnPoints": [],
@@ -95,10 +94,22 @@
     "NetworkFrequency": 60,
     "ThreadedAnimation": true,
     "TimeScale": 1,
-    "UseFixedUpdate": true
+    "UseFixedUpdate": true,
+    "NavMesh": {
+      "Enabled": false,
+      "IncludeStaticBodies": true,
+      "IncludeKeyframedBodies": true,
+      "EditorAutoUpdate": true,
+      "AgentHeight": 64,
+      "AgentRadius": 16,
+      "AgentStepSize": 18,
+      "AgentMaxSlope": 40,
+      "ExcludedBodies": "",
+      "IncludedBodies": ""
+    }
   },
   "Title": "GameScene",
   "Description": "",
-  "LastSaved": "2024-01-31T14:19:18.8090107\u002B03:00",
+  "LastSaved": "2024-02-04T02:05:32.4472264\u002B03:00",
   "__references": []
 }

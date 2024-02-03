@@ -1,4 +1,5 @@
 using Sandbox;
+using System;
 
 namespace HideAndSeek;
 
@@ -7,12 +8,15 @@ public class FootstepsComponent : Component
 	#region Properties
 	[Property] public FootComponent LeftFoot { get; set; }
 	[Property] public FootComponent RightFoot { get; set; }
+	[Property] public PawnComponent Pawn { get; set; }
+	private Surface CurrentSurface { get { if ( LeftFoot.CurrentSurface is null ) return RightFoot.CurrentSurface; else return LeftFoot.CurrentSurface; } }
 	#endregion
 
 	#region Variables
 	private bool _leftStepped;
 	private bool _rightStepped;
 	#endregion
+
 
 	protected override void OnUpdate()
 	{
@@ -23,9 +27,44 @@ public class FootstepsComponent : Component
 	protected override void OnAwake()
 	{
 		base.OnAwake();
+		Pawn.JumpAction += JumpSound;
+		Pawn.LandedAction += LandedSound;
 	}
 
 	#region Methods
+	private void JumpSound()
+	{
+		var sound = "sounds/footsteps/footstep-concrete.sound";
+		if ( CurrentSurface != null )
+		{
+			sound = CurrentSurface.Sounds.FootLaunch;
+			if ( sound == "" || sound is null )
+			{
+				sound = "sounds/footsteps/footstep-concrete.sound";
+			}
+		}
+
+		Sound.Play( sound, LeftFoot.FootObject.Transform.Position ).Volume = System.Math.Max( 0.5f * Pawn.PawnController.Velocity.Length / Pawn.BaseSpeed, 0.2f );
+		Sound.Play( sound, RightFoot.FootObject.Transform.Position ).Volume = System.Math.Max( 0.5f * Pawn.PawnController.Velocity.Length / Pawn.BaseSpeed, 0.2f );
+	}
+
+	private void LandedSound()
+	{
+		var sound = "sounds/footsteps/footstep-concrete.sound";
+		if ( CurrentSurface != null )
+		{
+			sound = CurrentSurface.Sounds.FootLaunch;
+			if ( sound == "" || sound is null )
+			{
+				sound = "sounds/footsteps/footstep-concrete.sound";
+			}
+		}
+
+		Sound.Play( sound, LeftFoot.FootObject.Transform.Position ).Volume = System.Math.Max(0.5f * Pawn.PawnController.Velocity.Length / Pawn.BaseSpeed, 0.2f);
+		Sound.Play( sound, RightFoot.FootObject.Transform.Position ).Volume = System.Math.Max( 0.5f * Pawn.PawnController.Velocity.Length / Pawn.BaseSpeed, 0.2f );
+
+	}
+
 	private void PlaySound( FootComponent foot )
 	{
 		bool stepped = true;
@@ -45,12 +84,13 @@ public class FootstepsComponent : Component
 			if ( foot.CurrentSurface is null )
 				return;
 
+
 			var sound = foot.CurrentSurface.Sounds.FootRight;
 			if ( foot.Foot == FootLR.Left ) sound = foot.CurrentSurface.Sounds.FootLeft;
 			if ( sound == "" || sound is null )
-				foot.CurrentSurface.PlayCollisionSound( foot.FootObject.Transform.Position );
-			else
-				Sound.Play( sound, foot.FootObject.Transform.Position ).Volume = 0.5f;
+				sound = "sounds/footsteps/footstep-concrete.sound";
+
+			Sound.Play( sound, foot.FootObject.Transform.Position ).Volume = System.Math.Max(1f * Pawn.DesiredVelocity.Length / Pawn.BaseSpeed, 0.2f);
 
 
 			switch ( foot.Foot )
@@ -63,7 +103,7 @@ public class FootstepsComponent : Component
 					return;
 			}
 		}
-		if( foot.IsLifted )
+		if ( foot.IsLifted )
 		{
 			switch ( foot.Foot )
 			{

@@ -28,19 +28,12 @@ public static class PawnAnimator
 		pawn.AnimationHelper.WithWishVelocity( pawn.DesiredVelocity + Vector3.Zero.LerpTo(RotationTilt(pawn), Time.Delta * 2));
 		pawn.AnimationHelper.WithVelocity( pawn.PawnController.Velocity);
 		Vector3 lookTowards = pawn.Head.Transform.Rotation.Forward;
-/*		float headWeight;
-		if ( Math.Abs( pawn.Head.Transform.Rotation.Angle().NormalizeDegrees() - pawn.Model.Transform.Rotation.Angle().NormalizeDegrees() ) > 60f )
-			headWeight = 0f;
-		else
-			headWeight = 0.5f;*/
 		pawn.AnimationHelper.WithLook( lookTowards, 0.1f, 0.0f, 0.1f );
 		pawn.AnimationHelper.DuckLevel = pawn.IsDucking ? 1 : 0;
 		pawn.AnimationHelper.AimAngle = pawn.Head.Transform.Rotation;
 		pawn.AnimationHelper.HoldType = CitizenAnimationHelper.HoldTypes.None;
 		pawn.AnimationHelper.IsGrounded = pawn.PawnController.IsOnGround;
-		pawn.AnimationHelper.MoveStyle = CitizenAnimationHelper.MoveStyles.Auto;
-		//pawn.AnimationHelper.FootShuffle = 100f;
-		
+		pawn.AnimationHelper.MoveStyle = CitizenAnimationHelper.MoveStyles.Auto;		
 	}
 
 }

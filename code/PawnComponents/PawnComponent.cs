@@ -18,6 +18,10 @@ public class PawnComponent : Component
 	[Property] public float CrouchDelta { get; set; } = -125f;
 	[Property] public float JumpForce { get; set; } = 300f;
 	[Property] public float Friction { get; set; } = 3f;
+	[Property] public Action JumpAction { get; set; }
+	[Property] public Action LandedAction { get; set; }
+	[Property] public Action CrouchAction { get; set; }
+	[Property] public Action SprintAction { get; set; }
 	[Property] public CharacterController PawnController { get { return _characterController; } }
 	[Property] public CitizenAnimationHelper AnimationHelper { get { return _animationHelper; } }
 	[Property] public PawnStats Stats { get { return _stats; } }
@@ -28,7 +32,6 @@ public class PawnComponent : Component
 	[Property] public bool IsSprinting { get; private set; }
 	[Property] public bool IsWalking { get; private set; }
 	[Property] public Vector3 DesiredVelocity { get; set; }
-	[Property] public float ShowingTime { get { return Sandbox.Time.Now; } }
 	#endregion
 
 	#region References
@@ -42,6 +45,7 @@ public class PawnComponent : Component
 	#region Member Variables
 	private Rotation _lastRotation;
 	private List<SpawnPoint> _spawnPoints;
+	private bool _jumped;
 	#endregion
 
 
@@ -77,15 +81,11 @@ public class PawnComponent : Component
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
-
+		
 		PawnAnimator.AnimationUpdate( this );
 		IsSprinting = Input.Down( "Run" );
 		IsWalking = Input.Down( "Walk" );
-		if ( Input.Pressed( "Jump" ) )
-		{
-			Jump();
-		}
-		//PawnController.GroundCollider.Surface.PlayCollisionSound( Model.Transform.Position, 200f );
+		if ( Input.Pressed( "Jump" ) )	Jump();
 	}
 
 	protected override void OnFixedUpdate()
@@ -116,9 +116,8 @@ public class PawnComponent : Component
 			PawnController.Height /= 1.5f;
 			IsDucking = true;
 			Head.Transform.LocalPosition = Head.Transform.LocalPosition.LerpTo( Vector3.Zero.WithZ( 40 ), Time.Delta * 100 );
-
 		}
-		if ( !Input.Down( "Duck" ) && IsDucking )
+		else if ( !Input.Down( "Duck" ) && IsDucking )
 		{
 			SceneTraceResult collision = Scene.Trace.Ray( Head.Transform.Position, Head.Transform.Position + Vector3.Up * PawnController.Height * 0.4f )
 				.WithoutTags( "pawn", "trigger" )
@@ -182,6 +181,11 @@ public class PawnComponent : Component
 
 		if ( PawnController.IsOnGround )
 		{
+			if(_jumped)
+			{
+				_jumped = false;
+				LandedAction?.Invoke();
+			}
 			PawnController.Velocity = PawnController.Velocity.WithZ( 0 );
 			PawnController.Accelerate( DesiredVelocity );
 			PawnController.ApplyFriction( Friction );
@@ -210,6 +214,8 @@ public class PawnComponent : Component
 		{
 			return;
 		}
+		_jumped = true;
+		JumpAction?.Invoke();
 		PawnController.Punch( Vector3.Up * JumpForce );
 		_animationHelper?.TriggerJump();
 	}
@@ -220,21 +226,11 @@ public class PawnComponent : Component
 		{ return; }
 
 		Angles targetAngle = new( 0, Head.Transform.Rotation.Yaw(), 0f );
-		float rotateDifference = Model.Transform.Rotation.Distance( targetAngle );
 
 		if ( PawnController.Velocity.Length > 10f )
 		{
 			Model.Transform.Rotation = Rotation.Lerp( Model.Transform.Rotation, targetAngle, Time.Delta * 4f );
 		}
-		/*else if ( rotateDifference > 100f )
-		{
-			Model.Transform.Rotation = Rotation.Lerp( Model.Transform.Rotation, targetAngle, Time.Delta * 1f);
-			AnimationHelper.WithVelocity( 5f );
-		}
-		else
-		{
-			AnimationHelper.WithVelocity( 0f );
-		}*/
 	}
 	#endregion
 }
