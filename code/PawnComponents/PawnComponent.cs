@@ -69,6 +69,7 @@ public class PawnComponent : Component
 		_stats = Components.Get<PawnStats>();
 		_characterController = Components.Get<CharacterController>();
 		_animationHelper = Components.GetInChildren<CitizenAnimationHelper>();
+		
 		_lastRotation = Head.Transform.Rotation;
 		Spawn();
 	}
@@ -84,6 +85,7 @@ public class PawnComponent : Component
 		{
 			Jump();
 		}
+		//PawnController.GroundCollider.Surface.PlayCollisionSound( Model.Transform.Position, 200f );
 	}
 
 	protected override void OnFixedUpdate()
@@ -192,7 +194,6 @@ public class PawnComponent : Component
 		}
 
 		PawnController.Move();
-
 		if ( !PawnController.IsOnGround )
 		{
 			PawnController.Velocity += gravity * Time.Delta * 0.5f;

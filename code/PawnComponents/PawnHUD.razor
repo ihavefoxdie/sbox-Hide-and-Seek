@@ -5,8 +5,10 @@
 
 <root>
     <div class="player-stats">
-	    <div class="health">HP: @Health</div>
-        <div class="health">STMN: @Stamina</div>
+	    <div class="health">@Health</div>
+        <div class="stamina-background">
+            <div class="stamina" style="width: @(Stamina/5)vh; background-color: @Color"></div>
+        </div>
     </div>
     <div class="items">
     </div>
@@ -15,8 +17,17 @@
 @code
 {
     [Property] public PawnComponent Pawn { get; set; }
+    //private int StaminaPerVW
+    private string Color
+    {
+        get
+        {
+            if (Stamina < Pawn.Stats.MaxStamina * 0.20f ) return "red";
+            return "lime";
+        }
+    }
     [Property, TextArea] public int Health { get { if (Pawn is null || Pawn.Stats is null) return 0; else return Pawn.Stats.Health; } }
-    [Property, TextArea] public int Stamina { get { if (Pawn is null || Pawn.Stats is null) return 0; else return (int)Pawn.Stats.Stamina; } }
+    [Property, TextArea] public float Stamina { get { if (Pawn is null || Pawn.Stats is null) return 0; else return Pawn.Stats.Stamina; } }
 
 	/// <summary>
     /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt

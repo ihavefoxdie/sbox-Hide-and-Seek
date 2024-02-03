@@ -33,14 +33,14 @@ public static class PawnAnimator
 			headWeight = 0f;
 		else
 			headWeight = 0.5f;*/
-		
-		pawn.AnimationHelper.WithLook( lookTowards, 1f, 0f, 1f );
+		pawn.AnimationHelper.WithLook( lookTowards, 0.1f, 0.0f, 0.1f );
 		pawn.AnimationHelper.DuckLevel = pawn.IsDucking ? 1 : 0;
 		pawn.AnimationHelper.AimAngle = pawn.Head.Transform.Rotation;
 		pawn.AnimationHelper.HoldType = CitizenAnimationHelper.HoldTypes.None;
 		pawn.AnimationHelper.IsGrounded = pawn.PawnController.IsOnGround;
 		pawn.AnimationHelper.MoveStyle = CitizenAnimationHelper.MoveStyles.Auto;
 		//pawn.AnimationHelper.FootShuffle = 100f;
+		
 	}
 
 }
