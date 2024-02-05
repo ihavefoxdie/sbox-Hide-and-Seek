@@ -10,23 +10,28 @@ namespace HideAndSeek;
 public class PawnComponent : Component
 {
 	#region General Properties
-	[Property] public float AirSpeed { get; set; } = 50f;
-	[Property] public float AirFriction { get; } = 0.25f;
-	[Property] public float BaseSpeed { get; set; } = 200;
-	[Property] public float WalkingDelta { get; set; } = -100f;
-	[Property] public float SpritDelta { get; set; } = 100f;
-	[Property] public float CrouchDelta { get; set; } = -125f;
-	[Property] public float JumpForce { get; set; } = 300f;
-	[Property] public float Friction { get; set; } = 3f;
-	[Property] public Action JumpAction { get; set; }
-	[Property] public Action LandedAction { get; set; }
-	[Property] public Action CrouchAction { get; set; }
-	[Property] public Action SprintAction { get; set; }
-	[Property] public CharacterController PawnController { get { return _characterController; } }
-	[Property] public CitizenAnimationHelper AnimationHelper { get { return _animationHelper; } }
-	[Property] public PawnStats Stats { get { return _stats; } }
-	[Property] public GameObject Head { get { return _head; } }
-	[Property] public GameObject Model { get { return _model; } }
+	[Property, Category( "Measurements" )] public float AirSpeed { get; set; } = 50f;
+	[Property, Category( "Measurements" )] public float AirFriction { get; } = 0.25f;
+	[Property, Category( "Measurements" )] public float BaseSpeed { get; set; } = 200;
+	[Property, Category( "Measurements" )] public float WalkingDelta { get; set; } = -100f;
+	[Property, Category( "Measurements" )] public float SpritDelta { get; set; } = 100f;
+	[Property, Category( "Measurements" )] public float DuckDelta { get; set; } = -125f;
+	[Property, Category( "Measurements" )] public int DuckHeightDelta { get { return -(int)(_initPawnHeight / 2f); } }
+	[Property, Category( "Measurements" )] public float InitHeight { get { return _initPawnHeight; } }
+	[Property, Category( "Measurements" )] public float JumpForce { get; set; } = 300f;
+	[Property, Category( "Measurements" )] public float Friction { get; set; } = 3f;
+
+	public Action JumpAction { get; set; }
+	public Action LandedAction { get; set; }
+	public Action CrouchAction { get; set; }
+	public Action SprintAction { get; set; }
+
+	[Property, Category( "Components" )] public CharacterController PawnController { get { return _characterController; } }
+	[Property, Category( "Components" )] public CitizenAnimationHelper AnimationHelper { get { return _animationHelper; } }
+	[Property, Category( "Components" )] public PawnStats Stats { get { return _stats; } }
+	[Property, Category( "Components" )] public GameObject Head { get { return _head; } }
+	[Property, Category( "Components" )] public GameObject Model { get { return _model; } }
+
 	[Property] public bool Rotated { get; private set; }
 	[Property] public bool IsDucking { get; private set; }
 	[Property] public bool IsSprinting { get; private set; }
@@ -46,13 +51,14 @@ public class PawnComponent : Component
 	private Rotation _lastRotation;
 	private List<SpawnPoint> _spawnPoints;
 	private bool _jumped;
+	private float _initPawnHeight;
 	#endregion
-
 
 
 	protected override void OnAwake()
 	{
 		base.OnAwake();
+
 
 		_spawnPoints = Scene.GetAllComponents<SpawnPoint>().ToList();
 		var elements = this.GameObject.Children;
@@ -73,19 +79,26 @@ public class PawnComponent : Component
 		_stats = Components.Get<PawnStats>();
 		_characterController = Components.Get<CharacterController>();
 		_animationHelper = Components.GetInChildren<CitizenAnimationHelper>();
-		
+
+		_initPawnHeight = PawnController.Height;
+		var pawnModel = Model.Components.Get<SkinnedModelRenderer>();
+		var clothing = ClothingContainer.CreateFromLocalUser();
+		clothing.Apply( pawnModel );
 		_lastRotation = Head.Transform.Rotation;
+
+		JumpAction += Jump;
+
 		Spawn();
 	}
 
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
-		
+		Head.Transform.LocalPosition = Head.Transform.LocalPosition.WithZ((PawnController.Height - 10).Clamp(40, InitHeight));
 		PawnAnimator.AnimationUpdate( this );
 		IsSprinting = Input.Down( "Run" );
 		IsWalking = Input.Down( "Walk" );
-		if ( Input.Pressed( "Jump" ) )	Jump();
+		if ( Input.Pressed( "Jump" ) ) JumpAction?.Invoke();
 	}
 
 	protected override void OnFixedUpdate()
@@ -111,25 +124,37 @@ public class PawnComponent : Component
 
 	private void DuckCheck()
 	{
-		if ( Input.Down( "Duck" ) && !IsDucking )
+		float delta = _initPawnHeight - PawnController.Height;
+
+		if ( Input.Down( "Duck" ))
 		{
-			PawnController.Height /= 1.5f;
+			PawnController.Height = PawnController.Height.LerpTo(_initPawnHeight + DuckHeightDelta, 8 * Time.Delta);
 			IsDucking = true;
-			Head.Transform.LocalPosition = Head.Transform.LocalPosition.LerpTo( Vector3.Zero.WithZ( 40 ), Time.Delta * 100 );
 		}
 		else if ( !Input.Down( "Duck" ) && IsDucking )
 		{
 			SceneTraceResult collision = Scene.Trace.Ray( Head.Transform.Position, Head.Transform.Position + Vector3.Up * PawnController.Height * 0.4f )
 				.WithoutTags( "pawn", "trigger" )
-				.Radius( 20f )
+				.Radius( 5f )
 				.Run();
 
-			if ( !collision.Hit )
+			if ( !collision.Hit && PawnController.IsOnGround )
 			{
-				PawnController.Height *= 1.5f;
-				IsDucking = false;
-				Head.Transform.LocalPosition = Head.Transform.LocalPosition.LerpTo( Vector3.Zero.WithZ( 60 ), Time.Delta * 100 );
+				//what a fucking hack!
+				PawnController.Height = PawnController.Height.LerpTo( _initPawnHeight, 8 * Time.Delta);
+				if ( PawnController.Height.CeilToInt() < _initPawnHeight.CeilToInt() )
+					IsDucking = true;
+				else
+				{
+					PawnController.Height = 71;
+					IsDucking = false;
+				}
 			}
+		}
+		delta -= _initPawnHeight - PawnController.Height;
+		if ( IsDucking && !PawnController.IsOnGround )
+		{
+			PawnController.Transform.Position += new Vector3(0, 0, delta * -1);
 		}
 	}
 
@@ -166,7 +191,7 @@ public class PawnComponent : Component
 			DesiredVelocity = DesiredVelocity.Normal;
 
 		if ( IsDucking )
-			DesiredVelocity *= BaseSpeed + CrouchDelta;
+			DesiredVelocity *= BaseSpeed + DuckDelta;
 		else if ( IsSprinting && Stats.Stamina > 0 )
 			DesiredVelocity *= BaseSpeed + SpritDelta;
 		else if ( IsWalking )
@@ -181,7 +206,7 @@ public class PawnComponent : Component
 
 		if ( PawnController.IsOnGround )
 		{
-			if(_jumped)
+			if ( _jumped )
 			{
 				_jumped = false;
 				LandedAction?.Invoke();
@@ -215,7 +240,6 @@ public class PawnComponent : Component
 			return;
 		}
 		_jumped = true;
-		JumpAction?.Invoke();
 		PawnController.Punch( Vector3.Up * JumpForce );
 		_animationHelper?.TriggerJump();
 	}

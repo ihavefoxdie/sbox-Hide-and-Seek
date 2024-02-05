@@ -26,6 +26,11 @@ public class BoneComponent : Component
 		MoveFoot();
 	}
 
+	protected override void OnFixedUpdate()
+	{
+		base.OnFixedUpdate();
+	}
+
 	#region Methods
 	private void MoveFoot()
 	{

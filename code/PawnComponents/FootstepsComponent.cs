@@ -20,6 +20,13 @@ public class FootstepsComponent : Component
 
 	protected override void OnUpdate()
 	{
+
+	}
+
+	protected override void OnFixedUpdate()
+	{
+		base.OnFixedUpdate();
+
 		PlaySound( LeftFoot );
 		PlaySound( RightFoot );
 	}
@@ -32,6 +39,7 @@ public class FootstepsComponent : Component
 	}
 
 	#region Methods
+	[Broadcast]
 	private void JumpSound()
 	{
 		var sound = "sounds/footsteps/footstep-concrete.sound";
@@ -48,6 +56,7 @@ public class FootstepsComponent : Component
 		Sound.Play( sound, RightFoot.FootObject.Transform.Position ).Volume = System.Math.Max( 0.5f * Pawn.PawnController.Velocity.Length / Pawn.BaseSpeed, 0.2f );
 	}
 
+	[Broadcast]
 	private void LandedSound()
 	{
 		var sound = "sounds/footsteps/footstep-concrete.sound";
@@ -64,6 +73,7 @@ public class FootstepsComponent : Component
 		Sound.Play( sound, RightFoot.FootObject.Transform.Position ).Volume = System.Math.Max( 0.5f * Pawn.PawnController.Velocity.Length / Pawn.BaseSpeed, 0.2f );
 
 	}
+
 
 	private void PlaySound( FootComponent foot )
 	{
@@ -89,7 +99,6 @@ public class FootstepsComponent : Component
 			if ( foot.Foot == FootLR.Left ) sound = foot.CurrentSurface.Sounds.FootLeft;
 			if ( sound == "" || sound is null )
 				sound = "sounds/footsteps/footstep-concrete.sound";
-
 			Sound.Play( sound, foot.FootObject.Transform.Position ).Volume = System.Math.Max(1f * Pawn.DesiredVelocity.Length / Pawn.BaseSpeed, 0.2f);
 
 

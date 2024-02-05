@@ -30,7 +30,6 @@ public class FootComponent : Component
 		base.OnFixedUpdate();
 
 		CheckLifted();
-
 	}
 
 	#region Methods

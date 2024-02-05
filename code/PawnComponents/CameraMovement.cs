@@ -82,8 +82,8 @@ public class CameraMovement : Component
 			else
 			{
 				_cameraPosition = Head.Transform.Position;
-				//Distance *= 10;
 			}
+
 			Vector3 forward = Head.Transform.Rotation.Forward;
 			SceneTraceResult cameraTrace = Scene.Trace.Ray( _cameraPosition, _cameraPosition - (forward * Distance) )
 				.WithoutTags( "pawn", "trigger" )

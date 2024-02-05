@@ -25,11 +25,11 @@ public static class PawnAnimator
 		if ( pawn.AnimationHelper is null )
 		{ return; }
 
-		pawn.AnimationHelper.WithWishVelocity( pawn.DesiredVelocity + Vector3.Zero.LerpTo(RotationTilt(pawn), Time.Delta * 2));
-		pawn.AnimationHelper.WithVelocity( pawn.PawnController.Velocity);
+		pawn.AnimationHelper.WithWishVelocity( pawn.PawnController.Velocity + Vector3.Zero.LerpTo(RotationTilt(pawn), Time.Delta * 2));
+		pawn.AnimationHelper.WithVelocity( pawn.PawnController.Velocity );
 		Vector3 lookTowards = pawn.Head.Transform.Rotation.Forward;
 		pawn.AnimationHelper.WithLook( lookTowards, 0.1f, 0.0f, 0.1f );
-		pawn.AnimationHelper.DuckLevel = pawn.IsDucking ? 1 : 0;
+		pawn.AnimationHelper.DuckLevel = 1 - ((pawn.PawnController.Height * 2)/pawn.InitHeight - 1);
 		pawn.AnimationHelper.AimAngle = pawn.Head.Transform.Rotation;
 		pawn.AnimationHelper.HoldType = CitizenAnimationHelper.HoldTypes.None;
 		pawn.AnimationHelper.IsGrounded = pawn.PawnController.IsOnGround;

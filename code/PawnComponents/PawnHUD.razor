@@ -28,7 +28,7 @@
     }
     [Property, TextArea] public int Health { get { if (Pawn is null || Pawn.Stats is null) return 0; else return Pawn.Stats.Health; } }
     [Property, TextArea] public float Stamina { get { if (Pawn is null || Pawn.Stats is null) return 0; else return Pawn.Stats.Stamina; } }
-    [Property, TextArea] public double StaminaPercentage { get { return Stamina / (Pawn.Stats.MaxStamina / 100); } }
+    [Property, TextArea] public double StaminaPercentage { get { if (Stamina == null || Pawn == null || Pawn.Stats == null) return 0; return Stamina / (Pawn.Stats.MaxStamina / 100); } }
 
 	/// <summary>
     /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
