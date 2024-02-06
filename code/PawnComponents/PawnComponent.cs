@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace HideAndSeek;
 
-public class PawnComponent : Component
+public class PawnComponent : Component, Component.INetworkSpawn
 {
 	#region General Properties
 	[Property, Category( "Measurements" )] public float AirSpeed { get; set; } = 50f;
@@ -26,25 +26,26 @@ public class PawnComponent : Component
 	public Action CrouchAction { get; set; }
 	public Action SprintAction { get; set; }
 
-	[Property, Category( "Components" )] public CharacterController PawnController { get { return _characterController; } }
-	[Property, Category( "Components" )] public CitizenAnimationHelper AnimationHelper { get { return _animationHelper; } }
-	[Property, Category( "Components" )] public PawnStats Stats { get { return _stats; } }
-	[Property, Category( "Components" )] public GameObject Head { get { return _head; } }
-	[Property, Category( "Components" )] public GameObject Model { get { return _model; } }
+	[Property, Category( "Components" )] public CharacterController PawnController { get; set; }
+	[Property, Category( "Components" )] public CitizenAnimationHelper AnimationHelper { get; set; }
+	[Property, Category( "Components" )] public PawnStats Stats { get; set; }
+	[Property, Category( "Components" )] public GameObject Head { get; set; }
+	[Property, Category( "Components" )] public GameObject Model { get; set; }
 
-	[Property] public bool Rotated { get; private set; }
-	[Property] public bool IsDucking { get; private set; }
-	[Property] public bool IsSprinting { get; private set; }
-	[Property] public bool IsWalking { get; private set; }
+	[Property][Sync] public float CurrentHeight { get { return PawnController.Height; } }
+	[Property][Sync] public bool Rotated { get; private set; }
+	[Property][Sync] public bool IsDucking { get; private set; }
+	[Property][Sync] public bool IsSprinting { get; private set; }
+	[Property][Sync] public bool IsWalking { get; private set; }
 	[Property] public Vector3 DesiredVelocity { get; set; }
 	#endregion
 
 	#region References
-	private GameObject _head;
-	private GameObject _model;
+	//private GameObject _head;
+	//private GameObject _model;
 	private CharacterController _characterController;
 	private CitizenAnimationHelper _animationHelper;
-	private PawnStats _stats;
+	//private PawnStats _stats;
 	#endregion
 
 	#region Member Variables
@@ -55,10 +56,9 @@ public class PawnComponent : Component
 	#endregion
 
 
-	protected override void OnAwake()
+	protected override void OnStart()
 	{
-		base.OnAwake();
-
+		base.OnStart();
 
 		_spawnPoints = Scene.GetAllComponents<SpawnPoint>().ToList();
 		var elements = this.GameObject.Children;
@@ -67,35 +67,66 @@ public class PawnComponent : Component
 			switch ( element.Name )
 			{
 				case "Head":
-					_head = element;
+					Head = element;
 					continue;
 				case "Model":
-					_model = element;
+					Model = element;
 					continue;
 				default: continue;
 			}
 		}
 
-		_stats = Components.Get<PawnStats>();
+		_lastRotation = Head.Transform.Rotation;
+		//Stats = Components.Get<PawnStats>();
 		_characterController = Components.Get<CharacterController>();
-		_animationHelper = Components.GetInChildren<CitizenAnimationHelper>();
+		AnimationHelper = Components.GetInChildren<CitizenAnimationHelper>();
 
 		_initPawnHeight = PawnController.Height;
+		JumpAction += Jump;
+
 		var pawnModel = Model.Components.Get<SkinnedModelRenderer>();
 		var clothing = ClothingContainer.CreateFromLocalUser();
 		clothing.Apply( pawnModel );
-		_lastRotation = Head.Transform.Rotation;
-
-		JumpAction += Jump;
 
 		Spawn();
+	}
+
+	public void OnNetworkSpawn( Connection owner )
+	{
+		/*GameObject model = null;
+		var elements = this.GameObject.Children;
+		foreach ( var element in elements )
+		{
+			switch ( element.Name )
+			{
+				case "Model":
+					Model = element;
+					break;
+				default: continue;
+			}
+		}
+		if ( model is null ) return;
+		var pawnModel = GameObject.Components.GetInChildren<SkinnedModelRenderer>();
+		var clothing = ClothingContainer.CreateFromLocalUser();
+		clothing.Apply( pawnModel );*/
+	}
+
+	protected override void OnEnabled()
+	{
+		base.OnEnabled();
 	}
 
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
-		Head.Transform.LocalPosition = Head.Transform.LocalPosition.WithZ((PawnController.Height - 10).Clamp(40, InitHeight));
+
+		RotateModel();
 		PawnAnimator.AnimationUpdate( this );
+		if ( IsProxy )
+		{
+			return;
+		}
+		Head.Transform.LocalPosition = Head.Transform.LocalPosition.WithZ( (PawnController.Height - 10).Clamp( 40, InitHeight ) );
 		IsSprinting = Input.Down( "Run" );
 		IsWalking = Input.Down( "Walk" );
 		if ( Input.Pressed( "Jump" ) ) JumpAction?.Invoke();
@@ -104,12 +135,14 @@ public class PawnComponent : Component
 	protected override void OnFixedUpdate()
 	{
 		base.OnUpdate();
-
+		if ( IsProxy )
+		{
+			return;
+		}
 		DuckCheck();
 		RotationCheck();
 		CalculateDesiredVelocity();
 		Move();
-		RotateModel();
 	}
 
 	#region Methods
@@ -126,9 +159,9 @@ public class PawnComponent : Component
 	{
 		float delta = _initPawnHeight - PawnController.Height;
 
-		if ( Input.Down( "Duck" ))
+		if ( Input.Down( "Duck" ) )
 		{
-			PawnController.Height = PawnController.Height.LerpTo(_initPawnHeight + DuckHeightDelta, 8 * Time.Delta);
+			PawnController.Height = PawnController.Height.LerpTo( _initPawnHeight + DuckHeightDelta, 8 * Time.Delta );
 			IsDucking = true;
 		}
 		else if ( !Input.Down( "Duck" ) && IsDucking )
@@ -141,7 +174,7 @@ public class PawnComponent : Component
 			if ( !collision.Hit && PawnController.IsOnGround )
 			{
 				//what a fucking hack!
-				PawnController.Height = PawnController.Height.LerpTo( _initPawnHeight, 8 * Time.Delta);
+				PawnController.Height = PawnController.Height.LerpTo( _initPawnHeight, 8 * Time.Delta );
 				if ( PawnController.Height.CeilToInt() < _initPawnHeight.CeilToInt() )
 					IsDucking = true;
 				else
@@ -154,7 +187,7 @@ public class PawnComponent : Component
 		delta -= _initPawnHeight - PawnController.Height;
 		if ( IsDucking && !PawnController.IsOnGround )
 		{
-			PawnController.Transform.Position += new Vector3(0, 0, delta * -1);
+			PawnController.Transform.Position += new Vector3( 0, 0, delta * -1 );
 		}
 	}
 

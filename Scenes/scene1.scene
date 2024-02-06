@@ -8,21 +8,6 @@
       "Enabled": true,
       "Components": [
         {
-          "__type": "Terrain",
-          "ClipMapLodExtentTexels": 128,
-          "ClipMapLodLevels": 7,
-          "DebugView": "None",
-          "RenderType": "On",
-          "TerrainDataFile": "new terrain 2.terrain",
-          "TerrainMaterial": "materials/core/terrain.vmat"
-        },
-        {
-          "__type": "TerrainCollider",
-          "IsTrigger": false,
-          "Static": true,
-          "Surface": null
-        },
-        {
           "__type": "MapInstance",
           "MapName": "thieves.skyscraper",
           "OnMapLoaded": null,
@@ -110,6 +95,6 @@
   },
   "Title": "GameScene",
   "Description": "",
-  "LastSaved": "2024-02-04T02:05:32.4472264\u002B03:00",
+  "LastSaved": "2024-02-07T00:51:30.3705011\u002B03:00",
   "__references": []
 }

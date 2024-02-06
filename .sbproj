@@ -208,6 +208,6 @@
       ]
     },
     "MapStartupScene": null,
-    "LaunchMode": "Normal"
+    "LaunchMode": "Launcher"
   }
 }

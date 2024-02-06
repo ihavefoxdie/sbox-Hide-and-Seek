@@ -1,4 +1,5 @@
 using Sandbox;
+using System.Numerics;
 
 namespace HideAndSeek;
 
@@ -9,10 +10,10 @@ public class CameraMovement : Component
 	[Property]
 	[Range( 0f, 150f, 0.01f, true, true )]
 	public float Distance { get; set; } = 150f;
-	[Property][Sync] public GameObject Head { get; private set; }
+	[Property] public GameObject Head { get; set; }
 	[Property] public GameObject Model { get; private set; }
 	[Property] public ModelRenderer PawnRenderer { get { return _pawnRenderer; } }
-	[Property] public CameraComponent Camera { get { return _camera; } }
+	[Property] public CameraComponent Camera { get; set; }
 	[Property] public bool FloatyCamera { get; set; } = true;
 	[Property]
 	[Range( 0f, 2f, 0.01f, true, true )]
@@ -34,28 +35,29 @@ public class CameraMovement : Component
 	private Vector3 _cameraPosition;
 	#endregion
 
-	protected override void OnAwake()
+	protected override void OnStart()
 	{
-		base.OnAwake();
+		base.OnStart();
 		Pawn ??= Components.GetInParent<PawnComponent>();
 		Head ??= Pawn.Head;
 		Model ??= Pawn.Model;
 		_cameraPosition = Head.Transform.Position;
 		_pawnRenderer = Model.Components.Get<ModelRenderer>();
 		_camera = Components.Get<CameraComponent>();
-		base.OnAwake();
 	}
 
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
+		Camera.Enabled = !IsProxy && GameObject.Network.IsOwner;
+		if ( IsProxy ) return;
 		ProcessRotation();
+		ProcessCameraPosition();
 	}
 
 	protected override void OnFixedUpdate()
 	{
 		base.OnFixedUpdate();
-		ProcessCameraPosition();
 	}
 
 
@@ -70,6 +72,7 @@ public class CameraMovement : Component
 		eyeAngles.pitch = eyeAngles.pitch.Clamp( -89f, 89f );
 		Head.Transform.Rotation = Rotation.From( eyeAngles );
 	}
+
 
 	private void ProcessCameraPosition()
 	{
