@@ -1,21 +1,19 @@
 using Sandbox;
+using Sandbox.Network;
 namespace HideAndSeek;
 
-public class PawnModel : Component
+public class PawnModel : Component, Component.INetworkSpawn
 {
-	[Property][Sync] public SkinnedModelRenderer PawmModelRenderer { get; set; }
+	[Property] public SkinnedModelRenderer PawmModelRenderer { get; set; }
 
-	protected override void OnAwake()
+	public void OnNetworkSpawn( Connection owner )
 	{
-		base.OnAwake();
-
-		//PawmModelRenderer = Components.Get<SkinnedModelRenderer>();
 		var clothing = ClothingContainer.CreateFromLocalUser();
 		clothing.Apply( PawmModelRenderer );
 	}
 
 	protected override void OnUpdate()
 	{
-
+		
 	}
 }

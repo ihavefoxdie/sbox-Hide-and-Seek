@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace HideAndSeek;
 
-public class PawnComponent : Component, Component.INetworkSpawn
+public class PawnComponent : Component
 {
 	#region General Properties
 	[Property, Category( "Measurements" )] public float AirSpeed { get; set; } = 50f;
@@ -86,25 +86,6 @@ public class PawnComponent : Component, Component.INetworkSpawn
 		Spawn();
 	}
 
-	public void OnNetworkSpawn( Connection owner )
-	{
-		/*GameObject model = null;
-		var elements = this.GameObject.Children;
-		foreach ( var element in elements )
-		{
-			switch ( element.Name )
-			{
-				case "Model":
-					Model = element;
-					break;
-				default: continue;
-			}
-		}
-		if ( model is null ) return;
-		var pawnModel = GameObject.Components.GetInChildren<SkinnedModelRenderer>();
-		var clothing = ClothingContainer.CreateFromLocalUser();
-		clothing.Apply( pawnModel );*/
-	}
 
 	protected override void OnEnabled()
 	{

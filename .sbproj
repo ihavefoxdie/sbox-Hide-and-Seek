@@ -7,8 +7,8 @@
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
-  "Resources": null,
-  "MenuResources": "GameUI/MenuUI.razor.scss\nScenes/main_menu.scene",
+  "Resources": "",
+  "MenuResources": "",
   "HasCode": true,
   "CodePath": "/code/",
   "PackageReferences": [],
@@ -208,6 +208,6 @@
       ]
     },
     "MapStartupScene": null,
-    "LaunchMode": "Launcher"
+    "LaunchMode": "Normal"
   }
 }

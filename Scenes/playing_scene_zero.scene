@@ -2,22 +2,6 @@
   "Id": "e7d37f95-b9c7-46bc-8e7b-fa5a43ef0c05",
   "GameObjects": [
     {
-      "Id": "9b229fc8-9c3d-41ed-adb8-a83bb3f37762",
-      "Name": "community pool",
-      "Position": "0,0,100",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "MapInstance",
-          "MapName": "thieves.community_pool",
-          "OnMapLoaded": null,
-          "OnMapUnloaded": null,
-          "UseMapFromLaunch": false
-        }
-      ],
-      "Children": []
-    },
-    {
       "Id": "473e9260-2ae7-489c-9eca-68ff8ad7db32",
       "Name": "NetworkComponent",
       "Position": "-52.07862,207.9259,1028.127",
@@ -31,6 +15,33 @@
           },
           "SpawnPoints": [],
           "StartServer": true
+        }
+      ]
+    },
+    {
+      "Id": "b4820a45-a2ef-440d-8b09-dd27603c72df",
+      "Name": "Terrain",
+      "Position": "603.5001,-341.5693,705.9443",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "MapInstance",
+          "MapName": "thieves.community_pool",
+          "OnMapLoaded": null,
+          "OnMapUnloaded": null,
+          "UseMapFromLaunch": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "Id": "654b6d84-e5bc-49ec-90dc-d78d03b8f25b",
+      "Name": "Removing doors",
+      "Position": "-288.0474,213.2799,926.9672",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "TestComponent"
         }
       ]
     }
@@ -58,6 +69,6 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-02-04T02:05:33.3068802\u002B03:00",
+  "LastSaved": "2024-02-07T19:14:40.1576662\u002B03:00",
   "__references": []
 }
