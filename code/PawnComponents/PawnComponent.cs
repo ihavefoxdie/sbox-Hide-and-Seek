@@ -77,16 +77,11 @@ public class PawnComponent : Component, Component.INetworkSpawn
 		}
 
 		_lastRotation = Head.Transform.Rotation;
-		//Stats = Components.Get<PawnStats>();
 		_characterController = Components.Get<CharacterController>();
 		AnimationHelper = Components.GetInChildren<CitizenAnimationHelper>();
 
 		_initPawnHeight = PawnController.Height;
 		JumpAction += Jump;
-
-		var pawnModel = Model.Components.Get<SkinnedModelRenderer>();
-		var clothing = ClothingContainer.CreateFromLocalUser();
-		clothing.Apply( pawnModel );
 
 		Spawn();
 	}
