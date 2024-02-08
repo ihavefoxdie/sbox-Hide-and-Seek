@@ -1,0 +1,27 @@
+ScreenInfoComponent {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	//background-color: #444;
+	justify-content: center;
+	align-items: center;
+	font-weight: bold;
+	border-radius: 20px;
+
+	.game_ui {
+		display: flex;
+		flex-direction: row;
+		align-self: flex-start;
+		align-items: center;
+
+		.game_timer {
+			min-width: 3vh;
+			margin: 3vh;
+			font-size: 5vh;
+			font-family: Inter;
+			color: #fff;
+		}
+	}
+}

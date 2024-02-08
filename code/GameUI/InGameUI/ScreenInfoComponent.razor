@@ -1,0 +1,27 @@
+@using Sandbox;
+@using Sandbox.UI;
+@namespace HideAndSeek
+@inherits PanelComponent
+
+<root>
+    <div class="game_ui">
+        <div class="game_timer">@(GetFullTime())</div>
+    </div>
+</root>
+
+@code
+{
+    [Property] public GameComponent GameComp { get; set; }
+    [Property] public int CurrentTimeSecs { get { if (GameComp is null || GameComp.CurrentRound is null) return 0; return (int)((GameComp.CurrentRound.RoundLength - GameComp.CurrentRound.TimeSinceStart) % 60); } }
+    [Property] public int CurrentTimeMinutes { get { if (GameComp is null || GameComp.CurrentRound is null) return 0; return (int)((GameComp.CurrentRound.RoundLength - GameComp.CurrentRound.TimeSinceStart) / 60); } }
+
+    private string GetFullTime()
+    {
+        return $"{CurrentTimeMinutes:00}:{CurrentTimeSecs:00}";
+    }
+
+    /// <summary>
+    /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+    /// </summary>
+    protected override int BuildHash() => System.HashCode.Combine(GameComp, CurrentTimeSecs, CurrentTimeMinutes);
+}

@@ -44,7 +44,7 @@ public class PawnComponent : Component
 	//private GameObject _head;
 	//private GameObject _model;
 	private CharacterController _characterController;
-	private CitizenAnimationHelper _animationHelper;
+	//private CitizenAnimationHelper _animationHelper;
 	//private PawnStats _stats;
 	#endregion
 
@@ -95,7 +95,6 @@ public class PawnComponent : Component
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
-
 		RotateModel();
 		PawnAnimator.AnimationUpdate( this );
 		if ( IsProxy )
@@ -123,7 +122,7 @@ public class PawnComponent : Component
 
 	#region Methods
 	[ConCmd( "respawn" )]
-	private void Spawn()
+	public void Spawn()
 	{
 		if ( _spawnPoints is null || _spawnPoints.Count < 1 )
 			return;
@@ -250,7 +249,7 @@ public class PawnComponent : Component
 		}
 		_jumped = true;
 		PawnController.Punch( Vector3.Up * JumpForce );
-		_animationHelper?.TriggerJump();
+		AnimationHelper?.TriggerJump();
 	}
 
 	private void RotateModel()

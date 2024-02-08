@@ -44,6 +44,59 @@
           "__type": "TestComponent"
         }
       ]
+    },
+    {
+      "Id": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
+      "Name": "Game",
+      "Position": "-1215.657,580.4098,1189.077",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "GameComponent",
+          "CurrentRound": {
+            "RoundLength": 300
+          },
+          "Players": [],
+          "RoundLength": 300,
+          "Teams": [],
+          "TimeSinceStart": {
+            "Relative": 18074.41
+          }
+        }
+      ]
+    },
+    {
+      "Id": "975f4de1-1fef-45c9-98b6-ef89c63730ff",
+      "Name": "GameUI",
+      "Position": "-1215.657,580.4098,1189.077",
+      "Enabled": true,
+      "Children": [
+        {
+          "Id": "ec3ca7bf-c930-4f0a-8dda-d3ad305da1f5",
+          "Name": "OnScreenInfo",
+          "Position": "0,0,0",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "ScreenPanel",
+              "AutoScreenScale": true,
+              "Opacity": 1,
+              "Scale": 1,
+              "ZIndex": 100
+            },
+            {
+              "__type": "ScreenInfoComponent",
+              "CurrentTimeMinutes": -296,
+              "CurrentTimeSecs": -14,
+              "GameComp": {
+                "_type": "component",
+                "go": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
+                "component_type": "GameComponent"
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "SceneProperties": {
@@ -69,6 +122,6 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-02-07T19:14:40.1576662\u002B03:00",
+  "LastSaved": "2024-02-09T00:48:47.4992859\u002B03:00",
   "__references": []
 }
