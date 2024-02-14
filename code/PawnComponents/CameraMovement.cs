@@ -1,5 +1,4 @@
 using Sandbox;
-using System.Numerics;
 
 namespace HideAndSeek;
 
@@ -15,6 +14,10 @@ public class CameraMovement : Component
 	[Property] public ModelRenderer PawnRenderer { get { return _pawnRenderer; } }
 	[Property] public CameraComponent Camera { get; set; }
 	[Property] public bool FloatyCamera { get; set; } = true;
+	[Property][Sync] public Angles EyeAngles { get; set; }
+	[Property][Sync] public Vector3 EyePosition { get; set; }
+	[Property][Sync] public Vector3 EyeLocalPosition { get; set; }
+
 	[Property]
 	[Range( 0f, 2f, 0.01f, true, true )]
 	public float Sensitivity { get; set; } = 0.05f;
@@ -30,20 +33,19 @@ public class CameraMovement : Component
 	#endregion
 
 	#region Variables
-	private CameraComponent _camera;
 	private ModelRenderer _pawnRenderer;
-	private Vector3 _cameraPosition;
+	public Vector3 _cameraPosition;
 	#endregion
 
 	protected override void OnStart()
 	{
 		base.OnStart();
+		
 		Pawn ??= Components.GetInParent<PawnComponent>();
 		Head ??= Pawn.Head;
 		Model ??= Pawn.Model;
 		_cameraPosition = Head.Transform.Position;
-		_pawnRenderer = Model.Components.Get<ModelRenderer>();
-		_camera = Components.Get<CameraComponent>();
+		_pawnRenderer ??= Model.Components.Get<ModelRenderer>();
 	}
 
 	protected override void OnUpdate()
@@ -70,14 +72,16 @@ public class CameraMovement : Component
 		eyeAngles.yaw -= Input.MouseDelta.x * Sensitivity;
 		eyeAngles.roll = 0f;
 		eyeAngles.pitch = eyeAngles.pitch.Clamp( -89f, 89f );
-		Head.Transform.Rotation = Rotation.From( eyeAngles );
+		EyeAngles = eyeAngles;
+		Head.Transform.Rotation = Rotation.From( EyeAngles );
 	}
 
 
 	private void ProcessCameraPosition()
 	{
-		if ( _camera == null ) return;
-
+		if ( Head == null || PawnRenderer == null ) return;
+		EyePosition = Head.Transform.Position;
+		EyeLocalPosition = Head.Transform.LocalPosition;
 		if ( !IsFirstPerson )
 		{
 			if ( FloatyCamera )
@@ -113,7 +117,7 @@ public class CameraMovement : Component
 			PawnRenderer.RenderType = ModelRenderer.ShadowRenderType.ShadowsOnly;
 		}
 		Camera.Transform.Position = _cameraPosition;
-		Camera.Transform.Rotation = Head.Transform.Rotation;
+		Camera.Transform.Rotation = Rotation.From( EyeAngles );
 	}
 	#endregion
 }

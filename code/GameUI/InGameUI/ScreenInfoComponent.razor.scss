@@ -7,7 +7,7 @@ ScreenInfoComponent {
 	//background-color: #444;
 	justify-content: center;
 	align-items: center;
-	font-weight: bold;
+	//font-weight: bold;
 	border-radius: 20px;
 
 	.game_ui {
@@ -17,11 +17,17 @@ ScreenInfoComponent {
 		align-items: center;
 
 		.game_timer {
-			min-width: 3vh;
+			justify-content: center;
+			border-radius: 1vh;
+			background-color: #ffffff20;
+			backdrop-filter: blur(10px) saturate(100%) brightness(500%);
+			min-width: 15vh;
+			padding: 1vh;
 			margin: 3vh;
-			font-size: 5vh;
+			font-size: 4vh;
 			font-family: Inter;
 			color: #fff;
+			box-shadow: 0px 0px 0.5vh #ffffff20;
 		}
 	}
 }

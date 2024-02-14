@@ -2,23 +2,6 @@
   "Id": "e7d37f95-b9c7-46bc-8e7b-fa5a43ef0c05",
   "GameObjects": [
     {
-      "Id": "473e9260-2ae7-489c-9eca-68ff8ad7db32",
-      "Name": "NetworkComponent",
-      "Position": "-52.07862,207.9259,1028.127",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "NetworkHelper",
-          "PlayerPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/pawn.prefab"
-          },
-          "SpawnPoints": [],
-          "StartServer": true
-        }
-      ]
-    },
-    {
       "Id": "b4820a45-a2ef-440d-8b09-dd27603c72df",
       "Name": "Terrain",
       "Position": "603.5001,-341.5693,705.9443",
@@ -49,19 +32,28 @@
       "Id": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
       "Name": "Game",
       "Position": "-1215.657,580.4098,1189.077",
+      "Networked": true,
       "Enabled": true,
       "Components": [
         {
-          "__type": "GameComponent",
-          "CurrentRound": {
-            "RoundLength": 300
+          "__type": "NetworkComponent",
+          "PlayerPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/pawn.prefab"
           },
-          "Players": [],
-          "RoundLength": 300,
-          "Teams": [],
-          "TimeSinceStart": {
-            "Relative": 18074.41
-          }
+          "SpawnPoints": [],
+          "StartServer": true
+        },
+        {
+          "__type": "GameComponent",
+          "NetworkComponent": {
+            "_type": "component",
+            "go": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
+            "component_type": "NetworkComponent"
+          },
+          "RoundCooldown": 5,
+          "RoundLength": 20,
+          "Teams": []
         }
       ]
     },
@@ -69,7 +61,15 @@
       "Id": "975f4de1-1fef-45c9-98b6-ef89c63730ff",
       "Name": "GameUI",
       "Position": "-1215.657,580.4098,1189.077",
+      "Networked": true,
       "Enabled": true,
+      "Components": [
+        {
+          "__type": "SyncComponent",
+          "CurrentGame": null,
+          "Timer": 0
+        }
+      ],
       "Children": [
         {
           "Id": "ec3ca7bf-c930-4f0a-8dda-d3ad305da1f5",
@@ -79,19 +79,47 @@
           "Components": [
             {
               "__type": "ScreenPanel",
-              "AutoScreenScale": true,
+              "AutoScreenScale": false,
               "Opacity": 1,
-              "Scale": 1,
+              "Scale": 5,
               "ZIndex": 100
             },
             {
               "__type": "ScreenInfoComponent",
-              "CurrentTimeMinutes": -296,
-              "CurrentTimeSecs": -14,
+              "CurrentTimeMinutes": 0,
+              "CurrentTimeSecs": 0,
+              "SharedInfo": {
+                "_type": "component",
+                "go": "975f4de1-1fef-45c9-98b6-ef89c63730ff",
+                "component_type": "SyncComponent"
+              }
+            }
+          ]
+        },
+        {
+          "Id": "3c747e30-34dc-4b17-8415-0aeec384d8fd",
+          "Name": "SessionJoined",
+          "Position": "0,0,0",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "ScreenPanel",
+              "AutoScreenScale": true,
+              "Opacity": 1,
+              "Scale": 1,
+              "ZIndex": 90
+            },
+            {
+              "__type": "JoinedScreen",
               "GameComp": {
                 "_type": "component",
                 "go": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
                 "component_type": "GameComponent"
+              },
+              "MyStringValue": "",
+              "ThisGameObject": {
+                "_type": "gameobject",
+                "go": "3c747e30-34dc-4b17-8415-0aeec384d8fd"
               }
             }
           ]
@@ -122,6 +150,6 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-02-09T00:48:47.4992859\u002B03:00",
+  "LastSaved": "2024-02-14T13:40:52.4091069\u002B03:00",
   "__references": []
 }

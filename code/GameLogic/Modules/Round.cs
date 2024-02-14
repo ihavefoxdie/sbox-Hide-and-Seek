@@ -12,13 +12,13 @@ public class Round
 	/// RoundLength in seconds
 	/// </summary>
 	public int RoundLength { get; private set; }
-	public bool IsStarted { get; private set; }
+	public bool IsStarted { get; private set; } = false;
 	#endregion
 
 
 
 	#region Actions
-	public Action Timeout { get; set; }
+	public Action End { get; set; }
 	public Action Start { get; set; }
 	#endregion
 
@@ -53,9 +53,7 @@ public class Round
 
 	public void EndTheRound()
 	{
-		if (!IsStarted) return;
-
-		Timeout?.Invoke();
+		End?.Invoke();
 		IsStarted = false;
 	}
 

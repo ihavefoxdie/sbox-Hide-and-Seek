@@ -7,12 +7,12 @@ public class Team
 {
 	public string Name { get; set; }
 	public string Color { get; set; }
-	public List<GameObject> TeamPlayers { get; set; }
+	public List<Connection> TeamPlayers { get; set; }
 
 	public Team(string name, string color)
 	{
 		Name = name;
 		Color = color;
-		TeamPlayers = new List<GameObject>();
+		TeamPlayers = new List<Connection>();
 	}
 }

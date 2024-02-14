@@ -31,6 +31,7 @@ public class PawnComponent : Component
 	[Property, Category( "Components" )] public PawnStats Stats { get; set; }
 	[Property, Category( "Components" )] public GameObject Head { get; set; }
 	[Property, Category( "Components" )] public GameObject Model { get; set; }
+	[Property, Category( "Components" )] public CameraMovement Camera { get; set; }
 
 	[Property][Sync] public float CurrentHeight { get { return PawnController.Height; } }
 	[Property][Sync] public bool Rotated { get; private set; }
@@ -43,14 +44,13 @@ public class PawnComponent : Component
 	#region References
 	//private GameObject _head;
 	//private GameObject _model;
-	private CharacterController _characterController;
+	//private CharacterController _characterController;
 	//private CitizenAnimationHelper _animationHelper;
 	//private PawnStats _stats;
 	#endregion
 
 	#region Member Variables
 	private Rotation _lastRotation;
-	private List<SpawnPoint> _spawnPoints;
 	private bool _jumped;
 	private float _initPawnHeight;
 	#endregion
@@ -60,7 +60,6 @@ public class PawnComponent : Component
 	{
 		base.OnStart();
 
-		_spawnPoints = Scene.GetAllComponents<SpawnPoint>().ToList();
 		var elements = this.GameObject.Children;
 		foreach ( var element in elements )
 		{
@@ -77,13 +76,10 @@ public class PawnComponent : Component
 		}
 
 		_lastRotation = Head.Transform.Rotation;
-		_characterController = Components.Get<CharacterController>();
 		AnimationHelper = Components.GetInChildren<CitizenAnimationHelper>();
-
+		Camera = Components.GetInChildren<CameraMovement>();
 		_initPawnHeight = PawnController.Height;
 		JumpAction += Jump;
-
-		Spawn();
 	}
 
 
@@ -97,10 +93,12 @@ public class PawnComponent : Component
 		base.OnUpdate();
 		RotateModel();
 		PawnAnimator.AnimationUpdate( this );
+
 		if ( IsProxy )
 		{
 			return;
 		}
+
 		Head.Transform.LocalPosition = Head.Transform.LocalPosition.WithZ( (PawnController.Height - 10).Clamp( 40, InitHeight ) );
 		IsSprinting = Input.Down( "Run" );
 		IsWalking = Input.Down( "Walk" );
@@ -121,15 +119,6 @@ public class PawnComponent : Component
 	}
 
 	#region Methods
-	[ConCmd( "respawn" )]
-	public void Spawn()
-	{
-		if ( _spawnPoints is null || _spawnPoints.Count < 1 )
-			return;
-
-		GameObject.Transform.World = Random.Shared.FromList( _spawnPoints, default ).GameObject.Transform.World;
-	}
-
 	private void DuckCheck()
 	{
 		float delta = _initPawnHeight - PawnController.Height;
@@ -257,7 +246,7 @@ public class PawnComponent : Component
 		if ( Model is null )
 		{ return; }
 
-		Angles targetAngle = new( 0, Head.Transform.Rotation.Yaw(), 0f );
+		Angles targetAngle = new( 0, Rotation.From( Camera.EyeAngles ).Yaw(), 0f );
 
 		if ( PawnController.Velocity.Length > 10f )
 		{
