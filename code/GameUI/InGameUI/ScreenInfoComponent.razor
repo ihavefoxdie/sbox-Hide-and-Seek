@@ -1,10 +1,15 @@
 @using Sandbox;
 @using Sandbox.UI;
+@using System;
+@using System.Collections.Generic;
+
 @namespace HideAndSeek
 @inherits PanelComponent
 
 <root>
     <div class="game_ui">
+        <div class="player_count" style="background-color: #00b1ffc0" ; box-shadow: 0px 0px 0.5vh #00b1ffc0;>@(Hiders.Count)</div>
+        <div class="player_count" style="background-color: #f20000c0; box-shadow: 0px 0px 0.5vh #f20000c0;">@(Seekers.Count)</div>
         <div class="game_timer">@(GetFullTime())</div>
     </div>
 </root>
@@ -14,6 +19,8 @@
     [Property] public SyncComponent SharedInfo { get; set; }
     [Property] public int CurrentTimeSecs { get { if (SharedInfo is null) return 0; return (int)((SharedInfo.Timer) % 60); } }
     [Property] public int CurrentTimeMinutes { get { if (SharedInfo is null) return 0; return (int)((SharedInfo.Timer) / 60); } }
+    [Property] public List<Guid> Seekers { get { if (SharedInfo is null || SharedInfo.Seekers is null) return new List<Guid>(); return SharedInfo.Seekers; } }
+    [Property] public List<Guid> Hiders { get { if (SharedInfo is null || SharedInfo.Hiders is null) return new List<Guid>(); return SharedInfo.Hiders; } }
 
     private string GetFullTime()
     {
@@ -23,5 +30,5 @@
     /// <summary>
     /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
     /// </summary>
-    protected override int BuildHash() => System.HashCode.Combine(SharedInfo, CurrentTimeSecs, CurrentTimeMinutes);
+    protected override int BuildHash() => System.HashCode.Combine(SharedInfo, CurrentTimeSecs, CurrentTimeMinutes, Seekers, Hiders);
 }

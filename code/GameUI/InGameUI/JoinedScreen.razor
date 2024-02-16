@@ -4,7 +4,7 @@
 @inherits PanelComponent
 
 <root>
-	<div class="title">@MyStringValue</div>
+	<div class="title"></div>
     <button onclick=@(Start) class="start_button">Press me</button>
 </root>
 
@@ -12,7 +12,6 @@
 {
     [Property] public GameComponent GameComp { get; set; }
     [Property] public GameObject ThisGameObject { get; set; }
-    [Property, TextArea] public string MyStringValue { get; set; } = "Hello World!";
 
 
     private void Start()
@@ -23,5 +22,5 @@
     /// <summary>
 	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
 	/// </summary>
-	protected override int BuildHash() => System.HashCode.Combine( MyStringValue, ThisGameObject, GameComp );
+	protected override int BuildHash() => System.HashCode.Combine( ThisGameObject, GameComp );
 }

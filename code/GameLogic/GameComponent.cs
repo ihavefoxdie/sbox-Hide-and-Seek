@@ -10,26 +10,36 @@ public class GameComponent : Component, Component.INetworkListener
 {
 	#region Properties
 	public Round CurrentRound { get; set; }
-	[Property] public List<Team> Teams { get; set; }
-	//[Property] public List<GameObject> Players { get; set; }
-	[Property] public int RoundCooldown { get; set; }
+	//public List<Team> Teams { get; set; }
+	public Team Hiders { get; set; }
+	public Team Seekers { get; set; }
+	[Sync] public List<Guid> PlayerPawns { get; set; }
 	[Property] public NetworkComponent NetworkComponent { get; set; }
 	private bool GameBegan { get; set; } = false;
 	/// <summary>
 	/// Round length limit in seconds.
 	/// </summary>
 	[Property] public int RoundLength { get; set; } = 300;
+	/// <summary>
+	/// Time before the next round starts.
+	/// </summary>
+	[Property] public int RoundCooldown { get; set; } = 10;
+	/// <summary>
+	/// Time before seekers become active.
+	/// </summary>
+	[Property] public int PreparationTime { get; set; } = 10;
 	#endregion
 
 
 	#region Actions and Events
 	public Action<Team> OnTeamLost { get; set; }
+	public Action OnRoundStart { get; set; }
 	#endregion
 
 
 	protected override void OnAwake()
 	{
-		base.OnStart();
+		PlayerPawns = new();
 	}
 
 	public void OnActive( Connection conn )
@@ -40,7 +50,7 @@ public class GameComponent : Component, Component.INetworkListener
 				return;
 		}
 
-		if ( Networking.Connections.Count > 0 )
+		if ( Networking.Connections.Count > 1 )
 		{
 			GameBegan = true;
 			InitGame();
@@ -49,19 +59,22 @@ public class GameComponent : Component, Component.INetworkListener
 
 	public void OnConnected( Connection conn )
 	{
-/*		if ( CurrentRound != null )
-		{
-			if(GameBegan)
-				return;
-		}
-
-		GameBegan = true;
-		InitGame();*/
 	}
 
 	public void OnDisconnected( Connection conn )
 	{
+		for ( int i = 0; i < PlayerPawns.Count; i++ )
+		{
+			var p = Scene.Directory.FindByGuid( PlayerPawns[i] );
+			if ( p.Network.OwnerConnection == conn )
+			{
+				PlayerPawns.Remove( PlayerPawns[i] );
+				break;
+			}
+		}
 
+		Seekers.TeamPlayers.Remove( conn.Id );
+		Hiders.TeamPlayers.Remove( conn.Id );
 	}
 
 	protected override void OnEnabled()
@@ -69,37 +82,79 @@ public class GameComponent : Component, Component.INetworkListener
 		base.OnEnabled();
 	}
 
-	protected override void OnUpdate()
+	protected override void OnFixedUpdate()
 	{
-		if(CurrentRound is null || Teams is null ) return;
+		if ( !GameBegan ) { return; }
+
+		if ( CurrentRound is null || Seekers is null || Hiders is null ) return;
+
 		if ( CurrentRound.IsStarted )
 		{
 			Team lost = LostTeam();
 			if ( lost != null )
 			{
+				Log.Info( "Someone has lost!" );
 				OnTeamLost?.Invoke( lost );
+				CurrentRound.EndTheRound();
 			}
-			CurrentRound.CheckRoundTime();
+			else if ( CurrentRound.CheckRoundTime() )
+			{
+				OnTeamLost?.Invoke( Seekers );
+				CurrentRound.EndTheRound();
+			}
 		}
+
 	}
 
 
 	#region Methods
-	public void InitGame()
+	private void LogTeamLost( Team team )
 	{
+		Log.Info( team.Name + " team has lost!" );
+	}
+
+	private void ToggleSeekers( bool toggle )
+	{
+		var pawns = Scene.GetAllObjects( false ).Where( x => x.Tags.Has( "seekers" ) );
+		foreach ( var pawn in pawns )
+		{
+			ToggleASeeker( pawn.Id, toggle );
+		}
+	}
+
+	[Broadcast]
+	private void ToggleASeeker( Guid guid, bool toggle )
+	{
+		Scene.Directory.FindByGuid( guid ).Enabled = toggle;
+	}
+
+	private async void InitGame()
+	{
+		if ( Networking.Connections.Count <= 1 )
+		{
+			GameBegan = false;
+			return;
+		}
+
+		OnRoundStart?.Invoke();
 		InitRound();
 		Log.Info( "Initiating the game." );
 		CurrentRound.StartTheRound();
+
+		//Giving hiders time to hide
+		ToggleSeekers( false );
+		Log.Info( "Seekers disabled." );
+		await Task.DelayRealtimeSeconds( PreparationTime );
+		ToggleSeekers( true );
+		Log.Info( "Seekers enabled." );
 	}
 
 	private void InitRound()
 	{
 		CurrentRound = new( RoundLength );
-		Teams = new List<Team>
-		{
-			new ( "Seekers", "red" ),
-			new ( "Hiders", "blue" )
-		};
+		OnTeamLost = LogTeamLost;
+		Seekers = new( "Seekers", "red" );
+		Hiders = new( "Hiders", "blue" );
 		CurrentRound.Start += StartRound;
 		CurrentRound.End += EndRound;
 	}
@@ -108,13 +163,11 @@ public class GameComponent : Component, Component.INetworkListener
 	/// Checks player count in each team.
 	/// </summary>
 	/// <returns>Returns the team that has lost the round. Otherwise returns null.</returns>
-	private Team? LostTeam()
+	private Team LostTeam()
 	{
-		for ( int i = 0; i < Teams.Count; i++ )
-		{
-			if ( Teams[i].TeamPlayers.Count <= 0 )
-				return Teams[i];
-		}
+
+		if ( Seekers.TeamPlayers.Count <= 0 ) return Seekers;
+		if ( Hiders.TeamPlayers.Count <= 0 ) return Hiders;
 
 		return null;
 	}
@@ -126,47 +179,52 @@ public class GameComponent : Component, Component.INetworkListener
 		//Selecting seekers
 		int seekersCount = Math.Max( Networking.Connections.Count / 4, 1 );
 		int selected = 0;
-		int[] seekersIndexes = new int[ seekersCount ];
+		int[] seekersIndexes = new int[seekersCount];
 		seekersIndexes[0] = -1;
 		while ( selected < seekersCount )
 		{
-			int index = new Random().Next( seekersCount - 1 );
+			int index = new Random().Next( Networking.Connections.Count - 1 );
 			var connection = Networking.Connections.ElementAt( index );
+			Guid connId = connection.Id;
 
-			if ( seekersIndexes.Contains(index) )
+			if ( seekersIndexes.Contains( index ) )
 				continue;
 
-			Teams.Find( x => x.Name == "Seekers" ).TeamPlayers.Add( connection );
-			RespawnPlayer( connection ).Tags.Add( "Seekers" );
-			seekersIndexes[ selected ] = index;
+			Seekers.TeamPlayers.Add( connection.Id );
+			RespawnPlayer( connId );
+			seekersIndexes[selected] = index;
 			selected++;
 		}
 
 		//assigning the remaining players to hiders team
 		for ( int i = 0; i < Networking.Connections.Count; i++ )
 		{
-			if(!seekersIndexes.Contains(i))
+			if ( !seekersIndexes.Contains( i ) )
 			{
 				var startLocation = NetworkComponent.FindSpawnLocation().WithScale( 1 );
 
 				// Spawn this object and make the client the owner
-				RespawnPlayer( Networking.Connections[i] ).Tags.Add( "Hiders" );
-				Teams.Find( x => x.Name == "Hiders" ).TeamPlayers.Add( Networking.Connections[i] );
+				RespawnPlayer( Networking.Connections[i].Id, "hiders" );
+				Hiders.TeamPlayers.Add( Networking.Connections[i].Id );
 			}
 		}
-
-		//Respawn();
 	}
 
-	private GameObject RespawnPlayer(Connection connection)
+	/// <summary>
+	/// Respawn player by providing them a new pawn to play as.
+	/// </summary>
+	/// <param name="connection">Player connection.</param>
+	/// <returns>Pawn GameObject.</returns>
+	private void RespawnPlayer( Guid connection, string tag = "seekers" )
 	{
 		var startLocation = NetworkComponent.FindSpawnLocation().WithScale( 1 );
-
+		var conn = Networking.Connections.Where( x => x.Id == connection ).First();
 		// Spawn this object and make the client the owner
-		var player = NetworkComponent.PlayerPrefab.Clone( startLocation, name: $"Player - {connection.DisplayName}" );
-		player.NetworkSpawn( connection );
+		var player = NetworkComponent.PlayerPrefab.Clone( startLocation, name: $"Player - {conn.DisplayName}" );
+		player.NetworkSpawn( conn );
 
-		return player;
+		player.Tags.Add( tag );
+		PlayerPawns.Add( player.Id );
 	}
 
 	private async void EndRound()
@@ -180,34 +238,11 @@ public class GameComponent : Component, Component.INetworkListener
 	[Broadcast]
 	private void RemoveAllPawns()
 	{
-		var pawns = Scene.GetAllObjects( false ).Where( x => x.Name.Contains( "Player" ) );
-		foreach ( var player in pawns )
+		for ( int i = 0; i < PlayerPawns.Count; i++ )
 		{
-			//player.Network.DropOwnership();
-			player.Destroy();
+			Scene.Directory.FindByGuid( PlayerPawns[i] ).Destroy();
 		}
+		PlayerPawns.Clear();
 	}
-
-	/// <summary>
-	/// Try to join selected team.
-	/// </summary>
-	/// <param name="team">Selected team.</param>
-	/// <param name="conn">Client connection.</param>
-	/// <returns>Returns true on a successful join, false on a failed one.</returns>
-/*	public bool JoinTeam( int team, Connection conn )
-	{
-		if ( team < 0 || team >= Teams.Count ) return false;
-
-		for ( int i = 0; i < Teams.Count; i++ )
-		{
-			if ( Teams[team].TeamPlayers.Count > Teams[i].TeamPlayers.Count )
-				return false;
-		}
-		var pawn = Players.Find( x => x.Name.Contains( conn.DisplayName ) );
-		pawn.Tags.Add( Teams[team].Name );
-		Teams[team].TeamPlayers.Add( pawn );
-		return true;
-	}*/
-
 	#endregion
 }

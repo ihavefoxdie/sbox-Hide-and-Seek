@@ -57,12 +57,13 @@ public class Round
 		IsStarted = false;
 	}
 
-	public void CheckRoundTime()
+	public bool CheckRoundTime()
 	{
 		if ( TimeSinceStart.Relative >= RoundLength )
 		{
-			EndTheRound();
+			return true;
 		}
+		return false;
 	}
 	#endregion
 }

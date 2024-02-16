@@ -90,24 +90,30 @@ public class PawnComponent : Component
 
 	protected override void OnUpdate()
 	{
-		base.OnUpdate();
-		RotateModel();
-		PawnAnimator.AnimationUpdate( this );
-
-		if ( IsProxy )
+		try
 		{
-			return;
-		}
+			RotateModel();
+			PawnAnimator.AnimationUpdate( this );
 
-		Head.Transform.LocalPosition = Head.Transform.LocalPosition.WithZ( (PawnController.Height - 10).Clamp( 40, InitHeight ) );
-		IsSprinting = Input.Down( "Run" );
-		IsWalking = Input.Down( "Walk" );
-		if ( Input.Pressed( "Jump" ) ) JumpAction?.Invoke();
+			if ( IsProxy )
+			{
+				return;
+			}
+
+			Head.Transform.LocalPosition = Head.Transform.LocalPosition.WithZ( (PawnController.Height - 10).Clamp( 40, InitHeight ) );
+			IsSprinting = Input.Down( "Run" );
+			IsWalking = Input.Down( "Walk" );
+			if ( Input.Pressed( "Jump" ) ) JumpAction?.Invoke();
+		}
+		catch ( Exception ex )
+		{
+			Log.Info( ex.Message );
+		}
 	}
 
 	protected override void OnFixedUpdate()
 	{
-		base.OnUpdate();
+		base.OnFixedUpdate();
 		if ( IsProxy )
 		{
 			return;
