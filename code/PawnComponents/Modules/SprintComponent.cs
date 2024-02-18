@@ -14,9 +14,9 @@ public class SprintComponent : Component
 	private float _sinceSprint;
 	#endregion
 
-	protected override void OnAwake()
+	protected override void OnStart()
 	{
-		base.OnAwake();
+		base.OnStart();
 		_sinceSprint = Time.Now;
 		_pawn = Components.Get<PawnComponent>();
 		Pawn.JumpAction += JumpHandler;
@@ -25,12 +25,6 @@ public class SprintComponent : Component
 	protected override void OnUpdate()
 	{
 		SprintCheck();
-	}
-
-	protected override void OnFixedUpdate()
-	{
-		base.OnFixedUpdate();
-
 	}
 
 	#region Methods
@@ -57,12 +51,6 @@ public class SprintComponent : Component
 				_sinceSprint = Time.Now;
 			}
 		}
-	}
-
-	private void SprintAcceleration()
-	{
-		if ( Pawn.IsSprinting && Pawn.Stats.Stamina > 0 )
-			Pawn.DesiredVelocity *= Pawn.SpritDelta;
 	}
 	#endregion
 }

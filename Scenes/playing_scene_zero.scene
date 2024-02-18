@@ -36,6 +36,22 @@
       "Enabled": true,
       "Components": [
         {
+          "__type": "CameraComponent",
+          "BackgroundColor": "0.33333,0.46275,0.52157,1",
+          "ClearFlags": "All",
+          "FieldOfView": 60,
+          "IsMainCamera": true,
+          "Orthographic": false,
+          "OrthographicHeight": 1204,
+          "Priority": 1,
+          "RenderExcludeTags": "",
+          "RenderTags": "",
+          "TargetEye": "None",
+          "Viewport": "0,0,1,1",
+          "ZFar": 10000,
+          "ZNear": 10
+        },
+        {
           "__type": "NetworkComponent",
           "PlayerPrefab": {
             "_type": "gameobject",
@@ -66,8 +82,13 @@
       "Components": [
         {
           "__type": "SyncComponent",
-          "CurrentGame": null,
+          "CurrentGame": {
+            "_type": "component",
+            "go": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
+            "component_type": "GameComponent"
+          },
           "Hiders": [],
+          "IsStarted": false,
           "Seekers": [],
           "Timer": 0
         }
@@ -85,6 +106,16 @@
               "Opacity": 1,
               "Scale": 5,
               "ZIndex": 100
+            },
+            {
+              "__type": "WaitingScreenComponent",
+              "First": "Waiting for more",
+              "Second": "players to join",
+              "SharedInfo": {
+                "_type": "component",
+                "go": "975f4de1-1fef-45c9-98b6-ef89c63730ff",
+                "component_type": "SyncComponent"
+              }
             },
             {
               "__type": "ScreenInfoComponent",
@@ -115,11 +146,6 @@
             },
             {
               "__type": "JoinedScreen",
-              "GameComp": {
-                "_type": "component",
-                "go": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
-                "component_type": "GameComponent"
-              },
               "ThisGameObject": {
                 "_type": "gameobject",
                 "go": "3c747e30-34dc-4b17-8415-0aeec384d8fd"
@@ -153,6 +179,6 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-02-17T01:33:17.0355251\u002B03:00",
+  "LastSaved": "2024-02-19T02:22:41.6300782\u002B03:00",
   "__references": []
 }

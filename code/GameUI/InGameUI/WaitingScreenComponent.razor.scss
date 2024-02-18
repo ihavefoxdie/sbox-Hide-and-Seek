@@ -1,0 +1,36 @@
+WaitingScreenComponent {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+
+	.message {
+		//background-color: #40404045;
+		//backdrop-filter: blur(20px);
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		justify-content: flex-end;
+
+		.title1 {
+			transition: all 0.2s linear;
+			//justify-content: flex-start;
+			font-weight: bold;
+			font-size: 18vh;
+			font-style: italic;
+			font-family: Poppins;
+			color: #fff;
+			height: 10vh;
+		}
+
+		.title2 {
+			transition: all 0.2s linear;
+			//justify-content: flex-start;
+			//font-weight: bold;
+			font-size: 15vh;
+			font-family: Poppins;
+			color: #ff6a00;
+		}
+	}
+}

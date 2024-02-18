@@ -4,17 +4,53 @@ JoinedScreen {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	//background-color: #444;
 	justify-content: center;
 	align-items: center;
-	font-weight: bold;
 	border-radius: 20px;
 
-	.start_button {
-		background-color: aliceblue;
-		pointer-events: all;
-		font-size: 25px;
-		font-family: Poppins;
-		color: black;
+	.ui {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		transition: all 0.2s linear;
+
+		.message {
+			display: flex;
+			align-items: center;
+			flex-direction: column;
+			background-color: dodgerblue;
+			border-radius: 5%;
+			box-shadow: 0px 0px 2vh 0.5vh dodgerblue;
+			padding: 1vh;
+
+			.title {
+			}
+		}
+
+		.close_button, .title {
+			font-size: 25px;
+			font-family: Poppins;
+			color: black;
+		}
+
+		.close_button {
+			flex-direction: column;
+			text-align: center;
+			display: flex;
+			background-color: aliceblue;
+			pointer-events: all;
+			width: 8vw;
+			margin: 1.5vh;
+			padding: 1vh;
+			border-radius: 25%;
+			box-shadow: 0px 0px 3vh 1.5vh aliceblue;
+			transition: all 0.2s linear;
+			font-weight: bold;
+
+			&:hover {
+				background-color: #ff6a00;
+				box-shadow: 0px 0px 3vh 1.5vh #ff6a00;
+			}
+		}
 	}
 }

@@ -16,15 +16,6 @@ public class FootComponent : Component
 	[Property] public Surface CurrentSurface { get; private set; }
 	#endregion
 
-	protected override void OnAwake()
-	{
-		base.OnAwake();
-	}
-
-	protected override void OnUpdate()
-	{
-	}
-
 	protected override void OnFixedUpdate()
 	{
 		base.OnFixedUpdate();

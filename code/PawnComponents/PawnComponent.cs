@@ -2,8 +2,6 @@ using HideAndSeek.PawnComponents.Modules;
 using Sandbox;
 using Sandbox.Citizen;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace HideAndSeek;
 
@@ -60,7 +58,7 @@ public class PawnComponent : Component
 	{
 		base.OnStart();
 
-		var elements = this.GameObject.Children;
+		var elements = GameObject.Children;
 		foreach ( var element in elements )
 		{
 			switch ( element.Name )
@@ -76,48 +74,32 @@ public class PawnComponent : Component
 		}
 
 		_lastRotation = Head.Transform.Rotation;
+		PawnController = Components.Get<CharacterController>();
 		AnimationHelper = Components.GetInChildren<CitizenAnimationHelper>();
 		Camera = Components.GetInChildren<CameraMovement>();
 		_initPawnHeight = PawnController.Height;
 		JumpAction += Jump;
 	}
 
-
-	protected override void OnEnabled()
-	{
-		base.OnEnabled();
-	}
-
 	protected override void OnUpdate()
 	{
-		try
-		{
-			RotateModel();
-			PawnAnimator.AnimationUpdate( this );
+		base.OnUpdate();
+		RotateModel();
+		PawnAnimator.AnimationUpdate( this );
+		if ( IsProxy ) return;
 
-			if ( IsProxy )
-			{
-				return;
-			}
-
-			Head.Transform.LocalPosition = Head.Transform.LocalPosition.WithZ( (PawnController.Height - 10).Clamp( 40, InitHeight ) );
-			IsSprinting = Input.Down( "Run" );
-			IsWalking = Input.Down( "Walk" );
-			if ( Input.Pressed( "Jump" ) ) JumpAction?.Invoke();
-		}
-		catch ( Exception ex )
-		{
-			Log.Info( ex.Message );
-		}
+		Head.Transform.LocalPosition = Head.Transform.LocalPosition.WithZ( (PawnController.Height - 10).Clamp( 40, InitHeight ) );
+		IsSprinting = Input.Down( "Run" );
+		IsWalking = Input.Down( "Walk" );
+		if ( Input.Pressed( "Jump" ) ) JumpAction?.Invoke();
 	}
 
 	protected override void OnFixedUpdate()
 	{
 		base.OnFixedUpdate();
-		if ( IsProxy )
-		{
-			return;
-		}
+
+		if ( IsProxy ) return;
+
 		DuckCheck();
 		RotationCheck();
 		CalculateDesiredVelocity();
@@ -249,7 +231,7 @@ public class PawnComponent : Component
 
 	private void RotateModel()
 	{
-		if ( Model is null )
+		if ( Model is null || PawnController is null || Camera is null )
 		{ return; }
 
 		Angles targetAngle = new( 0, Rotation.From( Camera.EyeAngles ).Yaw(), 0f );

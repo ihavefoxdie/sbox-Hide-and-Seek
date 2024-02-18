@@ -1,0 +1,28 @@
+@using Sandbox;
+@using Sandbox.UI;
+@namespace HideAndSeek
+@inherits PanelComponent
+
+<root>
+    @if(!Hide && !IsProxy)
+    {
+        <div class="message">
+            <div class="title1" style="opacity: @Opacity">@(First.ToUpper())</div>
+            <div class="title2" style="opacity: @Opacity">@(Second.ToUpper())</div>
+        </div>
+    }
+</root>
+
+@code
+{
+    [Property] public SyncComponent SharedInfo { get; set; }
+    [Property, TextArea] public string First { get; set; } = "Waiting for more";
+    [Property, TextArea] public string Second { get; set; } = "players to join...";
+    private bool Hide { get { if (SharedInfo is not null) return SharedInfo.IsStarted; return false; } }
+    private int Opacity = 1;
+
+	/// <summary>
+    /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+    /// </summary>
+    protected override int BuildHash() => System.HashCode.Combine(First, Second, SharedInfo, Hide, Opacity);
+}

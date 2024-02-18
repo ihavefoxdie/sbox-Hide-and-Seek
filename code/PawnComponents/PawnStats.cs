@@ -16,9 +16,4 @@ public class PawnStats : Component
 		Dead = 0,
 		Alive = 1
 	}
-
-	protected override void OnUpdate()
-	{
-		base.OnUpdate();
-	}
 }

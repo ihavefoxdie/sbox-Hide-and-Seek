@@ -8,6 +8,7 @@ public class SyncComponent : Component, Component.INetworkListener
 {
 	[Property] public GameComponent CurrentGame { get; set; }
 	[Property][Sync] public float Timer { get; set; }
+	[Property][Sync] public bool IsStarted { get; set; }
 	[Property][Sync] public List<Guid> Hiders { get; set; }
 	[Property][Sync] public List<Guid> Seekers { get; set; }
 
@@ -19,7 +20,7 @@ public class SyncComponent : Component, Component.INetworkListener
 		Seekers = new();
 	}
 
-	protected override void OnUpdate()
+	protected override void OnFixedUpdate()
 	{
 		if ( IsProxy )
 		{
@@ -27,6 +28,7 @@ public class SyncComponent : Component, Component.INetworkListener
 		}
 		if ( CurrentGame is not null && CurrentGame.CurrentRound is not null )
 		{
+			IsStarted = CurrentGame.GameBegan;
 			Timer = CurrentGame.CurrentRound.TimeSinceStart.Relative;
 			if ( CurrentGame.Seekers is not null && CurrentGame.Hiders is not null )
 			{

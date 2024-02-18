@@ -4,23 +4,40 @@
 @inherits PanelComponent
 
 <root>
-	<div class="title"></div>
-    <button onclick=@(Start) class="start_button">Press me</button>
+    @if (!Hide)
+    {
+        <div class="ui" style="opacity: @Opacity">
+            <div class="message">
+            <div class="title">
+                Thank you for joining and testing my game!
+            </div>
+            <div class="title">
+                Do not forget to leave a review on asset.party!
+            </div>
+            <div class="title">
+                Have fun!
+            </div>
+        </div>
+            <button onclick=@(Start) class="close_button">Close</button>
+    </div>
+    }
 </root>
 
 @code
 {
-    [Property] public GameComponent GameComp { get; set; }
     [Property] public GameObject ThisGameObject { get; set; }
+    private bool Hide = false;
+    private float Opacity = 1;
 
 
-    private void Start()
+    private async void Start()
     {
-        //GameComp.InitGame();
-        ThisGameObject.Destroy();
+        Opacity = 0;
+        await Task.DelayRealtimeSeconds(1000);
+        Hide = true;
     }
     /// <summary>
-	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
-	/// </summary>
-	protected override int BuildHash() => System.HashCode.Combine( ThisGameObject, GameComp );
+    /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+    /// </summary>
+    protected override int BuildHash() => System.HashCode.Combine(ThisGameObject, Opacity, Hide);
 }

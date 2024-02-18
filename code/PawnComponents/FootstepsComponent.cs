@@ -18,11 +18,6 @@ public class FootstepsComponent : Component
 	#endregion
 
 
-	protected override void OnUpdate()
-	{
-
-	}
-
 	protected override void OnFixedUpdate()
 	{
 		base.OnFixedUpdate();
@@ -31,9 +26,9 @@ public class FootstepsComponent : Component
 		PlaySound( RightFoot );
 	}
 
-	protected override void OnAwake()
+	protected override void OnStart()
 	{
-		base.OnAwake();
+		base.OnStart();
 		Pawn.JumpAction += JumpSound;
 		Pawn.LandedAction += LandedSound;
 	}

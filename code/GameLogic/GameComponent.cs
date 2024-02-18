@@ -1,8 +1,10 @@
 using Sandbox;
+using Sandbox.Citizen;
 using Sandbox.GameLogic.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 namespace HideAndSeek;
 
 
@@ -15,7 +17,8 @@ public class GameComponent : Component, Component.INetworkListener
 	public Team Seekers { get; set; }
 	[Sync] public List<Guid> PlayerPawns { get; set; }
 	[Property] public NetworkComponent NetworkComponent { get; set; }
-	private bool GameBegan { get; set; } = false;
+	[Sync] public bool GameBegan { get; private set; } = false;
+	private CameraComponent Camera { get; set; }
 	/// <summary>
 	/// Round length limit in seconds.
 	/// </summary>
@@ -41,6 +44,10 @@ public class GameComponent : Component, Component.INetworkListener
 	{
 		PlayerPawns = new();
 	}
+	protected override void OnStart()
+	{
+		Camera = Components.Get<CameraComponent>();
+	}
 
 	public void OnActive( Connection conn )
 	{
@@ -57,6 +64,7 @@ public class GameComponent : Component, Component.INetworkListener
 		}
 	}
 
+
 	public void OnConnected( Connection conn )
 	{
 	}
@@ -66,20 +74,18 @@ public class GameComponent : Component, Component.INetworkListener
 		for ( int i = 0; i < PlayerPawns.Count; i++ )
 		{
 			var p = Scene.Directory.FindByGuid( PlayerPawns[i] );
-			if ( p.Network.OwnerConnection == conn )
+			if ( p != null )
 			{
-				PlayerPawns.Remove( PlayerPawns[i] );
-				break;
+				if ( p.Network.OwnerConnection == conn )
+				{
+					PlayerPawns.Remove( PlayerPawns[i] );
+					break;
+				}
 			}
 		}
 
 		Seekers.TeamPlayers.Remove( conn.Id );
 		Hiders.TeamPlayers.Remove( conn.Id );
-	}
-
-	protected override void OnEnabled()
-	{
-		base.OnEnabled();
 	}
 
 	protected override void OnFixedUpdate()
@@ -110,7 +116,8 @@ public class GameComponent : Component, Component.INetworkListener
 	#region Methods
 	private void LogTeamLost( Team team )
 	{
-		Log.Info( team.Name + " team has lost!" );
+		if ( team != null )
+			Log.Info( team.Name + " team has lost!" );
 	}
 
 	private void ToggleSeekers( bool toggle )
@@ -118,23 +125,41 @@ public class GameComponent : Component, Component.INetworkListener
 		var pawns = Scene.GetAllObjects( false ).Where( x => x.Tags.Has( "seekers" ) );
 		foreach ( var pawn in pawns )
 		{
-			ToggleASeeker( pawn.Id, toggle );
+			TogglePawn( pawn.Id, toggle );
 		}
 	}
 
 	[Broadcast]
-	private void ToggleASeeker( Guid guid, bool toggle )
+	private void TogglePawn( Guid guid, bool toggle )
 	{
-		Scene.Directory.FindByGuid( guid ).Enabled = toggle;
+		var pawn = Scene.Directory.FindByGuid( guid );
+		if ( pawn != null )
+		{
+			pawn.Enabled = toggle;
+			if ( toggle == true )
+			{
+				pawn.Components.Create<TeamEquipmentComponent>( true );
+			}
+		}
+	}
+
+	[Broadcast]
+	private void ToggleCam(bool toggle)
+	{
+		var id = Components.Get<CameraComponent>(true);
+		id.IsMainCamera = toggle;
+		id.Enabled = toggle;
 	}
 
 	private async void InitGame()
 	{
 		if ( Networking.Connections.Count <= 1 )
 		{
+			ToggleCam( true);
 			GameBegan = false;
 			return;
 		}
+		ToggleCam( false );
 
 		OnRoundStart?.Invoke();
 		InitRound();
@@ -190,7 +215,7 @@ public class GameComponent : Component, Component.INetworkListener
 			if ( seekersIndexes.Contains( index ) )
 				continue;
 
-			Seekers.TeamPlayers.Add( connection.Id );
+			Seekers?.TeamPlayers.Add( connection.Id );
 			RespawnPlayer( connId );
 			seekersIndexes[selected] = index;
 			selected++;
@@ -201,11 +226,9 @@ public class GameComponent : Component, Component.INetworkListener
 		{
 			if ( !seekersIndexes.Contains( i ) )
 			{
-				var startLocation = NetworkComponent.FindSpawnLocation().WithScale( 1 );
-
 				// Spawn this object and make the client the owner
 				RespawnPlayer( Networking.Connections[i].Id, "hiders" );
-				Hiders.TeamPlayers.Add( Networking.Connections[i].Id );
+				Hiders?.TeamPlayers.Add(Networking.Connections[i].Id);
 			}
 		}
 	}
@@ -214,6 +237,7 @@ public class GameComponent : Component, Component.INetworkListener
 	/// Respawn player by providing them a new pawn to play as.
 	/// </summary>
 	/// <param name="connection">Player connection.</param>
+	/// <param name="tag">Player team.</param>
 	/// <returns>Pawn GameObject.</returns>
 	private void RespawnPlayer( Guid connection, string tag = "seekers" )
 	{
@@ -221,17 +245,19 @@ public class GameComponent : Component, Component.INetworkListener
 		var conn = Networking.Connections.Where( x => x.Id == connection ).First();
 		// Spawn this object and make the client the owner
 		var player = NetworkComponent.PlayerPrefab.Clone( startLocation, name: $"Player - {conn.DisplayName}" );
-		player.NetworkSpawn( conn );
-
 		player.Tags.Add( tag );
 		PlayerPawns.Add( player.Id );
+		if ( tag == "seekers" )
+		{
+		}
+
+		player.NetworkSpawn( conn );
 	}
 
 	private async void EndRound()
 	{
 		await Task.DelayRealtimeSeconds( RoundCooldown );
 		RemoveAllPawns();
-		await Task.DelayRealtimeSeconds( 1f );
 		InitGame();
 	}
 
@@ -240,7 +266,8 @@ public class GameComponent : Component, Component.INetworkListener
 	{
 		for ( int i = 0; i < PlayerPawns.Count; i++ )
 		{
-			Scene.Directory.FindByGuid( PlayerPawns[i] ).Destroy();
+			var gameObject = Scene.Directory.FindByGuid( PlayerPawns[i] );
+			gameObject?.Destroy();
 		}
 		PlayerPawns.Clear();
 	}

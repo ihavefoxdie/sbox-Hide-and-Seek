@@ -49,8 +49,6 @@ public class NetworkComponent : Component, Component.INetworkListener
 	/// </summary>
 	public void OnActive( Connection channel )
 	{
-		Log.Info( $"Player '{channel.DisplayName}' has joined the game" );
-
 		if ( PlayerPrefab is null )
 			return;
 	}

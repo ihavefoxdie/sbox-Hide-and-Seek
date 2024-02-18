@@ -51,15 +51,16 @@ public class CameraMovement : Component
 	protected override void OnUpdate()
 	{
 		base.OnUpdate();
-		Camera.Enabled = !IsProxy && GameObject.Network.IsOwner;
+
 		if ( IsProxy ) return;
+
 		ProcessRotation();
 		ProcessCameraPosition();
 	}
 
 	protected override void OnFixedUpdate()
 	{
-		base.OnFixedUpdate();
+		Camera.Enabled = !IsProxy && GameObject.Network.IsOwner;
 	}
 
 
