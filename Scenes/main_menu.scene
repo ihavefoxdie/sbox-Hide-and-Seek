@@ -75,6 +75,180 @@
         }
       ],
       "Children": []
+    },
+    {
+      "Id": "de0c9c75-606a-4e8c-8050-ab28fa723a97",
+      "Name": "2nd Camera",
+      "Position": "-2250.664,3234.76,-12678.78",
+      "Rotation": "0,0.06975647,0,0.9975641",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "CameraComponent",
+          "BackgroundColor": "0,0.68333,1,1",
+          "ClearFlags": "All",
+          "FieldOfView": 83,
+          "IsMainCamera": false,
+          "Orthographic": false,
+          "OrthographicHeight": 1204,
+          "Priority": 1,
+          "RenderExcludeTags": "",
+          "RenderTags": "",
+          "TargetEye": "None",
+          "Viewport": "0.07,0.275,0.35,0.35",
+          "ZFar": 10000,
+          "ZNear": 10
+        }
+      ]
+    },
+    {
+      "Id": "58cf8cc6-7780-4b5d-b997-4e859dd39aa1",
+      "Name": "Wall",
+      "Position": "-2075.138,3233.941,-12827.04",
+      "Rotation": "0,0,0.7071068,0.7071068",
+      "Scale": "10,0.1,10",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "ModelRenderer",
+          "BodyGroups": 18446744073709551615,
+          "MaterialGroup": null,
+          "MaterialOverride": "materials/dev/bright_100.vmat",
+          "Model": "models/dev/box.vmdl",
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        }
+      ]
+    },
+    {
+      "Id": "8f1bfb68-23c0-497c-9848-95aa2762a851",
+      "Name": "Pawn",
+      "Position": "-2161.669,3214.814,-12731.89",
+      "Rotation": "0,0,0.9469293,0.3214417",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "SkinnedModelRenderer",
+          "AnimationGraph": null,
+          "BodyGroups": 341,
+          "BoneMergeTarget": null,
+          "CreateBoneObjects": false,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Model": "models/citizen/citizen.vmdl",
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "CitizenAnimationHelper",
+          "BodyWeight": 1,
+          "EyeSource": null,
+          "EyesWeight": 1,
+          "HeadWeight": 1,
+          "Height": 1,
+          "IkLeftFoot": null,
+          "IkLeftHand": null,
+          "IkRightFoot": null,
+          "IkRightHand": null,
+          "LookAt": null,
+          "LookAtEnabled": false,
+          "Target": {
+            "_type": "component",
+            "go": "8f1bfb68-23c0-497c-9848-95aa2762a851",
+            "component_type": "SkinnedModelRenderer"
+          }
+        },
+        {
+          "__type": "MainMenuDresser",
+          "PawnModelRenderer": {
+            "_type": "component",
+            "go": "8f1bfb68-23c0-497c-9848-95aa2762a851",
+            "component_type": "SkinnedModelRenderer"
+          }
+        }
+      ]
+    },
+    {
+      "Id": "b965e2a6-2360-4500-83b3-a117dcdbc9b7",
+      "Name": "\u0026",
+      "Position": "-2152.034,3174,-12706.5",
+      "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "WorldPanel",
+          "HorizontalAlign": "Center",
+          "LookAtCamera": false,
+          "PanelSize": "2048,1024",
+          "RenderScale": 2,
+          "VerticalAlign": "Center"
+        },
+        {
+          "__type": "HideTitle",
+          "MyStringValue": "\u0026\n"
+        }
+      ]
+    },
+    {
+      "Id": "9700d4f8-d38a-45b3-b3b7-89462949fed3",
+      "Name": "Hide",
+      "Position": "-2110.212,3247,-12675",
+      "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "WorldPanel",
+          "HorizontalAlign": "Center",
+          "LookAtCamera": false,
+          "PanelSize": "4096,1024",
+          "RenderScale": 2,
+          "VerticalAlign": "Center"
+        },
+        {
+          "__type": "HideTitle",
+          "MyStringValue": "Hide"
+        }
+      ]
+    },
+    {
+      "Id": "5da02ea9-251f-4afc-8c67-c84c9a75b1b6",
+      "Name": "Seek",
+      "Position": "-2183.349,3242,-12705",
+      "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
+      "Scale": "1,0.55,0.55",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "WorldPanel",
+          "HorizontalAlign": "Center",
+          "LookAtCamera": false,
+          "PanelSize": "4096,1024",
+          "RenderScale": 1.65,
+          "VerticalAlign": "Center"
+        },
+        {
+          "__type": "HideTitle",
+          "MyStringValue": "Seek\n"
+        }
+      ]
+    },
+    {
+      "Id": "9978bc40-4fc8-4de8-a856-3092ec1bb50f",
+      "Name": "Light",
+      "Position": "-2203.233,3222.265,-12680.08",
+      "Tags": "light_spot,light,light_point",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "PointLight",
+          "Attenuation": 0,
+          "FogMode": "Enabled",
+          "FogStrength": 1,
+          "LightColor": "1,1,1,1",
+          "Radius": 400,
+          "Shadows": false
+        }
+      ]
     }
   ],
   "SceneProperties": {
@@ -100,6 +274,6 @@
   },
   "Title": "MainMenu",
   "Description": "Game\u0027s main menu",
-  "LastSaved": "2024-02-13T14:52:45.2527119\u002B03:00",
+  "LastSaved": "2024-02-22T14:51:14.9119043\u002B03:00",
   "__references": []
 }

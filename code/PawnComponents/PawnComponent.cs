@@ -53,11 +53,9 @@ public class PawnComponent : Component
 	private float _initPawnHeight;
 	#endregion
 
-
+	//TODO: fix often thrown exception on failed proper component initialization.
 	protected override void OnStart()
 	{
-		base.OnStart();
-
 		var elements = GameObject.Children;
 		foreach ( var element in elements )
 		{
@@ -76,17 +74,34 @@ public class PawnComponent : Component
 		_lastRotation = Head.Transform.Rotation;
 		PawnController = Components.Get<CharacterController>();
 		AnimationHelper = Components.GetInChildren<CitizenAnimationHelper>();
-		Camera = Components.GetInChildren<CameraMovement>();
+		Camera = Components.GetInChildren<CameraMovement>(true);
 		_initPawnHeight = PawnController.Height;
 		JumpAction += Jump;
 	}
 
+
 	protected override void OnUpdate()
 	{
-		base.OnUpdate();
+		if ( Model == null )
+		{
+			Log.Info( "THIS DAMN model IS NULL!!!" );
+		}
+		if ( Head == null )
+		{
+			Log.Info( "THIS DAMN head IS NULL!!!" );
+		}
+		if ( Camera == null )
+		{
+			Log.Info( "THIS DAMN camera IS NULL!!!" );
+			Camera = Components.GetInChildren<CameraMovement>( true );
+		}
+
+
 		RotateModel();
 		PawnAnimator.AnimationUpdate( this );
+
 		if ( IsProxy ) return;
+		if ( Head == null ) return;
 
 		Head.Transform.LocalPosition = Head.Transform.LocalPosition.WithZ( (PawnController.Height - 10).Clamp( 40, InitHeight ) );
 		IsSprinting = Input.Down( "Run" );
@@ -96,10 +111,7 @@ public class PawnComponent : Component
 
 	protected override void OnFixedUpdate()
 	{
-		base.OnFixedUpdate();
-
 		if ( IsProxy ) return;
-
 		DuckCheck();
 		RotationCheck();
 		CalculateDesiredVelocity();
@@ -231,8 +243,7 @@ public class PawnComponent : Component
 
 	private void RotateModel()
 	{
-		if ( Model is null || PawnController is null || Camera is null )
-		{ return; }
+		if ( Model == null || PawnController == null || Camera == null ) return;
 
 		Angles targetAngle = new( 0, Rotation.From( Camera.EyeAngles ).Yaw(), 0f );
 

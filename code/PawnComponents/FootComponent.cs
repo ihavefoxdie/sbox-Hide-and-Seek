@@ -18,8 +18,6 @@ public class FootComponent : Component
 
 	protected override void OnFixedUpdate()
 	{
-		base.OnFixedUpdate();
-
 		CheckLifted();
 	}
 

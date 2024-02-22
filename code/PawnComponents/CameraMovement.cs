@@ -5,7 +5,6 @@ namespace HideAndSeek;
 public class CameraMovement : Component
 {
 	#region Properties
-	[Property] public PawnComponent Pawn { get; private set; }
 	[Property]
 	[Range( 0f, 150f, 0.01f, true, true )]
 	public float Distance { get; set; } = 150f;
@@ -37,21 +36,38 @@ public class CameraMovement : Component
 	public Vector3 _cameraPosition;
 	#endregion
 
-	protected override void OnStart()
+	protected override void DrawGizmos()
 	{
-		base.OnStart();
-		
-		Pawn ??= Components.GetInParent<PawnComponent>();
-		Head ??= Pawn.Head;
-		Model ??= Pawn.Model;
+		if (!Gizmo.IsSelected) return;
+
+		Gizmo.GizmoDraw draw = Gizmo.Draw;
+		draw.LineSphere( EyePosition, 10f );
+		draw.LineCylinder( EyePosition, EyePosition + Transform.Rotation.Forward * 40f, 5f, 5f, 10 );
+	}
+	protected override void OnAwake()
+	{
+		var elements = GameObject.Parent.Children;
+		foreach ( var element in elements )
+		{
+			switch ( element.Name )
+			{
+				case "Head":
+					Head = element;
+					continue;
+				case "Model":
+					Model = element;
+					continue;
+				default: continue;
+			}
+		}
+
 		_cameraPosition = Head.Transform.Position;
 		_pawnRenderer ??= Model.Components.Get<ModelRenderer>();
 	}
 
 	protected override void OnUpdate()
 	{
-		base.OnUpdate();
-
+		Camera.Enabled = !IsProxy && GameObject.Network.IsOwner;
 		if ( IsProxy ) return;
 
 		ProcessRotation();
@@ -60,7 +76,6 @@ public class CameraMovement : Component
 
 	protected override void OnFixedUpdate()
 	{
-		Camera.Enabled = !IsProxy && GameObject.Network.IsOwner;
 	}
 
 
@@ -113,10 +128,10 @@ public class CameraMovement : Component
 			PawnRenderer.RenderType = ModelRenderer.ShadowRenderType.ShadowsOnly;
 		}
 		//TODO: fix to avoid pawn dissappearing on for everyone on server
-		if ( Vector3.DistanceBetween( _cameraPosition, Model.Transform.Position ) < 20 || Vector3.DistanceBetween( _cameraPosition, Head.Transform.Position ) < 20 )
+/*		if ( Vector3.DistanceBetween( _cameraPosition, Model.Transform.Position ) < 20 || Vector3.DistanceBetween( _cameraPosition, Head.Transform.Position ) < 20 )
 		{
 			PawnRenderer.RenderType = ModelRenderer.ShadowRenderType.ShadowsOnly;
-		}
+		}*/
 		Camera.Transform.Position = _cameraPosition;
 		Camera.Transform.Rotation = Rotation.From( EyeAngles );
 	}

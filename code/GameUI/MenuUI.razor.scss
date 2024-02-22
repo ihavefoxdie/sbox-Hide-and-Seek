@@ -13,13 +13,20 @@ MenuUI {
 	.menu {
 		.title {
 			font-size: 10vh;
-			background-color: dodgerblue;
-			border-radius: 10%;
-			padding: 1vh;
-			padding-right: 10vh;
-			font-family: Inter;
+			background-color: white;
+			border-radius: 5%;
+			font-color: white;
+			font-family: Poppins;
 			margin-bottom: 5vh;
 			font-weight: bold;
+			min-width: 40%;
+			min-height: 40%;
+			box-shadow: 0px 0px 5vh white;
+			transition: all 0.1s linear;
+
+			&:hover {
+				border-radius: 7%;
+			}
 		}
 
 		pointer-events: all;
@@ -31,13 +38,22 @@ MenuUI {
 
 		.play-button, .sample-button, .exit-button {
 			font-size: 5vh;
-			font-family: Calibri;
+			font-family: Poppins;
 			color: #fff;
+			background-color: #ff6a0000;
+			transition: all 0.2s linear;
+			font-weight: bold;
+			width: 20%;
+/*			border-top-right-radius: 8%;
+			border-bottom-right-radius: 8%;*/
 		}
 
 		.play-button:hover, .exit-button:hover {
-			font-size: 5vh;
-			font-weight: 1000;
+			//font-size: 5vh;
+			background-color: #ff6a00;
+			width: 100%;
+			box-shadow: 0px 0px 4vh #ff6a00;
+			padding-left: 50px;
 		}
 
 		.exit-button {

@@ -21,7 +21,7 @@ public class FootstepsComponent : Component
 	protected override void OnFixedUpdate()
 	{
 		base.OnFixedUpdate();
-
+		
 		PlaySound( LeftFoot );
 		PlaySound( RightFoot );
 	}

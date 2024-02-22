@@ -1,0 +1,38 @@
+{
+  "RootObject": {
+    "Id": "15c95bd6-3bb6-41d1-8814-bdedd1a12552",
+    "Name": "hns_pawnui",
+    "Enabled": true,
+    "Components": [
+      {
+        "__type": "PawnSyncComponent",
+        "Pawn": null
+      },
+      {
+        "__type": "ScreenPanel",
+        "AutoScreenScale": true,
+        "Opacity": 1,
+        "Scale": 1,
+        "ZIndex": 100
+      },
+      {
+        "__type": "PawnHUD",
+        "Health": 0,
+        "Pawn": null,
+        "Proxy": 1,
+        "Stamina": 0,
+        "StaminaPercentage": 0,
+        "SyncComponent": {
+          "_type": "component",
+          "go": "15c95bd6-3bb6-41d1-8814-bdedd1a12552",
+          "component_type": "PawnSyncComponent"
+        }
+      }
+    ],
+    "Children": []
+  },
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "__references": []
+}

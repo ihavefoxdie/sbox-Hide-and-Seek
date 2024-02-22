@@ -6,7 +6,7 @@ public class PawnModel : Component, Component.INetworkSpawn
 {
 	[Property] public SkinnedModelRenderer PawmModelRenderer { get; set; }
 
-	protected override void OnStart()
+	protected override void OnAwake()
 	{
 		base.OnStart();
 

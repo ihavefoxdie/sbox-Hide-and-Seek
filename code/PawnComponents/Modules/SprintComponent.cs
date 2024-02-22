@@ -22,7 +22,7 @@ public class SprintComponent : Component
 		Pawn.JumpAction += JumpHandler;
 	}
 
-	protected override void OnUpdate()
+	protected override void OnFixedUpdate()
 	{
 		SprintCheck();
 	}

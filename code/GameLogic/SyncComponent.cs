@@ -14,8 +14,7 @@ public class SyncComponent : Component, Component.INetworkListener
 
 	protected override void OnAwake()
 	{
-		var fuck = Scene.GetAllComponents<GameComponent>();
-		CurrentGame = fuck.Last();
+		CurrentGame = Scene.GetAllComponents<GameComponent>().Last();
 		Hiders = new();
 		Seekers = new();
 	}

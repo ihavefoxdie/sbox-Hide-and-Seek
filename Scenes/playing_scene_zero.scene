@@ -67,6 +67,10 @@
             "go": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
             "component_type": "NetworkComponent"
           },
+          "PawnUIPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/hns_pawnui.prefab"
+          },
           "PreparationTime": 5,
           "RoundCooldown": 10,
           "RoundLength": 20
@@ -179,6 +183,6 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-02-19T02:22:41.6300782\u002B03:00",
+  "LastSaved": "2024-02-20T21:45:56.7788859\u002B03:00",
   "__references": []
 }

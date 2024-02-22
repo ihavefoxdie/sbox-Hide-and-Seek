@@ -1,0 +1,67 @@
+@using Sandbox;
+@using Sandbox.UI;
+@namespace HideAndSeek
+@inherits PanelComponent
+
+<root>
+    <div class="player-stats" style="opacity: @(Proxy)">
+        <div class="team" style="background-color: @TeamColor; box-shadow: 0px 0px 5vh @TeamColor;">@Team</div>
+        <div class="stamina-background">
+            <div class="stamina" style="width: @(StaminaPercentage/5)vh; background-color: @Color; box-shadow: 0px 0px 3vh @Color;"></div>
+        </div>
+    </div>
+    <div class="items">
+    </div>
+</root>
+
+@code
+{
+    [Property] public PawnSyncComponent SyncComponent {get; set;}
+    private PawnComponent Pawn { get { return SyncComponent?.Pawn; } }
+    private SyncComponent SyncComp { get { return SyncComponent?.SyncComp; } }
+
+    private string Color
+    {
+        get
+        {
+            if (Pawn == null) return "white";
+            if (Stamina < Pawn.Stats.MaxStamina * 0.2f ) return "red";
+            return "lime";
+        }
+    }
+
+    private string Team
+    {
+        get
+        {
+            if (SyncComp.Seekers.Contains(this.Network.OwnerConnection.Id))
+                return "S";
+            if (SyncComp.Hiders.Contains(this.Network.OwnerConnection.Id))
+                return "H";
+
+            return "?";
+        }
+    }
+
+    private string TeamColor
+    {
+        get
+        {
+            if (SyncComp.Seekers.Contains(this.Network.OwnerConnection.Id))
+                return "#f20000c0";
+            if (SyncComp.Hiders.Contains(this.Network.OwnerConnection.Id))
+                return "dodgerblue";
+
+            return "black";
+        }
+    }
+
+    [Property] public float Stamina { get { if (Pawn is null || Pawn.Stats is null) return 0; else return Pawn.Stats.Stamina; } }
+    [Property] public double StaminaPercentage { get { if (Pawn == null || Pawn.Stats == null) return 0; return Stamina / (Pawn.Stats.MaxStamina / 100); } }
+    [Property] public int Proxy { get { if (IsProxy) return 0; return 1; } }
+
+	/// <summary>
+    /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+    /// </summary>
+    protected override int BuildHash() => System.HashCode.Combine(Stamina, StaminaPercentage, Color, Team, TeamColor);
+}
