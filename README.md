@@ -2,4 +2,10 @@
 
 #### A game of hide and seek for s&box.
 
-Very early stages of development.
+Not so early stages of development!
+
+Working features:
+Round start, round end, seekers tagging hiders and winning
+
+UI elements completion is nearing the stage to be minimal but hello my name is dusya
+haw are you
