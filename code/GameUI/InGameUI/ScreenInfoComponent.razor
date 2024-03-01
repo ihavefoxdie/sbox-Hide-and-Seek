@@ -1,35 +1,79 @@
 @using Sandbox;
 @using Sandbox.UI;
 @using System;
+@using Sandbox.GameLogic.Modules;
 @using System.Collections.Generic;
 
 @namespace HideAndSeek
 @inherits PanelComponent
 
 <root>
-    <div class="game_ui" style="opacity: @Opacity;">
-        <div class="player_count" style="font-weight:bold; background-color: dodgerblue; box-shadow: 0px 0px 0.5vh dodgerblue;">@(Hiders.Count)</div>
-        <div class="player_count" style="font-weight:bold; background-color: #f20000c0; box-shadow: 0px 0px 0.5vh #f20000c0;">@(Seekers.Count)</div>
-        <div class="game_timer">@(GetFullTime())</div>
+    @{
+        if (Input.EscapePressed)
+            Hide = !Hide;
+    }
+    <div style="flex-direction: column; @(Hide == false ? "display: flex;" : "display: none;")">
+        <div class="game_ui" style="opacity: @Opacity;">
+            <div class="player_count" style="font-weight:bold; background-color: dodgerblue; box-shadow: 0px 0px 0.5vh dodgerblue;">@(Hiders.Count)</div>
+            <div class="player_count" style="font-weight:bold; background-color: #f20000c0; box-shadow: 0px 0px 0.5vh #f20000c0;">@(Seekers.Count)</div>
+            <div class="game_timer">@(GetFullTime())</div>
+        </div>
+        <div class="info" style="@(StartEventGoing == true ? "display:flex; opacity: 1;" : "display:none; opacity: 0;")">
+            <div class="message">@Message</div>
+        </div>
     </div>
 </root>
 
 @code
 {
     [Property] public SyncComponent SharedInfo { get; set; }
-    [Property] public int CurrentTimeSecs { get { if (SharedInfo is null) return 0; return (int)((SharedInfo.Timer) % 60); } }
-    [Property] public int CurrentTimeMinutes { get { if (SharedInfo is null) return 0; return (int)((SharedInfo.Timer) / 60); } }
+    [Property] public int CurrentTimeSecs { get { if (SharedInfo is null) return 0; return (int)(Math.Max(SharedInfo.MaxTime - SharedInfo.Timer, 0) % 60); } }
+    [Property] public int CurrentTimeMinutes { get { if (SharedInfo is null) return 0; return (int)(Math.Max(SharedInfo.MaxTime - SharedInfo.Timer, 0) / 60); } }
     [Property] public List<Guid> Seekers { get { if (SharedInfo is null || SharedInfo.Seekers is null) return new List<Guid>(); return SharedInfo.Seekers; } }
     [Property] public List<Guid> Hiders { get { if (SharedInfo is null || SharedInfo.Hiders is null) return new List<Guid>(); return SharedInfo.Hiders; } }
     private float Opacity { get {  if (SharedInfo is not null) return Convert.ToInt32(SharedInfo.IsStarted); return 0; } }
+    [Sync] private string Message { get; set; }
+    [Sync] private bool StartEventGoing { get; set; }
+    private bool Hide { get; set; } = false;
 
     private string GetFullTime()
     {
         return $"{CurrentTimeMinutes:00}:{CurrentTimeSecs:00}";
     }
 
+    private void PrepTime()
+    {
+        //SharedInfo == null ? "" : (SharedInfo.Timer - (SharedInfo.MaxTime - SharedInfo.PreparationTime))
+    }
+
+    private async void StartRound()
+    {
+        StartEventGoing = true;
+        Message = "Get Ready!";
+
+        await Task.DelayRealtimeSeconds(SharedInfo == null ? 5 : SharedInfo.PreparationTime);
+
+        StartEventGoing = false;
+    }
+
+    private async void RoundEnd(Team loser)
+    {
+        StartEventGoing = true;
+        Message = "Team " + loser.Name + " has lost!";
+
+        await Task.DelayRealtimeSeconds(SharedInfo == null ? 5 : SharedInfo.RoundCooldown);
+
+        StartEventGoing = false;
+    }
+
+    protected override void OnTreeFirstBuilt()
+    {
+        SharedInfo.CurrentGame.OnRoundStart += StartRound;
+        SharedInfo.CurrentGame.OnTeamLost += RoundEnd;
+    }
+
     /// <summary>
     /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
     /// </summary>
-    protected override int BuildHash() => System.HashCode.Combine(SharedInfo, CurrentTimeSecs, CurrentTimeMinutes, Seekers, Hiders, Opacity);
+    protected override int BuildHash() => System.HashCode.Combine(CurrentTimeSecs, CurrentTimeMinutes, Opacity, StartEventGoing, Message, Input.EscapePressed);
 }

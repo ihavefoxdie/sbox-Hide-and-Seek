@@ -1,0 +1,14 @@
+{
+  "UI": false,
+  "Volume": "0.01,0.10,1",
+  "Pitch": "1.00,1.00,0",
+  "Decibels": 140,
+  "SelectionMode": "Random",
+  "Sounds": [
+    "sounds/game/throw1.vsnd",
+    "sounds/game/throw2.vsnd",
+    "sounds/game/throw3.vsnd",
+    "sounds/game/throw4.vsnd"
+  ],
+  "__references": []
+}

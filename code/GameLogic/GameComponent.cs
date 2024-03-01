@@ -3,6 +3,8 @@ using Sandbox.GameLogic.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+
 namespace HideAndSeek;
 
 
@@ -45,7 +47,7 @@ public class GameComponent : Component, Component.INetworkListener
 	/// <summary>
 	/// Time before seekers become active.
 	/// </summary>
-	[Property] public int PreparationTime { get; set; } = 10;
+	[Property] public int PreparationTime { get; set; } = 30;
 	#endregion
 
 
@@ -266,6 +268,12 @@ public class GameComponent : Component, Component.INetworkListener
 		id.Enabled = toggle;
 	}
 
+	[Broadcast]
+	private void PlayStart()
+	{
+		Sound.Play( "sounds/game/ringsoundevent.sound" );
+	}
+
 	/// <summary>
 	/// Initializes the game (seeker timeout, logic firing and stuff).
 	/// </summary>
@@ -289,6 +297,7 @@ public class GameComponent : Component, Component.INetworkListener
 		Log.Info( "Seekers disabled." );
 		await Task.DelayRealtimeSeconds( PreparationTime );
 		ToggleSeekers( true );
+		PlayStart();
 		Log.Info( "Seekers enabled." );
 	}
 
@@ -298,7 +307,7 @@ public class GameComponent : Component, Component.INetworkListener
 	private void InitRound()
 	{
 		CurrentRound = new( RoundLength );
-		OnTeamLost = LogTeamLost;
+		OnTeamLost += LogTeamLost;
 		Seekers = new( "Seekers", "red" );
 		Hiders = new( "Hiders", "blue" );
 		CurrentRound.Start += StartRound;
@@ -332,7 +341,7 @@ public class GameComponent : Component, Component.INetworkListener
 		seekersIndexes[0] = -1;
 		while ( selected < seekersCount )
 		{
-			int index = new Random().Next( Networking.Connections.Count - 1 );
+			int index = Game.Random.Next( Networking.Connections.Count );
 			var connection = Networking.Connections.ElementAt( index );
 			Guid connId = connection.Id;
 

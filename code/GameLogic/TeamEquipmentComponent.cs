@@ -1,6 +1,7 @@
 using Sandbox;
 using Sandbox.Citizen;
 using Sandbox.ModelEditor.Nodes;
+using System.Diagnostics;
 using System.Linq;
 
 namespace HideAndSeek;
@@ -22,8 +23,8 @@ public class TeamEquipmentComponent : Component
 
 	protected override void OnStart()
 	{
-		_pawn = Components.Get<PawnComponent>();
-		CameraMovement = Components.GetInChildren<CameraMovement>();
+		_pawn = Components.Get<PawnComponent>(true);
+		CameraMovement = Components.GetInChildren<CameraMovement>(true);
 		_lastSwing = 0;
 		SyncComponent = Scene.GetAllComponents<SyncComponent>().Last();
 	}
@@ -34,7 +35,9 @@ public class TeamEquipmentComponent : Component
 
 		if ( IsProxy ) return;
 		if ( Input.Pressed( "attack1" ) && _lastSwing >= SwingCooldown )
+		{
 			Swing();
+		}
 	}
 
 	protected override void OnFixedUpdate()
@@ -61,13 +64,27 @@ public class TeamEquipmentComponent : Component
 	{
 		if ( _animationHelper == null ) return;
 		_animationHelper.Target.Set( "b_attack", true );
+		Sound.Play( "sounds/game/swingsoundevent.sound", _pawn.Transform.Position);
+	}
+
+	[Broadcast]
+	private void PlayPunch()
+	{
+		Sound.Play( "sounds/game/pokesoundevent.sound", _pawn.Transform.Position );
+	}
+
+	[Broadcast]
+	private void PlaySimplePunch(string soundEvent)
+	{
+		var play = Sound.Play( soundEvent, _pawn.Transform.Position );
+		play.Volume = 1f;
 	}
 
 	private void Swing()
 	{
 		if ( _animationHelper == null ) return;
 		PlaySwing();
-		var trace = Scene.Trace.FromTo( CameraMovement.EyePosition, CameraMovement.EyePosition + CameraMovement.EyeAngles.Forward * SwingRange )
+		var trace = Scene.Trace.FromTo( CameraMovement.EyePosition, CameraMovement.EyePosition + CameraMovement.EyeAngles.WithYaw(_pawn.Model.Transform.Rotation.Yaw()).Forward * SwingRange )
 			.Size( 20f )
 			.IgnoreGameObjectHierarchy(GameObject)
 			.Run();
@@ -82,7 +99,12 @@ public class TeamEquipmentComponent : Component
 				Log.Info( check );
 				if(check)
 				{
-					SyncComponent.CurrentGame.Caught( _pawn.GameObject.Id, parent.Id );
+					PlayPunch();
+					SyncComponent.OnCaught( _pawn.GameObject.Id, parent.Id );
+				}
+				else
+				{
+					PlaySimplePunch( trace.Surface.Sounds.ImpactHard );
 				}
 			}
 		}

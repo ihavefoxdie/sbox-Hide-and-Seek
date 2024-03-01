@@ -50,6 +50,11 @@ JoinedScreen {
 			&:hover {
 				background-color: #ff6a00;
 				box-shadow: 0px 0px 3vh 1.5vh #ff6a00;
+				sound-in: sounds/ui/hoversoundevent.sound;
+			}
+
+			&:active {
+				sound-in: sounds/ui/clicksoundevent.sound;
 			}
 		}
 	}

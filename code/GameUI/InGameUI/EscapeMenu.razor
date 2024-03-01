@@ -1,0 +1,66 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using Sandbox.Network;
+@namespace HideAndSeek
+@inherits PanelComponent
+
+<root>
+    @{
+        if (Input.EscapePressed)
+            Hide = !Hide;
+    }
+    <div class="menu" style="@(Hide == false ? "display: flex;" : "display: none;")">
+        <div class="button-panel">
+            <button class="esc-menu-button" onclick=@Disconnect>Disconnect</button>
+        </div>
+        <div class="info-panel">
+            <div class="map-info" style="background-image: url(@(GetMapThumb())) ">
+                <div class="text-info">
+                    Currently playing on:
+                    <p>@(GetMapName())</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</root>
+
+@code
+{
+    [Property] public SyncComponent SharedInfo { get; private set; }
+    private Package MapPackage;
+    private bool Hide = true;
+
+    private void Disconnect()
+    {
+        GameNetworkSystem.Disconnect();
+        GameManager.ActiveScene.LoadFromFile("scenes/main_menu.scene");
+    }
+
+    private string GetMapThumb()
+    {
+        if (MapPackage != null)
+            return MapPackage.Thumb;
+
+        return "";
+    }
+
+    private string GetMapName()
+    {
+        if (MapPackage != null)
+            return MapPackage.FullIdent;
+
+        return "";
+    }
+
+    protected override void OnTreeFirstBuilt()
+    {
+        if (SharedInfo == null)
+            return;
+
+        MapPackage = Package.FetchAsync(SharedInfo.MapIdent, true).Result;
+    }
+    /// <summary>
+	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+	/// </summary>
+	protected override int BuildHash() => System.HashCode.Combine( Input.EscapePressed );
+}

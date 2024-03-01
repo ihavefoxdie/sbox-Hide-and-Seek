@@ -4,7 +4,7 @@
 @inherits PanelComponent
 
 <root>
-    @if(!Hide && !IsProxy)
+    @if(!Hide)
     {
         <div class="message">
             <div class="title1" style="opacity: @Opacity">@(First.ToUpper())</div>
@@ -18,7 +18,7 @@
     [Property] public SyncComponent SharedInfo { get; set; }
     [Property, TextArea] public string First { get; set; } = "Waiting for more";
     [Property, TextArea] public string Second { get; set; } = "players to join...";
-    private bool Hide { get { if (SharedInfo is not null) return SharedInfo.IsStarted; return false; } }
+    [Sync] private bool Hide { get { if (SharedInfo is not null) return SharedInfo.IsStarted; return false; } }
     private int Opacity = 1;
 
 	/// <summary>

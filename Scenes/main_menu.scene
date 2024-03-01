@@ -2,10 +2,229 @@
   "Id": "46883838-ec55-4141-b581-832c6abd1ffe",
   "GameObjects": [
     {
+      "Id": "61b16920-7dd1-4d60-949a-0474ddd8cd4d",
+      "Name": "Logo",
+      "Position": "4553.015,6165.111,0.0002397361",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "LogoComponent",
+          "LogoTexture": null
+        }
+      ],
+      "Children": [
+        {
+          "Id": "b965e2a6-2360-4500-83b3-a117dcdbc9b7",
+          "Name": "\u0026",
+          "Position": "-74.15698,-113.2263,42.03223",
+          "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "WorldPanel",
+              "HorizontalAlign": "Center",
+              "LookAtCamera": false,
+              "PanelSize": "2048,1024",
+              "RenderScale": 2,
+              "VerticalAlign": "Center"
+            },
+            {
+              "__type": "HideTitle",
+              "MyStringValue": "\u0026"
+            }
+          ]
+        },
+        {
+          "Id": "8f1bfb68-23c0-497c-9848-95aa2762a851",
+          "Name": "Pawn",
+          "Position": "-84.22192,-71.70898,16.64258",
+          "Rotation": "0,0,0.9469293,0.3214417",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "SkinnedModelRenderer",
+              "AnimationGraph": null,
+              "BodyGroups": 341,
+              "BoneMergeTarget": null,
+              "CreateBoneObjects": false,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Model": "models/citizen/citizen.vmdl",
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            },
+            {
+              "__type": "CitizenAnimationHelper",
+              "BodyWeight": 1,
+              "EyeSource": null,
+              "EyesWeight": 1,
+              "HeadWeight": 1,
+              "Height": 1,
+              "IkLeftFoot": null,
+              "IkLeftHand": null,
+              "IkRightFoot": null,
+              "IkRightHand": null,
+              "LookAt": null,
+              "LookAtEnabled": false,
+              "Target": {
+                "_type": "component",
+                "go": "8f1bfb68-23c0-497c-9848-95aa2762a851",
+                "component_type": "SkinnedModelRenderer"
+              }
+            },
+            {
+              "__type": "MainMenuDresser",
+              "PawnModelRenderer": {
+                "_type": "component",
+                "go": "8f1bfb68-23c0-497c-9848-95aa2762a851",
+                "component_type": "SkinnedModelRenderer"
+              }
+            }
+          ]
+        },
+        {
+          "Id": "de0c9c75-606a-4e8c-8050-ab28fa723a97",
+          "Name": "2nd Camera",
+          "Position": "-253.1222,-56.5,82.28125",
+          "Rotation": "0,0.06975647,0,0.9975641",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "CameraComponent",
+              "BackgroundColor": "0,0.68333,1,1",
+              "ClearFlags": "All",
+              "FieldOfView": 60,
+              "IsMainCamera": false,
+              "Orthographic": false,
+              "OrthographicHeight": 1204,
+              "Priority": 1,
+              "RenderExcludeTags": "",
+              "RenderTags": "",
+              "TargetEye": "None",
+              "Viewport": "0,0,1,1",
+              "ZFar": 10000,
+              "ZNear": 10
+            },
+            {
+              "__type": "LogoCamera"
+            },
+            {
+              "__type": "Blur",
+              "Size": 0.12
+            }
+          ]
+        },
+        {
+          "Id": "9700d4f8-d38a-45b3-b3b7-89462949fed3",
+          "Name": "Hide",
+          "Position": "-39.50708,-40.22729,68.89355",
+          "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "WorldPanel",
+              "HorizontalAlign": "Center",
+              "LookAtCamera": false,
+              "PanelSize": "4096,1024",
+              "RenderScale": 1.8,
+              "VerticalAlign": "Center"
+            },
+            {
+              "__type": "HideTitle",
+              "MyStringValue": "Hide"
+            }
+          ]
+        },
+        {
+          "Id": "5da02ea9-251f-4afc-8c67-c84c9a75b1b6",
+          "Name": "Seek",
+          "Position": "-106.5,-40,41",
+          "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
+          "Scale": "1,0.55,0.55",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "WorldPanel",
+              "HorizontalAlign": "Center",
+              "LookAtCamera": false,
+              "PanelSize": "4096,1024",
+              "RenderScale": 2,
+              "VerticalAlign": "Center"
+            },
+            {
+              "__type": "HideTitle",
+              "MyStringValue": "Seek"
+            }
+          ]
+        },
+        {
+          "Id": "9978bc40-4fc8-4de8-a856-3092ec1bb50f",
+          "Name": "Light",
+          "Position": "-125.3557,-64.96143,68.45215",
+          "Tags": "light_spot,light,light_point",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "PointLight",
+              "Attenuation": 0,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "1,1,1,1",
+              "Radius": 400,
+              "Shadows": false
+            }
+          ]
+        },
+        {
+          "Id": "58cf8cc6-7780-4b5d-b997-4e859dd39aa1",
+          "Name": "Wall",
+          "Position": "-31.99805,-53.28638,-45.63086",
+          "Rotation": "0,0,0.7071068,0.7071068",
+          "Scale": "10,0.1,10",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "ModelRenderer",
+              "BodyGroups": 18446744073709551615,
+              "MaterialGroup": null,
+              "MaterialOverride": "materials/dev/bright_100.vmat",
+              "Model": "models/dev/box.vmdl",
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          ]
+        },
+        {
+          "Id": "472719c7-029c-4983-8059-ab41d680af06",
+          "Name": "Object",
+          "Position": "0,0,0",
+          "Enabled": true
+        },
+        {
+          "Id": "9194b152-7b85-416b-8ef9-fe543a022758",
+          "Name": "fish_01",
+          "Position": "-88.4104,-32.64502,13.37305",
+          "Rotation": "-0.000000873646,-0.00000008579453,0.962691,-0.2706031",
+          "Enabled": true,
+          "Components": [
+            {
+              "__type": "ModelRenderer",
+              "BodyGroups": 18446744073709551615,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Model": "models/props_selbyen/fish_01.vmdl",
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Id": "daf78a65-6743-4d3b-a14b-12c704cbfdd7",
       "Name": "Main Camera",
-      "Position": "-2190,2640,-12130",
-      "Rotation": "0.01489867,0.05560258,-0.2583899,0.9643241",
+      "Position": "512.5,1042.3,742.5999",
+      "Rotation": "0.07264172,0.05563937,-0.7905535,0.6055185",
       "Enabled": true,
       "Components": [
         {
@@ -15,7 +234,7 @@
           "FieldOfView": 60,
           "IsMainCamera": true,
           "Orthographic": true,
-          "OrthographicHeight": 910.39923,
+          "OrthographicHeight": 890,
           "Priority": 1,
           "RenderExcludeTags": "",
           "RenderTags": "",
@@ -23,13 +242,24 @@
           "Viewport": "0,0,1,1",
           "ZFar": 10000,
           "ZNear": 10
+        },
+        {
+          "__type": "MainMenuCamera"
+        },
+        {
+          "__type": "CubemapFog",
+          "Blur": 1,
+          "EndDistance": 6500,
+          "FalloffExponent": 1,
+          "Sky": "materials/skybox/light_test_sky_sunny02.vmat",
+          "StartDistance": 3000
         }
       ]
     },
     {
       "Id": "8689d842-22b2-46cd-9ed7-7d4828c71931",
       "Name": "Menu",
-      "Position": "0,0,100",
+      "Position": "0,-0.0002441406,100",
       "Enabled": true,
       "Components": [
         {
@@ -40,7 +270,12 @@
           "ZIndex": 100
         },
         {
-          "__type": "MenuUI"
+          "__type": "MenuUI",
+          "Logo": {
+            "_type": "component",
+            "go": "61b16920-7dd1-4d60-949a-0474ddd8cd4d",
+            "component_type": "LogoComponent"
+          }
         }
       ]
     },
@@ -68,187 +303,13 @@
         },
         {
           "__type": "MapInstance",
-          "MapName": "cmb.flatgrass_13",
+          "MapName": "facepunch.construct",
           "OnMapLoaded": null,
           "OnMapUnloaded": null,
           "UseMapFromLaunch": false
         }
       ],
       "Children": []
-    },
-    {
-      "Id": "de0c9c75-606a-4e8c-8050-ab28fa723a97",
-      "Name": "2nd Camera",
-      "Position": "-2250.664,3234.76,-12678.78",
-      "Rotation": "0,0.06975647,0,0.9975641",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "CameraComponent",
-          "BackgroundColor": "0,0.68333,1,1",
-          "ClearFlags": "All",
-          "FieldOfView": 83,
-          "IsMainCamera": false,
-          "Orthographic": false,
-          "OrthographicHeight": 1204,
-          "Priority": 1,
-          "RenderExcludeTags": "",
-          "RenderTags": "",
-          "TargetEye": "None",
-          "Viewport": "0.07,0.275,0.35,0.35",
-          "ZFar": 10000,
-          "ZNear": 10
-        }
-      ]
-    },
-    {
-      "Id": "58cf8cc6-7780-4b5d-b997-4e859dd39aa1",
-      "Name": "Wall",
-      "Position": "-2075.138,3233.941,-12827.04",
-      "Rotation": "0,0,0.7071068,0.7071068",
-      "Scale": "10,0.1,10",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "ModelRenderer",
-          "BodyGroups": 18446744073709551615,
-          "MaterialGroup": null,
-          "MaterialOverride": "materials/dev/bright_100.vmat",
-          "Model": "models/dev/box.vmdl",
-          "RenderType": "On",
-          "Tint": "1,1,1,1"
-        }
-      ]
-    },
-    {
-      "Id": "8f1bfb68-23c0-497c-9848-95aa2762a851",
-      "Name": "Pawn",
-      "Position": "-2161.669,3214.814,-12731.89",
-      "Rotation": "0,0,0.9469293,0.3214417",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "SkinnedModelRenderer",
-          "AnimationGraph": null,
-          "BodyGroups": 341,
-          "BoneMergeTarget": null,
-          "CreateBoneObjects": false,
-          "MaterialGroup": null,
-          "MaterialOverride": null,
-          "Model": "models/citizen/citizen.vmdl",
-          "RenderType": "On",
-          "Tint": "1,1,1,1"
-        },
-        {
-          "__type": "CitizenAnimationHelper",
-          "BodyWeight": 1,
-          "EyeSource": null,
-          "EyesWeight": 1,
-          "HeadWeight": 1,
-          "Height": 1,
-          "IkLeftFoot": null,
-          "IkLeftHand": null,
-          "IkRightFoot": null,
-          "IkRightHand": null,
-          "LookAt": null,
-          "LookAtEnabled": false,
-          "Target": {
-            "_type": "component",
-            "go": "8f1bfb68-23c0-497c-9848-95aa2762a851",
-            "component_type": "SkinnedModelRenderer"
-          }
-        },
-        {
-          "__type": "MainMenuDresser",
-          "PawnModelRenderer": {
-            "_type": "component",
-            "go": "8f1bfb68-23c0-497c-9848-95aa2762a851",
-            "component_type": "SkinnedModelRenderer"
-          }
-        }
-      ]
-    },
-    {
-      "Id": "b965e2a6-2360-4500-83b3-a117dcdbc9b7",
-      "Name": "\u0026",
-      "Position": "-2152.034,3174,-12706.5",
-      "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "WorldPanel",
-          "HorizontalAlign": "Center",
-          "LookAtCamera": false,
-          "PanelSize": "2048,1024",
-          "RenderScale": 2,
-          "VerticalAlign": "Center"
-        },
-        {
-          "__type": "HideTitle",
-          "MyStringValue": "\u0026\n"
-        }
-      ]
-    },
-    {
-      "Id": "9700d4f8-d38a-45b3-b3b7-89462949fed3",
-      "Name": "Hide",
-      "Position": "-2110.212,3247,-12675",
-      "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "WorldPanel",
-          "HorizontalAlign": "Center",
-          "LookAtCamera": false,
-          "PanelSize": "4096,1024",
-          "RenderScale": 2,
-          "VerticalAlign": "Center"
-        },
-        {
-          "__type": "HideTitle",
-          "MyStringValue": "Hide"
-        }
-      ]
-    },
-    {
-      "Id": "5da02ea9-251f-4afc-8c67-c84c9a75b1b6",
-      "Name": "Seek",
-      "Position": "-2183.349,3242,-12705",
-      "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
-      "Scale": "1,0.55,0.55",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "WorldPanel",
-          "HorizontalAlign": "Center",
-          "LookAtCamera": false,
-          "PanelSize": "4096,1024",
-          "RenderScale": 1.65,
-          "VerticalAlign": "Center"
-        },
-        {
-          "__type": "HideTitle",
-          "MyStringValue": "Seek\n"
-        }
-      ]
-    },
-    {
-      "Id": "9978bc40-4fc8-4de8-a856-3092ec1bb50f",
-      "Name": "Light",
-      "Position": "-2203.233,3222.265,-12680.08",
-      "Tags": "light_spot,light,light_point",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "PointLight",
-          "Attenuation": 0,
-          "FogMode": "Enabled",
-          "FogStrength": 1,
-          "LightColor": "1,1,1,1",
-          "Radius": 400,
-          "Shadows": false
-        }
-      ]
     }
   ],
   "SceneProperties": {
@@ -274,6 +335,8 @@
   },
   "Title": "MainMenu",
   "Description": "Game\u0027s main menu",
-  "LastSaved": "2024-02-22T14:51:14.9119043\u002B03:00",
-  "__references": []
+  "LastSaved": "2024-02-29T19:11:13.8585013\u002B03:00",
+  "__references": [
+    "tfassets.fish_01"
+  ]
 }

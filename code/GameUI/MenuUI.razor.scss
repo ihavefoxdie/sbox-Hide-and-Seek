@@ -4,60 +4,175 @@ MenuUI {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	//background-color: #444;
-	//justify-content: center;
 	align-items: center;
-	//font-weight: bold;
-	border-radius: 20px;
+	padding: 5%;
+	justify-content: space-between;
+
+
 
 	.menu {
+		pointer-events: all;
+		flex-direction: column;
+		align-self: flex-end;
+		height: 100%;
+		justify-content: space-around;
+
 		.title {
-			font-size: 10vh;
-			background-color: white;
-			border-radius: 5%;
-			font-color: white;
-			font-family: Poppins;
-			margin-bottom: 5vh;
-			font-weight: bold;
-			min-width: 40%;
-			min-height: 40%;
+			border-radius: 3vh;
+			min-width: 30%;
+			min-height: 35%;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: contain;
 			box-shadow: 0px 0px 5vh white;
 			transition: all 0.1s linear;
 
 			&:hover {
-				border-radius: 7%;
+				border-radius: 4vh;
 			}
 		}
 
-		pointer-events: all;
-		display: flex;
-		flex-direction: column;
-		align-self: flex-end;
-		margin-left: 6vw;
-		margin-bottom: 10vh;
 
-		.play-button, .sample-button, .exit-button {
-			font-size: 5vh;
+		.button-container {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-around;
+		}
+
+
+		.ui-button {
+			font-size: 3vh;
 			font-family: Poppins;
 			color: #fff;
 			background-color: #ff6a0000;
 			transition: all 0.2s linear;
 			font-weight: bold;
-			width: 20%;
-/*			border-top-right-radius: 8%;
-			border-bottom-right-radius: 8%;*/
+			max-width: 60%;
+			align-items: center;
+
+
+			&:hover {
+				background-color: #ff6a00;
+				width: 100%;
+				max-width: 100%;
+				padding-left: 50px;
+				sound-in: sounds/ui/hoversoundevent.sound;
+			}
+
+			&:active {
+				background-color: #ffa362;
+				sound-in: sounds/ui/clicksoundevent.sound;
+			}
+		}
+	}
+
+
+	.browser-menu {
+		pointer-events: all;
+		flex-direction: column;
+		background-color: #0000006d;
+		box-shadow: 0px 0px 4vh #0000006d;
+		backdrop-filter: blur(5vh);
+		font-family: Poppins;
+		width: 60%;
+		max-width: 60%;
+		min-height: 100%;
+		max-height: 100%;
+		border-radius: 3vh;
+		display: flex;
+		padding: 5vh;
+		transition: all 0.1s linear;
+
+
+		.search-entry {
+			height: 5vh;
+			background-color: #0000006d;
+			box-shadow: 0px 0px 4vh #0000006d;
+			backdrop-filter: blur(5vh);
+			border-radius: 4vmin;
+			min-width: 15vw;
+			max-width: 20vw;
+			padding: 1vh;
+			transition: all 0.3s ease-out;
+			font-weight: normal;
+			font-size: 2vh;
 		}
 
-		.play-button:hover, .exit-button:hover {
-			//font-size: 5vh;
-			background-color: #ff6a00;
+		.browser-input-button {
+			height: 5vh;
+			background-color: #ff6a00ff;
+			box-shadow: 0px 0px 4vh #ff6a00ff;
+			backdrop-filter: blur(5vh);
+			border-radius: 5vmin;
+			padding: 1vh;
+			width: 5vh;
+			justify-content: center;
+			font-size: 3vh;
+			transition: all 0.1s ease-out;
+
+			&:hover {
+				width: 6vh;
+				sound-in: sounds/ui/hoversoundevent.sound;
+			}
+
+			&:active {
+				background-color: #ffa362;
+				sound-in: sounds/ui/clicksoundevent.sound;
+			}
+		}
+
+		.maps-panel {
+			border-radius: 3vh;
+			max-height: 90%;
+			overflow: scroll;
+			flex-wrap: wrap;
+			justify-content: space-between;
+
+			.browser-block {
+				margin: 0 0 3vh 0;
+				flex-direction: column;
+				border-radius: 3vh;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: 250px;
+				height: 20vh;
+				width: 20vh;
+				font-family: Poppins;
+				font-size: 2vh;
+				transition: all 0.3s ease-out;
+				border-width: 0vh;
+
+
+				&:hover {
+					background-size: 300px;
+				}
+			}
+		}
+
+		.browser-header {
+			color: #fff;
+			font-weight: bold;
+		}
+
+		.browser-button {
+			font-size: 3vh;
+			font-family: Poppins;
+			font-style: unset;
+			color: #fff;
+			background-color: #ff6a0000;
+			transition: all 0.2s linear;
 			width: 100%;
-			box-shadow: 0px 0px 4vh #ff6a00;
-			padding-left: 50px;
-		}
+			min-height: 5vh;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
 
-		.exit-button {
-			margin-top: 5vh;
+			&:hover {
+				background-color: #ff6a00;
+				font-style: italic;
+				font-size: 3.2vh;
+				//min-height: 10vh;
+			}
 		}
 	}
 }

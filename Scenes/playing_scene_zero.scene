@@ -3,19 +3,36 @@
   "GameObjects": [
     {
       "Id": "b4820a45-a2ef-440d-8b09-dd27603c72df",
-      "Name": "Terrain",
+      "Name": "Map",
       "Position": "603.5001,-341.5693,705.9443",
       "Enabled": true,
       "Components": [
         {
           "__type": "MapInstance",
-          "MapName": "thieves.community_pool",
+          "MapName": "mryabloko.melon_race_10",
           "OnMapLoaded": null,
           "OnMapUnloaded": null,
           "UseMapFromLaunch": false
         }
       ],
       "Children": []
+    },
+    {
+      "Id": "da90d64d-8437-4b50-8b48-ea9213623366",
+      "Name": "GameData",
+      "Position": "4735.98,8.712184,-235.1386",
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "SettingsLoaderComponent",
+          "Map": {
+            "_type": "component",
+            "go": "b4820a45-a2ef-440d-8b09-dd27603c72df",
+            "component_type": "MapInstance"
+          },
+          "MapIdent": "mryabloko.melon_race_10"
+        }
+      ]
     },
     {
       "Id": "654b6d84-e5bc-49ec-90dc-d78d03b8f25b",
@@ -31,7 +48,7 @@
     {
       "Id": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
       "Name": "Game",
-      "Position": "-1215.657,580.4098,1189.077",
+      "Position": "-1215.657,580.4098,135.5773",
       "Networked": true,
       "Enabled": true,
       "Components": [
@@ -71,9 +88,16 @@
             "_type": "gameobject",
             "prefab": "prefabs/hns_pawnui.prefab"
           },
-          "PreparationTime": 5,
+          "PreparationTime": 30,
           "RoundCooldown": 10,
-          "RoundLength": 20
+          "RoundLength": 300
+        },
+        {
+          "__type": "DepthOfField",
+          "BackBlur": true,
+          "BlurSize": 100,
+          "FocalDistance": 1000,
+          "FrontBlur": false
         }
       ]
     },
@@ -93,28 +117,33 @@
           },
           "Hiders": [],
           "IsStarted": false,
+          "MapIdent": null,
           "Seekers": [],
+          "SettingsData": {
+            "_type": "component",
+            "go": "da90d64d-8437-4b50-8b48-ea9213623366",
+            "component_type": "SettingsLoaderComponent"
+          },
           "Timer": 0
         }
       ],
       "Children": [
         {
           "Id": "ec3ca7bf-c930-4f0a-8dda-d3ad305da1f5",
-          "Name": "OnScreenInfo",
+          "Name": "GeneralUI",
           "Position": "0,0,0",
+          "Networked": true,
           "Enabled": true,
           "Components": [
             {
               "__type": "ScreenPanel",
-              "AutoScreenScale": false,
+              "AutoScreenScale": true,
               "Opacity": 1,
-              "Scale": 5,
+              "Scale": 1,
               "ZIndex": 100
             },
             {
-              "__type": "WaitingScreenComponent",
-              "First": "Waiting for more",
-              "Second": "players to join",
+              "__type": "EscapeMenu",
               "SharedInfo": {
                 "_type": "component",
                 "go": "975f4de1-1fef-45c9-98b6-ef89c63730ff",
@@ -127,6 +156,16 @@
               "CurrentTimeSecs": 0,
               "Hiders": [],
               "Seekers": [],
+              "SharedInfo": {
+                "_type": "component",
+                "go": "975f4de1-1fef-45c9-98b6-ef89c63730ff",
+                "component_type": "SyncComponent"
+              }
+            },
+            {
+              "__type": "WaitingScreenComponent",
+              "First": "Waiting for more",
+              "Second": "players to join...",
               "SharedInfo": {
                 "_type": "component",
                 "go": "975f4de1-1fef-45c9-98b6-ef89c63730ff",
@@ -146,14 +185,11 @@
               "AutoScreenScale": true,
               "Opacity": 1,
               "Scale": 1,
-              "ZIndex": 90
+              "ZIndex": 100
             },
             {
               "__type": "JoinedScreen",
-              "ThisGameObject": {
-                "_type": "gameobject",
-                "go": "3c747e30-34dc-4b17-8415-0aeec384d8fd"
-              }
+              "ThisGameObject": null
             }
           ]
         }
@@ -183,6 +219,6 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-02-20T21:45:56.7788859\u002B03:00",
+  "LastSaved": "2024-03-01T13:24:18.9391755\u002B03:00",
   "__references": []
 }

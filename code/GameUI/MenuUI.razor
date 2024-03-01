@@ -1,33 +1,181 @@
 @using Sandbox;
 @using Sandbox.UI;
-@inherits PanelComponent
+@using System;
+@using System.Collections.Generic;
+@using Sandbox.GameLogic.Modules;
 
+@namespace HideAndSeek
+@inherits PanelComponent;
 <root>
     <div class="menu">
-        <div class="title">Hide&Seek</div>
-
-	    <button onclick=@(Play) class="play-button">Play</button>
-
-        <button onclick=@(Exit) class="exit-button">Exit</button>
+        <TestingUI class="title" Texture=@LogoTexture></TestingUI>
+        <div class="button-container">
+            <div style="flex-direction: column;">
+                <button onclick=@(Create) class="ui-button">CREATE GAME</button>
+                <button onclick=@(Browser) class="ui-button" style="min-width: 375px;">
+                    <i>travel_explore</i><div>SERVER BROWSER</div>
+                </button>
+                <button onclick=@(Exit) class="ui-button" style="margin-top: 4vh;">QUIT</button>
+            </div>
+        </div>
+    </div>
+    <div class="browser-menu" style="@(BrowserState == true ? "display:flex; opacity: 1;" : "display:none; opacity: 0;")">
+        <div class="browser-header" style="@((Lobbies == null || Lobbies.Count < 1) ? "display:flex;" : "display:none;")  flex-direction: column; align-self: center; justify-content: center; font-size: 4vh; font-weight: normal; height: 100%;">
+            <div>
+                <h>@(Status == true ? "Updating..." : "Empty")</h>
+                <i style="align-self:center; @(Status == false ? "display:flex;" : "display:none;")">sentiment_very_dissatisfied</i>
+            </div>
+        </div>
+        <div class="browser-header" style="@((Lobbies != null && Lobbies.Count > 0) ? "display:flex;" : "display:none;") flex-direction: row; justify-content: space-between; align-items: center;">
+            <div style="width: 10vw; max-width: 200px; overflow-x: hidden;"> <i style="align-items: center;">badge</i> Name </div>
+            <div>
+                <i style="align-items: center;">perm_identity</i> Players
+            </div>
+            <div style="width: 20vw; max-width: 350px; overflow-x: hidden;"> <i style="align-items: center;">location_city</i> Map </div>
+        </div>
+        <div style="flex-direction: column; overflow-y: scroll;">
+        @if (Lobbies != null && Lobbies.Count > 0)
+        {
+            for (int i = 0; i < Lobbies.Count; i++)
+            {
+                <button onclick=@(Join) class="browser-button">
+                    <div style="width: 10vw; max-width: 200px; overflow-x: hidden;"> @Lobbies[0].Name  </div>
+                    <div>@Lobbies[i].Members/@Lobbies[i].MaxMembers</div>
+                    <div style="width: 20vw; max-width: 350px; overflow-x: hidden;">@Lobbies[0].Map</div>
+                </button>
+            }
+        }
+        </div>
+    </div>
+    <div class="browser-menu" style="@(CreateState == true ? "display:flex; opacity: 1;" : "display:none; opacity: 0;")">
+        <div class="browser-header" style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 5vh;">
+            <div style="align-items:center; justify-content: space-between; width: 100%;">
+                <div style="gap: 5vw;">
+                    <TextEntry MaxLength=@(20) class="search-entry" @ref="Entry" onsubmit=@SubmitText />
+                    <button class="browser-input-button" style="align-items:center;" onclick=@SubmitText><i>search</i></button>
+                </div>
+                <div style="font-size: 2vh; font-weight: normal">Selected: @SelectedMap</div>
+                <button class="browser-input-button" style="align-items:center; background-color: dodgerblue; 	box-shadow: 0px 0px 4vh dodgerblue;" onclick=@Play>
+                    >
+                </button>
+            </div>
+        </div>
+        <div class="maps-panel">
+            @if(MapsFound != null && MapsFound.Length > 0)
+            {
+                for (int i = 0; i < MapsFound.Length; i++)
+                {
+                    <button class="browser-block" id=@(i.ToString()) onclick=@(x => {Select(x.Target);} ) style="background-image: url(@MapsFound[i].Thumb);"></button>
+                }
+            }
+        </div>
     </div>
 </root>
 
 @code
 {
-    public void Play()
+    [Property] private LogoComponent Logo { get; set; }
+    private Texture LogoTexture { get { if (Logo.LogoTexture is null) Log.Info("Damn!"); return Logo.LogoTexture;} }
+    private List<Sandbox.Network.LobbyInformation> Lobbies;
+    private Package[] MapsFound;
+    private TextEntry Entry;
+    private bool BrowserState = false;
+    private bool CreateState = false;
+    private bool Status = true;
+    private string MapQuery;
+    private string SelectedMap;
+    private Panel PrevButton;
+    private GameSettings _settings = new();
+
+    private void Select(Panel button)
     {
+        if(PrevButton != null)
+        {
+            PrevButton.Style.BorderWidth = Length.ViewHeight(0);
+        }
+        if (PrevButton == button)
+        {
+            PrevButton = null;
+            SelectedMap = "";
+            return;
+        }
+        else
+        {
+            SelectedMap = MapsFound[Convert.ToInt32(button.Id)].FullIdent;
+            Log.Info(SelectedMap);
+            button.Style.BorderWidth = Length.ViewHeight(1);
+            PrevButton = button;
+            Clipboard.SetText(SelectedMap);
+        }
+    }
+
+    private void Play()
+    {
+        _settings.MapName = SelectedMap;
+        _settings.SaveSettings();
         GameManager.ActiveScene.LoadFromFile("scenes/playing_scene_zero.scene");
     }
 
-    public void Exit()
+    private void Create()
+    {
+        CreateState = !CreateState;
+        BrowserState = false;
+        if(CreateState)
+            FetchMaps();
+    }
+
+    private void SubmitText()
+    {
+        if(Entry != null)
+        {
+            MapQuery = Entry.Value;
+        }
+        Log.Info(MapQuery);
+        FetchMaps(MapQuery);
+    }
+
+    private async void FetchMaps(string query = "")
+    {
+        string searchMap = "type:map " + query;
+        var found = await Package.FindAsync(searchMap);
+        MapsFound = found.Packages;
+        StateHasChanged();
+        Log.Info("Maps found: " + MapsFound.Length);
+    }
+
+    private void Exit()
     {
         Game.Disconnect();
         GameManager.ActiveScene.Destroy();
         Game.Close();
     }
 
+    private async void Browser()
+    {
+        CreateState = false;
+        BrowserState = !BrowserState;
+        if (BrowserState)
+        {
+            Status = true;
+
+            Lobbies = await Networking.QueryLobbies("purpeliz.hide_seek_updated");
+            await Task.DelayRealtimeSeconds(10);
+            if (Lobbies is null || Lobbies.Count < 1)
+            {
+                Status = false;
+            }
+            Log.Info("Servers: " + Lobbies.Count);
+        }
+    }
+
+    private void Join()
+    {
+        Sandbox.Network.GameNetworkSystem.Connect(Lobbies[0].LobbyId);
+        Log.Info(Sandbox.Network.GameNetworkSystem.IsConnecting);
+    }
+
     /// <summary>
     /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
     /// </summary>
-    protected override int BuildHash() => System.HashCode.Combine( 1 );
+    protected override int BuildHash() => System.HashCode.Combine(LogoTexture, Status);
 }
