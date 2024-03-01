@@ -14,7 +14,7 @@
             <button class="esc-menu-button" onclick=@Disconnect>Disconnect</button>
         </div>
         <div class="info-panel">
-            <div class="map-info" style="background-image: url(@(GetMapThumb())) ">
+            <div class="map-info" style="@(GetMapThumb())">
                 <div class="text-info">
                     Currently playing on:
                     <p>@(GetMapName())</p>
@@ -36,12 +36,19 @@
         GameManager.ActiveScene.LoadFromFile("scenes/main_menu.scene");
     }
 
+    private void Quit()
+    {
+        GameNetworkSystem.Disconnect();
+        GameManager.ActiveScene.Destroy();
+        Game.Close();
+    }
+
     private string GetMapThumb()
     {
         if (MapPackage != null)
-            return MapPackage.Thumb;
+            return "background-image: url(" + MapPackage.Thumb + ")";
 
-        return "";
+        return "background-color: white";
     }
 
     private string GetMapName()

@@ -9,10 +9,13 @@ public class PawnSyncComponent : Component
 	[Property] public PawnComponent Pawn { get; set; }
 	[Property] public SyncComponent SyncComp { get; set; }
 
-	protected override void OnAwake()
+	protected override void OnStart()
 	{
 		GameObject parent = GameObject.Parent;
+		Log.Info( parent );
 		var syncComp = Scene.GetAllComponents<SyncComponent>().Last();
+		Log.Info( syncComp );
+
 		if (syncComp != null )
 		{
 			SyncComp = syncComp;
@@ -21,7 +24,6 @@ public class PawnSyncComponent : Component
 		{
 			Pawn = parent.Components.Get<PawnComponent>(true);
 		}
-
 	}
 
 	protected override void OnUpdate()

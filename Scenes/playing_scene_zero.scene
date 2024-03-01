@@ -9,7 +9,7 @@
       "Components": [
         {
           "__type": "MapInstance",
-          "MapName": "mryabloko.melon_race_10",
+          "MapName": "ply.am_redblue",
           "OnMapLoaded": null,
           "OnMapUnloaded": null,
           "UseMapFromLaunch": false
@@ -21,6 +21,7 @@
       "Id": "da90d64d-8437-4b50-8b48-ea9213623366",
       "Name": "GameData",
       "Position": "4735.98,8.712184,-235.1386",
+      "Networked": true,
       "Enabled": true,
       "Components": [
         {
@@ -30,18 +31,7 @@
             "go": "b4820a45-a2ef-440d-8b09-dd27603c72df",
             "component_type": "MapInstance"
           },
-          "MapIdent": "mryabloko.melon_race_10"
-        }
-      ]
-    },
-    {
-      "Id": "654b6d84-e5bc-49ec-90dc-d78d03b8f25b",
-      "Name": "Removing doors",
-      "Position": "-288.0474,213.2799,926.9672",
-      "Enabled": true,
-      "Components": [
-        {
-          "__type": "TestComponent"
+          "MapIdent": "ply.am_redblue"
         }
       ]
     },
@@ -79,6 +69,11 @@
         },
         {
           "__type": "GameComponent",
+          "CurrentMap": {
+            "_type": "component",
+            "go": "b4820a45-a2ef-440d-8b09-dd27603c72df",
+            "component_type": "MapInstance"
+          },
           "NetworkComponent": {
             "_type": "component",
             "go": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
@@ -173,25 +168,6 @@
               }
             }
           ]
-        },
-        {
-          "Id": "3c747e30-34dc-4b17-8415-0aeec384d8fd",
-          "Name": "SessionJoined",
-          "Position": "0,0,0",
-          "Enabled": true,
-          "Components": [
-            {
-              "__type": "ScreenPanel",
-              "AutoScreenScale": true,
-              "Opacity": 1,
-              "Scale": 1,
-              "ZIndex": 100
-            },
-            {
-              "__type": "JoinedScreen",
-              "ThisGameObject": null
-            }
-          ]
         }
       ]
     }
@@ -219,6 +195,6 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-03-01T13:24:18.9391755\u002B03:00",
+  "LastSaved": "2024-03-01T19:10:24.0562307\u002B03:00",
   "__references": []
 }

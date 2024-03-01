@@ -12,6 +12,7 @@ public class GameComponent : Component, Component.INetworkListener
 {
 	#region Properties
 	[Property] public GameObject PawnUIPrefab { get; set; }
+	[Property] public MapInstance CurrentMap {  get; private set; }
 	/// <summary>
 	/// Current round class object.
 	/// </summary>
@@ -28,6 +29,7 @@ public class GameComponent : Component, Component.INetworkListener
 	/// Guid list for every player pawn in the scene.
 	/// </summary>
 	[Sync] public List<Guid> PlayerPawns { get; set; }
+	[Sync] public bool MapLoaded { get; set; } = false;
 	/// <summary>
 	/// Tweaked network helper.
 	/// </summary>
@@ -64,6 +66,7 @@ public class GameComponent : Component, Component.INetworkListener
 	}
 	protected override void OnStart()
 	{
+	//CurrentMap.IsLoaded
 	}
 
 	public void OnActive( Connection conn )

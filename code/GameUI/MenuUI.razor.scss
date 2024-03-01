@@ -6,9 +6,51 @@ MenuUI {
 	bottom: 0;
 	align-items: center;
 	padding: 5%;
-	justify-content: space-between;
+
+	.browser-input-button {
+		height: 5vh;
+		background-color: #ff6a00ff;
+		box-shadow: 0 0 2vh 1vh #ff6a00ff;
+		backdrop-filter: blur(5vh);
+		border-radius: 5vmin;
+		padding: 1vh;
+		width: 5vh;
+		justify-content: center;
+		font-size: 3vh;
+		transition: all 0.1s ease-out;
+		aspect-ratio: 1;
+
+		&:hover {
+			//width: 6vh;
+			sound-in: sounds/ui/hoversoundevent.sound;
+			transform: scale(1.05);
+		}
+
+		&:active {
+			background-color: #ffa362;
+			sound-in: sounds/ui/clicksoundevent.sound;
+		}
+	}
+
+	.browser-block {
+		margin: 0vh 0vw 2.5vh 0vw;
+		flex-direction: column;
+		border-radius: 3vh;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 250px;
+		height: 20vh;
+		width: 20vh;
+		font-family: Poppins;
+		font-size: 2vh;
+		transition: all 0.3s ease-out;
+		border-width: 0vh;
 
 
+		&:hover {
+			background-size: 300px;
+		}
+	}
 
 	.menu {
 		pointer-events: all;
@@ -24,11 +66,12 @@ MenuUI {
 			background-repeat: no-repeat;
 			background-position: center;
 			background-size: contain;
-			box-shadow: 0px 0px 5vh white;
+			box-shadow: 0px 0px 2vh 1vh white;
 			transition: all 0.1s linear;
+			padding: 5vh;
 
 			&:hover {
-				border-radius: 4vh;
+				transform: scale(1.01);
 			}
 		}
 
@@ -71,7 +114,7 @@ MenuUI {
 		pointer-events: all;
 		flex-direction: column;
 		background-color: #0000006d;
-		box-shadow: 0px 0px 4vh #0000006d;
+		box-shadow: 0px 0px 2vh 0.5vh #0000006d;
 		backdrop-filter: blur(5vh);
 		font-family: Poppins;
 		width: 60%;
@@ -89,36 +132,13 @@ MenuUI {
 			background-color: #0000006d;
 			box-shadow: 0px 0px 4vh #0000006d;
 			backdrop-filter: blur(5vh);
-			border-radius: 4vmin;
+			border-radius: 4vmax;
 			min-width: 15vw;
 			max-width: 20vw;
 			padding: 1vh;
 			transition: all 0.3s ease-out;
 			font-weight: normal;
-			font-size: 2vh;
-		}
-
-		.browser-input-button {
-			height: 5vh;
-			background-color: #ff6a00ff;
-			box-shadow: 0px 0px 4vh #ff6a00ff;
-			backdrop-filter: blur(5vh);
-			border-radius: 5vmin;
-			padding: 1vh;
-			width: 5vh;
-			justify-content: center;
-			font-size: 3vh;
-			transition: all 0.1s ease-out;
-
-			&:hover {
-				width: 6vh;
-				sound-in: sounds/ui/hoversoundevent.sound;
-			}
-
-			&:active {
-				background-color: #ffa362;
-				sound-in: sounds/ui/clicksoundevent.sound;
-			}
+			font-size: 1.5vh;
 		}
 
 		.maps-panel {
@@ -127,26 +147,6 @@ MenuUI {
 			overflow: scroll;
 			flex-wrap: wrap;
 			justify-content: space-between;
-
-			.browser-block {
-				margin: 0 0 3vh 0;
-				flex-direction: column;
-				border-radius: 3vh;
-				background-repeat: no-repeat;
-				background-position: center;
-				background-size: 250px;
-				height: 20vh;
-				width: 20vh;
-				font-family: Poppins;
-				font-size: 2vh;
-				transition: all 0.3s ease-out;
-				border-width: 0vh;
-
-
-				&:hover {
-					background-size: 300px;
-				}
-			}
 		}
 
 		.browser-header {
@@ -173,6 +173,33 @@ MenuUI {
 				font-size: 3.2vh;
 				//min-height: 10vh;
 			}
+		}
+	}
+
+
+	.loading {
+		pointer-events: all;
+		height: 25%;
+		border-radius: 3vh;
+		width: 50%;
+		background-color: #0000006d;
+		box-shadow: 0px 0px 2vh 0.5vh #0000006d;
+		backdrop-filter: blur(5vh);
+		font-family: Poppins;
+		color: white;
+		justify-content: space-between;
+		padding: 2.5vw;
+		align-items: center;
+
+		.browser-block {
+			margin: 0;
+			border-radius: 3vh;
+			aspect-ratio: 1.3;
+			max-width: 11vw;
+			box-shadow: 0px 0px 2vh 2vh white;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: cover;
 		}
 	}
 }

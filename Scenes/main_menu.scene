@@ -235,7 +235,7 @@
           "IsMainCamera": true,
           "Orthographic": true,
           "OrthographicHeight": 890,
-          "Priority": 1,
+          "Priority": 2,
           "RenderExcludeTags": "",
           "RenderTags": "",
           "TargetEye": "None",
@@ -286,22 +286,6 @@
       "Enabled": true,
       "Components": [
         {
-          "__type": "Terrain",
-          "__enabled": false,
-          "ClipMapLodExtentTexels": 128,
-          "ClipMapLodLevels": 7,
-          "DebugView": "None",
-          "RenderType": "On",
-          "TerrainDataFile": "main menu terrain.terrain",
-          "TerrainMaterial": "materials/core/terrain.vmat"
-        },
-        {
-          "__type": "TerrainCollider",
-          "IsTrigger": false,
-          "Static": true,
-          "Surface": null
-        },
-        {
           "__type": "MapInstance",
           "MapName": "facepunch.construct",
           "OnMapLoaded": null,
@@ -335,7 +319,7 @@
   },
   "Title": "MainMenu",
   "Description": "Game\u0027s main menu",
-  "LastSaved": "2024-02-29T19:11:13.8585013\u002B03:00",
+  "LastSaved": "2024-03-01T18:02:41.3682808\u002B03:00",
   "__references": [
     "tfassets.fish_01"
   ]

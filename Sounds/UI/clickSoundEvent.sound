@@ -7,5 +7,8 @@
   "Sounds": [
     "sounds/ui/clicksound.vsnd"
   ],
+  "Occlusion": false,
+  "OcclusionRadius": 64,
+  "DistanceAttenuation": false,
   "__references": []
 }

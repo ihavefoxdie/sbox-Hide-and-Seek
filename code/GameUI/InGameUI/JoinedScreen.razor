@@ -1,5 +1,7 @@
 @using Sandbox;
 @using Sandbox.UI;
+
+
 @namespace HideAndSeek
 @inherits PanelComponent
 
@@ -18,26 +20,24 @@
                 Have fun!
             </div>
         </div>
-            <button onclick=@(Start) class="close_button">Close</button>
+        <button onclick=@(Start) class="close_button">Close</button>
     </div>
     }
 </root>
 
 @code
 {
-    [Property] public GameObject ThisGameObject { get; set; }
     private bool Hide = false;
     private float Opacity = 1;
 
 
-    private async void Start()
+    private void Start()
     {
         Opacity = 0;
-        await Task.DelayRealtimeSeconds(1);
         Hide = true;
     }
     /// <summary>
     /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
     /// </summary>
-    protected override int BuildHash() => System.HashCode.Combine(ThisGameObject, Opacity, Hide);
+    protected override int BuildHash() => System.HashCode.Combine( 1 );
 }
