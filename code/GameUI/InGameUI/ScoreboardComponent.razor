@@ -1,0 +1,68 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Linq;
+@using System.Collections.Generic;
+
+@namespace HideAndSeek
+@inherits PanelComponent
+
+<root>
+    @{
+        void team(string name, List<Guid> team, string color)
+        {
+            <div id="hiders" class="team">
+                <div class="team-name" style="background-color: @color;">
+                    <div style="align-self: flex-start; transform: rotate(90);">
+                        @name.ToUpper()
+                    </div>
+                </div>
+                <div style="flex-direction: column; width: 100%;">
+                    <div style=" justify-content: space-between; font-size: 2vh; padding: 1vh;">
+                        <div style="align-items: center;">
+                            <i style="font-size: 3vh; margin: 0.5vh 1vh 0.5vh 0;">account_circle</i>name
+                        </div>
+                        <div style="align-items: center;">
+                            <i>signal_cellular_alt_2_bar</i>ping
+                        </div>
+                    </div>
+                    <div class="browser-menu">
+                        @for (int i = 0; i < team.Count; i++)
+                        {
+                            <div class="player" style="align-items: center; justify-content: space-between;">
+                                <div style="align-items: center;">
+                                    <img style="margin: 0.5vh 1vh 0.5vh 0; align-self: center; border-radius: 100%;" src="avatar:@Networking.Connections.Last().SteamId" />
+                                    <div id="player_name" style="max-width: 10vw; max-height: 5vh; text-overflow: ellipsis;">@Networking.Connections.Where(x => x.Id == team[i]).First().DisplayName</div>
+                                </div>
+                                <div id="ping" style="max-width: 4vw; max-height: 5vh; text-overflow: ellipsis;">@Convert.ToInt32(Networking.Connections.Where(x => x.Id == team[i]).Last().Ping)</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        if (Input.Down("Score"))
+        {
+            <div class="browser-menu" @ref="fuck">
+                @{
+                    team("Hiders", Hiders, "dodgerblue");
+                    team("Seekers", Seekers, "red");
+                }
+            </div>
+        }
+</root>
+
+@code
+{
+    [Property] public SyncComponent SharedInfo { get; private set; }
+    [Property] public List<Guid> Seekers { get { if (SharedInfo is null || SharedInfo.Seekers is null) return new List<Guid>(); return SharedInfo.Seekers; } }
+    [Property] public List<Guid> Hiders { get { if (SharedInfo is null || SharedInfo.Hiders is null) return new List<Guid>(); return SharedInfo.Hiders; } }
+    private Panel fuck;
+    bool pressed = false;
+    bool released = false;
+    /// <summary>
+            /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+            /// </summary>
+            protected override int BuildHash() => System.HashCode.Combine(Input.Down("Score"), Seekers, Hiders);
+}

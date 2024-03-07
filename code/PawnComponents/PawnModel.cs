@@ -15,7 +15,8 @@ public class PawnModel : Component, Component.INetworkSpawn
 
 	public void OnNetworkSpawn( Connection owner )
 	{
-		var clothing = ClothingContainer.CreateFromLocalUser();
+		var clothing = new ClothingContainer();
+		clothing.Deserialize( owner.GetUserData( "avatar" ) );
 		clothing.Apply( PawmModelRenderer );
 	}
 

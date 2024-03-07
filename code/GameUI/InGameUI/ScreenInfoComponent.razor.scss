@@ -4,9 +4,6 @@ ScreenInfoComponent {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	//justify-content: center;
-	//align-items: center;
-	border-radius: 20px;
 	flex-direction: column;
 
 	.info {
@@ -31,7 +28,7 @@ ScreenInfoComponent {
 		align-items: flex-start;
 		//width: 100%;
 		//height: 100%;
-		margin: 5vh;
+		margin: 3vh;
 
 		.game_timer {
 			justify-content: center;
@@ -41,22 +38,26 @@ ScreenInfoComponent {
 			min-width: 15vh;
 			padding: 1vh;
 			margin-left: 3vh;
-			font-size: 4vh;
-			font-family: Inter;
+			font-size: 3.5vh;
+			font-family: Poppins;
 			color: #fff;
-			box-shadow: 0px 0px 0.5vh #ffffff20;
+			box-shadow: 0px 0px 2vh 0.5vh #ffffff20;
+			height: 6vh;
+			align-items: center;
 		}
 
 		.player_count {
+			aspect-ratio: 1;
 			justify-content: center;
 			border-radius: 20%;
 			backdrop-filter: blur(10px) saturate(100%) brightness(100%);
-			min-width: 7vh;
+			height: 6vh;
 			padding: 1vh;
 			margin-right: 0.25vh;
 			font-size: 4vh;
-			font-family: Inter;
+			font-family: Poppins;
 			color: #fff;
+			align-items: center;
 			//box-shadow: 0px 0px 0.5vh #00b1ff5d;
 		}
 	}

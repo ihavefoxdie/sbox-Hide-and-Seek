@@ -205,7 +205,7 @@
         StateHasChanged();
 
         if (!MapLoadCancel.IsCancellationRequested)
-            GameManager.ActiveScene.LoadFromFile("scenes/playing_scene_zero.scene");
+            Game.ActiveScene.LoadFromFile("scenes/playing_scene_zero.scene");
     }
 
     private void Create()
@@ -250,7 +250,7 @@
     private void Exit()
     {
         Game.Disconnect();
-        GameManager.ActiveScene.Destroy();
+        Game.ActiveScene.Destroy();
         Game.Close();
     }
 

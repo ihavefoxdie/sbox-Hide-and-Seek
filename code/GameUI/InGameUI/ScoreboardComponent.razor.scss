@@ -1,0 +1,70 @@
+ScoreboardComponent {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	justify-content: center;
+	padding: 5%;
+	opacity: 1;
+
+	.team-name {
+		font-style: italic;
+		font-size: 4vh;
+		font-weight: bold;
+		padding: 1vh;
+		white-space: nowrap;
+		width: 6vh;
+		margin-right: 0.5vw;
+	}
+
+	.browser-menu {
+		background-color: #0000006d;
+		box-shadow: 0px 0px 2vh 0.5vh #0000006d;
+		backdrop-filter: blur(4vh);
+		width: 80%;
+		height: 100%;
+		border-radius: 2vh;
+		padding: 5vh;
+		transition: all 0.1s linear;
+		justify-content: space-between;
+		opacity: 1;
+		transition: all 0.3s ease-in-out;
+
+		&:intro {
+			opacity: 0;
+		}
+
+		&:outro {
+			opacity: 0;
+		}
+	}
+
+	.team {
+		font-family: Poppins;
+		color: white;
+		overflow-x: scroll;
+		width: 49%;
+
+		.browser-menu {
+			backdrop-filter: blur(0);
+			border-radius: 1%;
+			width: 100%;
+			flex-direction: column;
+			justify-content: flex-start;
+			padding: 1vh;
+		}
+	}
+
+	.player {
+		min-width: 100%;
+		max-height: 10%;
+		align-items: flex-start;
+		font-size: 2vh;
+
+		img {
+			height: 3vh;
+			aspect-ratio: 1;
+		}
+	}
+}

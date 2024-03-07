@@ -33,14 +33,14 @@ MenuUI {
 	}
 
 	.browser-block {
-		margin: 0vh 0vw 2.5vh 0vw;
+		//margin: 0vh 0vw 2vh 0vw;
 		flex-direction: column;
-		border-radius: 3vh;
+		border-radius: 0.4vh;
 		background-repeat: no-repeat;
 		background-position: center;
-		background-size: 250px;
-		height: 20vh;
-		width: 20vh;
+		background-size: 225px;
+		height: 15vh;
+		width: 15vh;
 		font-family: Poppins;
 		font-size: 2vh;
 		transition: all 0.3s ease-out;
@@ -48,7 +48,7 @@ MenuUI {
 
 
 		&:hover {
-			background-size: 300px;
+			background-size: 200px;
 		}
 	}
 
@@ -84,7 +84,7 @@ MenuUI {
 
 
 		.ui-button {
-			font-size: 3vh;
+			font-size: 2.5vh;
 			font-family: Poppins;
 			color: #fff;
 			background-color: #ff6a0000;
@@ -143,10 +143,15 @@ MenuUI {
 
 		.maps-panel {
 			border-radius: 3vh;
+			background-color: #0000006d;
+			box-shadow: 0px 0px 4vh #0000006d;
 			max-height: 90%;
-			overflow: scroll;
+			height: 90%;
+			overflow-y: scroll;
 			flex-wrap: wrap;
+			padding: 2vh;
 			justify-content: space-between;
+			row-gap: 20%;
 		}
 
 		.browser-header {

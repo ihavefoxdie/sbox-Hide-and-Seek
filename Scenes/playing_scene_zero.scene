@@ -9,7 +9,7 @@
       "Components": [
         {
           "__type": "MapInstance",
-          "MapName": "ply.am_redblue",
+          "MapName": "modified.cool_dev_map",
           "OnMapLoaded": null,
           "OnMapUnloaded": null,
           "UseMapFromLaunch": false
@@ -31,7 +31,7 @@
             "go": "b4820a45-a2ef-440d-8b09-dd27603c72df",
             "component_type": "MapInstance"
           },
-          "MapIdent": "ply.am_redblue"
+          "MapIdent": "modified.cool_dev_map"
         }
       ]
     },
@@ -93,6 +93,19 @@
           "BlurSize": 100,
           "FocalDistance": 1000,
           "FrontBlur": false
+        },
+        {
+          "__type": "SceneCameraComponent",
+          "Camera": {
+            "_type": "component",
+            "go": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
+            "component_type": "CameraComponent"
+          },
+          "Networking": {
+            "_type": "component",
+            "go": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
+            "component_type": "NetworkComponent"
+          }
         }
       ]
     },
@@ -139,6 +152,16 @@
             },
             {
               "__type": "EscapeMenu",
+              "SharedInfo": {
+                "_type": "component",
+                "go": "975f4de1-1fef-45c9-98b6-ef89c63730ff",
+                "component_type": "SyncComponent"
+              }
+            },
+            {
+              "__type": "ScoreboardComponent",
+              "Hiders": [],
+              "Seekers": [],
               "SharedInfo": {
                 "_type": "component",
                 "go": "975f4de1-1fef-45c9-98b6-ef89c63730ff",
@@ -195,6 +218,6 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-03-01T19:10:24.0562307\u002B03:00",
+  "LastSaved": "2024-03-07T17:00:16.3210869\u002B03:00",
   "__references": []
 }

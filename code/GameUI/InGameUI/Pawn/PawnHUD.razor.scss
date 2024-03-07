@@ -16,9 +16,12 @@ PawnHUD {
 
 		.team {
 			min-width: 3vh;
+			aspect-ratio: 1;
 			margin: 3vh;
-			font-size: 5vh;
-			font-family: Inter;
+			font-size: 3.5vh;
+			font-family: Poppins;
+			font-weight: bolder;
+			align-items: center;
 			color: #fff;
 			min-width: 6vh;
 			justify-content: center;
@@ -27,19 +30,18 @@ PawnHUD {
 		}
 
 		.stamina {
-			min-width: 4vh;
-			width: 20vh;
-			height: 4vh;
+			//width: 20vw;
+			min-width: 2vw;
+			height: 2.5vh;
 			border-radius: 100%;
 			transition: all 0.1s linear;
 		}
 
 		.stamina-background {
-			width: 20vh;
-			height: 4vh;
+			width: 16.6vw;
+			height: 2.5vh;
 			border-radius: 100%;
 			background-color: #0004;
-			transition: opacity .2s;
 			backdrop-filter: blur( 10px );
 		}
 	}
