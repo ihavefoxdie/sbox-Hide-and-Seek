@@ -77,7 +77,8 @@ public class TeamEquipmentComponent : Component
 	private void PlaySimplePunch(string soundEvent)
 	{
 		var play = Sound.Play( soundEvent, _pawn.Transform.Position );
-		play.Volume = 1f;
+		if ( play != null )
+			play.Volume = 1f;
 	}
 
 	private void Swing()

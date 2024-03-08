@@ -8,7 +8,7 @@
 @namespace HideAndSeek
 @inherits PanelComponent
 <root style="@(Loading == false ? "justify-content: space-between;" : "justify-content: center;")">
-    @if(!Loading){
+    @if(!Loading && !Connecting){
         <div class="menu">
             <TestingUI class="title" Texture=@LogoTexture></TestingUI>
             <div class="button-container">
@@ -50,9 +50,9 @@
             </div>
         </div>
         <div class="browser-menu" style="@(CreateState == true ? "display:flex; opacity: 1;" : "display:none; opacity: 0;")">
-            <div class="browser-header" style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 5vh;">
+            <div class="browser-header" style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 3vh;">
                 <div style="align-items:center; justify-content: space-between; width: 100%;">
-                    <div style="gap: 5vw;">
+                    <div style="gap: 10vw;">
                         <TextEntry MaxLength=@(20) class="search-entry" @ref="Entry" onsubmit=@SubmitText />
                         <button class="browser-input-button" style="align-items:center;" onclick=@SubmitText><i>search</i></button>
                     </div>
@@ -62,8 +62,8 @@
                             <div>Selected: @(SelectedMap)</div>
                         }
                         </div>
-                    <button class="browser-input-button" style="align-items:center; background-color: dodgerblue; 	box-shadow: 0px 0px 2vh 1vh dodgerblue;" onclick=@Play>
-                        <i>play_arrow</i>
+                    <button class="browser-input-button" style="align-items:center; background-color: dodgerblue; 	box-shadow: 0px 0px 2vh 1vh dodgerblue; aspect-ratio: 2; width: 7vw; max-height: 5vh;" onclick=@Play>
+                        <div style="font-size: 1vw">NEXT</div><i>play_arrow</i>
                     </button>
                 </div>
             </div>
@@ -76,6 +76,12 @@
                     }
                 }
             </div>
+        </div>
+    }
+    else if (Connecting)
+    {
+        <div class="loading" style="font-size: 4vh; font-style: italic; max-width: 35%">
+            CONNECTING...
         </div>
     }
     else
@@ -103,6 +109,7 @@
     private CancellationTokenSource MapLoadCancelSrc;
     private CancellationToken MapLoadCancel;
     private bool Loading = false;
+    private bool Connecting = false;
     private Texture LogoTexture { get { if (Logo.LogoTexture is null) Log.Info("Damn!"); return Logo.LogoTexture;} }
     private List<Sandbox.Network.LobbyInformation> Lobbies;
     private Package[] MapsFound;
@@ -228,7 +235,7 @@
             Status = true;
 
             Lobbies = await Networking.QueryLobbies("purpeliz.hide_seek_updated");
-            await Task.DelayRealtimeSeconds(10);
+            await Task.DelayRealtimeSeconds(5);
             if (Lobbies is null || Lobbies.Count < 1)
             {
                 Status = false;
@@ -237,11 +244,15 @@
         }
     }
 
-    private void Join(string id)
+    private async void Join(string id)
     {
         int serverId = Convert.ToInt32(id);
+        Connecting = true;
+        StateHasChanged();
         Sandbox.Network.GameNetworkSystem.Connect(Lobbies[serverId].LobbyId);
-        Log.Info(Sandbox.Network.GameNetworkSystem.IsConnecting);
+        await Task.DelayRealtimeSeconds(5);
+        Connecting = false;
+        StateHasChanged();
     }
 
 

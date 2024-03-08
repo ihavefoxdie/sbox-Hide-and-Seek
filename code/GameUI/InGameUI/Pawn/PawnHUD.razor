@@ -47,10 +47,13 @@
     {
         get
         {
-            if (SyncComp.Seekers.Contains(this.Network.OwnerConnection.Id))
-                return "#f20000c0";
-            if (SyncComp.Hiders.Contains(this.Network.OwnerConnection.Id))
-                return "dodgerblue";
+            if (SyncComp != null && SyncComp.Seekers != null && SyncComp.Seekers != null)
+            {
+                if (SyncComp.Seekers.Contains(this.Network.OwnerConnection.Id))
+                    return "#f20000c0";
+                if (SyncComp.Hiders.Contains(this.Network.OwnerConnection.Id))
+                    return "dodgerblue";
+            }
 
             return "black";
         }

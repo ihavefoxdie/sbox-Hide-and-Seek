@@ -9,13 +9,12 @@
       "Components": [
         {
           "__type": "MapInstance",
-          "MapName": "modified.cool_dev_map",
+          "MapName": "",
           "OnMapLoaded": null,
           "OnMapUnloaded": null,
           "UseMapFromLaunch": false
         }
-      ],
-      "Children": []
+      ]
     },
     {
       "Id": "da90d64d-8437-4b50-8b48-ea9213623366",
@@ -31,7 +30,7 @@
             "go": "b4820a45-a2ef-440d-8b09-dd27603c72df",
             "component_type": "MapInstance"
           },
-          "MapIdent": "modified.cool_dev_map"
+          "MapIdent": "fishum.cporangex"
         }
       ]
     },
@@ -218,6 +217,6 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-03-07T17:00:16.3210869\u002B03:00",
+  "LastSaved": "2024-03-08T12:01:06.7256495\u002B03:00",
   "__references": []
 }

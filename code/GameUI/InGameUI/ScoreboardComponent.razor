@@ -31,7 +31,7 @@
                         {
                             <div class="player" style="align-items: center; justify-content: space-between;">
                                 <div style="align-items: center;">
-                                    <img style="margin: 0.5vh 1vh 0.5vh 0; align-self: center; border-radius: 100%;" src="avatar:@Networking.Connections.Last().SteamId" />
+                                    <img style="margin: 0.5vh 1vh 0.5vh 0; align-self: center; border-radius: 100%;" src="avatar:@Networking.Connections.Where(x => x.Id == team[i]).Last().SteamId"/>
                                     <div id="player_name" style="max-width: 10vw; max-height: 5vh; text-overflow: ellipsis;">@Networking.Connections.Where(x => x.Id == team[i]).First().DisplayName</div>
                                 </div>
                                 <div id="ping" style="max-width: 4vw; max-height: 5vh; text-overflow: ellipsis;">@Convert.ToInt32(Networking.Connections.Where(x => x.Id == team[i]).Last().Ping)</div>
@@ -44,7 +44,7 @@
 
         if (Input.Down("Score"))
         {
-            <div class="browser-menu" @ref="fuck">
+            <div class="browser-menu" style="z-index: 110;">
                 @{
                     team("Hiders", Hiders, "dodgerblue");
                     team("Seekers", Seekers, "red");
@@ -58,11 +58,9 @@
     [Property] public SyncComponent SharedInfo { get; private set; }
     [Property] public List<Guid> Seekers { get { if (SharedInfo is null || SharedInfo.Seekers is null) return new List<Guid>(); return SharedInfo.Seekers; } }
     [Property] public List<Guid> Hiders { get { if (SharedInfo is null || SharedInfo.Hiders is null) return new List<Guid>(); return SharedInfo.Hiders; } }
-    private Panel fuck;
-    bool pressed = false;
-    bool released = false;
+
     /// <summary>
-            /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
-            /// </summary>
-            protected override int BuildHash() => System.HashCode.Combine(Input.Down("Score"), Seekers, Hiders);
+    /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+    /// </summary>
+    protected override int BuildHash() => System.HashCode.Combine(Input.Down("Score"), Seekers, Hiders);
 }

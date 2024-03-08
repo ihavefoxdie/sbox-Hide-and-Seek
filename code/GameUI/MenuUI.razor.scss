@@ -6,6 +6,12 @@ MenuUI {
 	bottom: 0;
 	align-items: center;
 	padding: 5%;
+	opacity: 1;
+	transition: all 0.5s linear;
+
+	&:intro{
+		opacity: 0;
+	}
 
 	.browser-input-button {
 		height: 5vh;
@@ -65,6 +71,7 @@ MenuUI {
 			min-height: 35%;
 			background-repeat: no-repeat;
 			background-position: center;
+			background-color: white;
 			background-size: contain;
 			box-shadow: 0px 0px 2vh 1vh white;
 			transition: all 0.1s linear;
@@ -121,9 +128,9 @@ MenuUI {
 		max-width: 60%;
 		min-height: 100%;
 		max-height: 100%;
-		border-radius: 3vh;
+		border-radius: 2%;
 		display: flex;
-		padding: 5vh;
+		padding: 3vh;
 		transition: all 0.1s linear;
 
 
@@ -142,14 +149,14 @@ MenuUI {
 		}
 
 		.maps-panel {
-			border-radius: 3vh;
+			border-radius: 2%;
 			background-color: #0000006d;
 			box-shadow: 0px 0px 4vh #0000006d;
 			max-height: 90%;
 			height: 90%;
 			overflow-y: scroll;
 			flex-wrap: wrap;
-			padding: 2vh;
+			padding: 3vh;
 			justify-content: space-between;
 			row-gap: 20%;
 		}
@@ -157,17 +164,18 @@ MenuUI {
 		.browser-header {
 			color: #fff;
 			font-weight: bold;
+			font-size: 2vh;
 		}
 
 		.browser-button {
-			font-size: 3vh;
+			font-size: 2vh;
 			font-family: Poppins;
 			font-style: unset;
 			color: #fff;
 			background-color: #ff6a0000;
 			transition: all 0.2s linear;
 			width: 100%;
-			min-height: 5vh;
+			min-height: 4vh;
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
@@ -175,7 +183,7 @@ MenuUI {
 			&:hover {
 				background-color: #ff6a00;
 				font-style: italic;
-				font-size: 3.2vh;
+				font-size: 2.2vh;
 				//min-height: 10vh;
 			}
 		}
@@ -185,7 +193,7 @@ MenuUI {
 	.loading {
 		pointer-events: all;
 		height: 25%;
-		border-radius: 3vh;
+		border-radius: 4%;
 		width: 50%;
 		background-color: #0000006d;
 		box-shadow: 0px 0px 2vh 0.5vh #0000006d;
@@ -193,8 +201,10 @@ MenuUI {
 		font-family: Poppins;
 		color: white;
 		justify-content: space-between;
-		padding: 2.5vw;
+		padding: 3vh;
 		align-items: center;
+		opacity: 1;
+		transition: all 0.5s linear;
 
 		.browser-block {
 			margin: 0;
@@ -205,6 +215,10 @@ MenuUI {
 			background-repeat: no-repeat;
 			background-position: center;
 			background-size: cover;
+		}
+
+		&:intro {
+			opacity: 0;
 		}
 	}
 }

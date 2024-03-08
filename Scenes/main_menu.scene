@@ -4,7 +4,7 @@
     {
       "Id": "61b16920-7dd1-4d60-949a-0474ddd8cd4d",
       "Name": "Logo",
-      "Position": "4553.015,6165.111,0.0002397361",
+      "Position": "4553.015,6165.111,219.9221",
       "Enabled": true,
       "Components": [
         {
@@ -223,36 +223,28 @@
     {
       "Id": "daf78a65-6743-4d3b-a14b-12c704cbfdd7",
       "Name": "Main Camera",
-      "Position": "512.5,1042.3,742.5999",
-      "Rotation": "0.07264172,0.05563937,-0.7905535,0.6055185",
+      "Position": "-473.9014,2009.701,355.4009",
+      "Rotation": "0.0175162,0.02501573,-0.5733089,0.81877",
       "Enabled": true,
       "Components": [
         {
           "__type": "CameraComponent",
           "BackgroundColor": "0.33333,0.46275,0.52157,1",
           "ClearFlags": "All",
-          "FieldOfView": 60,
+          "FieldOfView": 50,
           "IsMainCamera": true,
-          "Orthographic": true,
-          "OrthographicHeight": 890,
+          "Orthographic": false,
+          "OrthographicHeight": 1000,
           "Priority": 2,
           "RenderExcludeTags": "",
           "RenderTags": "",
           "TargetEye": "None",
           "Viewport": "0,0,1,1",
-          "ZFar": 10000,
+          "ZFar": 25000,
           "ZNear": 10
         },
         {
           "__type": "MainMenuCamera"
-        },
-        {
-          "__type": "CubemapFog",
-          "Blur": 1,
-          "EndDistance": 6500,
-          "FalloffExponent": 1,
-          "Sky": "materials/skybox/light_test_sky_sunny02.vmat",
-          "StartDistance": 3000
         }
       ]
     },
@@ -287,7 +279,7 @@
       "Components": [
         {
           "__type": "MapInstance",
-          "MapName": "facepunch.construct",
+          "MapName": "facepunch.flatgrass",
           "OnMapLoaded": null,
           "OnMapUnloaded": null,
           "UseMapFromLaunch": false
@@ -319,7 +311,7 @@
   },
   "Title": "MainMenu",
   "Description": "Game\u0027s main menu",
-  "LastSaved": "2024-03-01T18:02:41.3682808\u002B03:00",
+  "LastSaved": "2024-03-07T21:06:22.1288171\u002B03:00",
   "__references": [
     "tfassets.fish_01"
   ]

@@ -388,7 +388,6 @@ public class GameComponent : Component, Component.INetworkListener
 		if ( tag == "seekers" )
 		{
 		}
-
 		player.NetworkSpawn( conn );
 	}
 
