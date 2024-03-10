@@ -5,6 +5,8 @@ EscapeMenu {
 	right: 0;
 	bottom: 0;
 	align-items: center;
+	z-index: 100;
+
 
 	.menu {
 		backdrop-filter: blur(0.5vh);

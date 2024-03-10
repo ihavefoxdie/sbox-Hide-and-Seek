@@ -9,7 +9,7 @@ public class LogoComponent : Component
 	protected override void OnAwake()
 	{
 		base.OnAwake();
-		LogoTexture = Texture.CreateRenderTarget().WithWidth( 1920 ).WithHeight( 1080 ).WithDynamicUsage().Create();
+		LogoTexture = Texture.CreateRenderTarget().WithWidth( 1280 ).WithHeight( 720 ).WithDynamicUsage().Create();
 	}
 
 	protected override void OnUpdate()

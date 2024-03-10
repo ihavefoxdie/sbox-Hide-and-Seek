@@ -11,8 +11,8 @@
     }
     <div class="menu" style="@(Hide == false ? "display: flex;" : "display: none;")">
         <div class="button-panel">
-            <button class="esc-menu-button" onclick=@Disconnect>Disconnect</button>
-            <button class="esc-menu-button" onclick=@Quit>Quit</button>
+            <button class="esc-menu-button" onclick=@SyncComponent.Disconnect>Disconnect</button>
+            <button class="esc-menu-button" onclick=@SyncComponent.Quit>Quit</button>
         </div>
         <div class="info-panel">
             <div class="map-info" style="@(GetMapThumb())">
@@ -31,18 +31,7 @@
     private Package MapPackage;
     private bool Hide = true;
 
-    private void Disconnect()
-    {
-        GameNetworkSystem.Disconnect();
-        Game.ActiveScene.LoadFromFile("scenes/main_menu.scene");
-    }
 
-    private void Quit()
-    {
-        GameNetworkSystem.Disconnect();
-        Game.ActiveScene.Destroy();
-        Game.Close();
-    }
 
     private string GetMapThumb()
     {

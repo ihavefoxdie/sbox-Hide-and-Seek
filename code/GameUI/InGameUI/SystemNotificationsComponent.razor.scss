@@ -1,0 +1,68 @@
+SystemNotificationsComponent {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: 3vh;
+	opacity: 1;
+	justify-content: flex-end;
+	align-items: flex-start;
+	transition: all 2s ease-in-out;
+
+	.browser-menu {
+		align-items: center;
+		background-color: #0e0e0e6d;
+		box-shadow: 0px 0px 2vh 0.5vh #0e0e0e6d;
+		backdrop-filter: blur(4vh);
+		width: 20%;
+		height: 15%;
+		border-radius: 2%;
+		padding: 1vh;
+		transition: all 0.1s linear;
+		justify-content: space-between;
+		opacity: 1;
+	}
+
+	.browser-input-button {
+		height: 6vh;
+		background-color: #ff6a00ff;
+		box-shadow: 0 0 2vh 1vh #ff6a00ff;
+		border-radius: 5vmin;
+		padding: 1vh;
+		width: 5vh;
+		justify-content: center;
+		align-items: center;
+		font-size: 3vh;
+		transition: all 0.1s ease-out;
+		aspect-ratio: 1;
+
+		&:hover {
+			//width: 6vh;
+			sound-in: sounds/ui/hoversoundevent.sound;
+			transform: scale(1.05);
+		}
+
+		&:active {
+			background-color: #ffa362;
+			sound-in: sounds/ui/clicksoundevent.sound;
+		}
+	}
+
+	.message {
+		background-color: #0e0e0e6d;
+		box-shadow: 0px 0px 2vh 0.5vh #0e0e0e6d;
+		backdrop-filter: blur(4vh);
+		border-radius: 2%;
+		height: 65%;
+		font-size: 1.2vh;
+		padding: 0.5vh;
+		font-family: Poppins;
+		color: #fff;
+		overflow-y: scroll;
+	}
+
+	&:intro {
+		opacity: 0;
+	}
+}

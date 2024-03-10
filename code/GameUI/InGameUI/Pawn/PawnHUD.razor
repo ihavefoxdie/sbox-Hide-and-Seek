@@ -34,10 +34,13 @@
     {
         get
         {
-            if (SyncComp.Seekers.Contains(this.Network.OwnerConnection.Id))
-                return "S";
-            if (SyncComp.Hiders.Contains(this.Network.OwnerConnection.Id))
-                return "H";
+            if (SyncComp != null && SyncComp.Seekers != null && SyncComp.Seekers != null)
+            {
+                if (SyncComp.Seekers.Contains(this.Network.OwnerConnection.Id))
+                    return "S";
+                if (SyncComp.Hiders.Contains(this.Network.OwnerConnection.Id))
+                    return "H";
+            }
 
             return "?";
         }

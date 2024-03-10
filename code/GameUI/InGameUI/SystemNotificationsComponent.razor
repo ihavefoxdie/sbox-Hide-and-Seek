@@ -1,0 +1,49 @@
+@using Sandbox;
+@using Sandbox.UI;
+@namespace HideAndSeek
+@inherits PanelComponent
+
+<root>
+    @if (Triggered)
+    {
+        <div class="browser-menu">
+            <div style="flex-direction: column; width: 100%; justify-content:space-between; height: 100%">
+                <div style="font-size: 1.5vh; font-family: Poppins; color: black; font-weight: bold; background-color: orange;
+		        box-shadow: 0px 0px 2vh 0.5vh orange;
+		        backdrop-filter: blur(4vh); border-radius: 10%; padding: 0.5vh; width: 30%">
+                    Attention!
+                </div>
+	            <div class="message">@Message</div>
+            </div>
+        </div>
+    }
+</root>
+
+@code
+{
+    [Property] public SyncComponent SharedInfo { get; private set; }
+    [Property, TextArea] public string Message { get; set; } = "";
+    private bool Triggered = false;
+
+    private async void Show(string message)
+    {
+        Log.Info("FUCK");
+        Triggered = true;
+        Message = message;
+        await Task.DelayRealtimeSeconds(5);
+        Triggered = false;
+        Message = "";
+    }
+
+    protected override void OnTreeFirstBuilt()
+    {
+        if(SharedInfo != null)
+        {
+            SharedInfo.SystemMessage += Show;
+        }
+    }
+	/// <summary>
+    /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+    /// </summary>
+    protected override int BuildHash() => System.HashCode.Combine(Message);
+}

@@ -1,5 +1,6 @@
 using Sandbox;
 using Sandbox.GameLogic.Modules;
+using Sandbox.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ public class GameComponent : Component, Component.INetworkListener
 {
 	#region Properties
 	[Property] public GameObject PawnUIPrefab { get; set; }
-	[Property] public MapInstance CurrentMap {  get; private set; }
+	[Property] public MapInstance CurrentMap { get; private set; }
 	/// <summary>
 	/// Current round class object.
 	/// </summary>
@@ -28,7 +29,7 @@ public class GameComponent : Component, Component.INetworkListener
 	/// <summary>
 	/// Guid list for every player pawn in the scene.
 	/// </summary>
-	[Sync] public List<Guid> PlayerPawns { get; set; }
+	[Sync] public NetList<Guid> PlayerPawns { get; set; }
 	[Sync] public bool MapLoaded { get; set; } = false;
 	/// <summary>
 	/// Tweaked network helper.
@@ -64,9 +65,10 @@ public class GameComponent : Component, Component.INetworkListener
 	{
 		PlayerPawns = new();
 	}
+
 	protected override void OnStart()
 	{
-	//CurrentMap.IsLoaded
+		//CurrentMap.IsLoaded
 	}
 
 	public void OnActive( Connection conn )
@@ -84,7 +86,7 @@ public class GameComponent : Component, Component.INetworkListener
 		}
 	}
 
-
+	//TODO: make new players get spawned and join seekers
 	public void OnConnected( Connection conn )
 	{
 	}
@@ -104,8 +106,16 @@ public class GameComponent : Component, Component.INetworkListener
 			}
 		}
 
-		Seekers.TeamPlayers.Remove( conn.Id );
-		Hiders.TeamPlayers.Remove( conn.Id );
+
+		if ( Seekers.TeamPlayers.Contains( conn.Id ) )
+		{
+			Seekers.TeamPlayers.Remove( conn.Id );
+		}
+
+		if ( Hiders.TeamPlayers.Contains( conn.Id ) )
+		{
+			Hiders.TeamPlayers.Remove( conn.Id );
+		}
 	}
 
 	protected override void OnFixedUpdate()
@@ -129,7 +139,6 @@ public class GameComponent : Component, Component.INetworkListener
 				CurrentRound.EndTheRound();
 			}
 		}
-
 	}
 
 	//TODO: add more documentation.
@@ -175,7 +184,7 @@ public class GameComponent : Component, Component.INetworkListener
 	private void RemoveSeekerComponent( Guid objectID )
 	{
 		var pawn = Scene.Directory.FindByGuid( objectID );
-		if(pawn == null ) return;
+		if ( pawn == null ) return;
 
 		var comp = pawn.Components.Get<TeamEquipmentComponent>( true );
 		if ( comp == null ) return;
@@ -243,8 +252,8 @@ public class GameComponent : Component, Component.INetworkListener
 	/// <summary>
 	/// Toggles Enabled on player pawn.
 	/// </summary>
-	/// <param name="guid"></param>
-	/// <param name="toggle"></param>
+	/// <param name="guid">Pawn's gameobject Guid.</param>
+	/// <param name="toggle">On(true) or off(false).</param>
 	[Broadcast]
 	private void TogglePawn( Guid guid, bool toggle )
 	{
@@ -262,7 +271,7 @@ public class GameComponent : Component, Component.INetworkListener
 	/// <summary>
 	/// Toggles spectator cam on or off.
 	/// </summary>
-	/// <param name="toggle"></param>
+	/// <param name="toggle">On(true) or off(false).</param>
 	[Broadcast]
 	private void ToggleCam( bool toggle )
 	{
@@ -402,6 +411,7 @@ public class GameComponent : Component, Component.INetworkListener
 		InitGame();
 	}
 
+	//TODO: should try disabling players instead?
 	/// <summary>
 	/// Clears the scene from every player pawn.
 	/// </summary>

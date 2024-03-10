@@ -1,4 +1,5 @@
 using Sandbox;
+using Sandbox.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ namespace HideAndSeek;
 
 public class SyncComponent : Component, Component.INetworkListener
 {
+	#region Properties
 	/// <summary>
 	/// Current GameComponent instance.
 	/// </summary>
@@ -17,10 +19,13 @@ public class SyncComponent : Component, Component.INetworkListener
 	/// </summary>
 	[Property][Sync] public float Timer { get; private set; }
 	[Property][Sync] public string MapIdent { get; private set; }
-	[Sync] public int MaxTime {  get; private set; }
+	[Sync] private Guid GameHostConnection { get; set; }
+	[Sync] public int MaxTime { get; private set; }
 	[Sync] public int RoundCooldown { get; private set; }
 	[Sync] public int PreparationTime { get; private set; }
-
+	[Sync] public bool DisconnectTriggered { get; set; } = false;
+	private int HostSentMessages { get; set; } = 0;
+	private TimeSince SinceLastMessage { get; set; } = 0;
 	/// <summary>
 	/// Has the game started yet.
 	/// </summary>
@@ -33,7 +38,11 @@ public class SyncComponent : Component, Component.INetworkListener
 	/// List of connections in Seekers team.
 	/// </summary>
 	[Property][Sync] public List<Guid> Seekers { get; private set; }
+	#endregion
 
+	#region Events
+	public event Action<string> SystemMessage;
+	#endregion
 	protected override void OnAwake()
 	{
 		CurrentGame = Scene.GetAllComponents<GameComponent>().Last();
@@ -44,14 +53,38 @@ public class SyncComponent : Component, Component.INetworkListener
 		RoundCooldown = CurrentGame.RoundCooldown;
 		PreparationTime = CurrentGame.PreparationTime;
 		MapIdent = SettingsData.MapIdent;
+		GameHostConnection = Networking.HostConnection.Id;
 	}
 
 	protected override void OnFixedUpdate()
 	{
 		if ( IsProxy )
 		{
+			if ( HostSentMessages != Networking.HostConnection.MessagesSent )
+			{
+				HostSentMessages = Networking.HostConnection.MessagesSent;
+				SinceLastMessage = 0;
+			}
+
+			if ( SinceLastMessage.Relative == 5 )
+			{
+				SystemMessage?.Invoke( "Host timeout" );
+			}
+			if ( SinceLastMessage.Relative > 10 )
+			{
+				Disconnect();
+			}
+
+			if ( GameHostConnection != Networking.HostConnection.Id && !DisconnectTriggered)
+			{
+				DisconnectTriggered = true;
+				DisconnectEveryone( "Host has left!" );
+			}
+
 			return;
 		}
+
+
 		if ( CurrentGame is not null && CurrentGame.CurrentRound is not null )
 		{
 			IsStarted = CurrentGame.GameBegan;
@@ -65,10 +98,31 @@ public class SyncComponent : Component, Component.INetworkListener
 	}
 
 	#region Methods
-	[Broadcast]
-	public void OnCaught(Guid catcher, Guid caught)
+	public static void Disconnect()
 	{
-		if(!IsProxy)
+		GameNetworkSystem.Disconnect();
+		Game.ActiveScene.LoadFromFile( "scenes/main_menu.scene" );
+	}
+
+	public static void Quit()
+	{
+		GameNetworkSystem.Disconnect();
+		Game.ActiveScene.Destroy();
+		Game.Close();
+	}
+
+	[Broadcast]
+	private void DisconnectEveryone( string message )
+	{
+		SystemMessage?.Invoke( message );
+		GameTask.DelayRealtimeSeconds( 5 );
+		Disconnect();
+	}
+
+	[Broadcast]
+	public void OnCaught( Guid catcher, Guid caught )
+	{
+		if ( !IsProxy )
 			CurrentGame.Caught( catcher, caught );
 	}
 	#endregion
