@@ -75,15 +75,14 @@ public class SyncComponent : Component, Component.INetworkListener
 				Disconnect();
 			}
 
-			if ( GameHostConnection != Networking.HostConnection.Id && !DisconnectTriggered)
-			{
-				DisconnectTriggered = true;
-				DisconnectEveryone( "Host has left!" );
-			}
-
 			return;
 		}
 
+		if ( (Networking.HostConnection == null || GameHostConnection != Networking.HostConnection?.Id) && !DisconnectTriggered )
+		{
+			DisconnectTriggered = true;
+			DisconnectEveryone( "Host has left!" );
+		}
 
 		if ( CurrentGame is not null && CurrentGame.CurrentRound is not null )
 		{
@@ -115,7 +114,7 @@ public class SyncComponent : Component, Component.INetworkListener
 	private void DisconnectEveryone( string message )
 	{
 		SystemMessage?.Invoke( message );
-		GameTask.DelayRealtimeSeconds( 5 );
+		Log.Info(message);
 		Disconnect();
 	}
 

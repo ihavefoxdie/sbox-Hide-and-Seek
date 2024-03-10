@@ -93,28 +93,36 @@ public class GameComponent : Component, Component.INetworkListener
 
 	public void OnDisconnected( Connection conn )
 	{
-		for ( int i = 0; i < PlayerPawns.Count; i++ )
+		if ( PlayerPawns != null )
 		{
-			var p = Scene.Directory.FindByGuid( PlayerPawns[i] );
-			if ( p != null )
+			for ( int i = 0; i < PlayerPawns.Count; i++ )
 			{
-				if ( p.Network.OwnerConnection == conn )
+				var p = Scene.Directory.FindByGuid( PlayerPawns[i] );
+				if ( p != null )
 				{
-					PlayerPawns.Remove( PlayerPawns[i] );
-					break;
+					if ( p.Network.OwnerConnection == conn )
+					{
+						PlayerPawns.Remove( PlayerPawns[i] );
+						break;
+					}
 				}
 			}
 		}
 
-
-		if ( Seekers.TeamPlayers.Contains( conn.Id ) )
+		if ( Seekers != null && Seekers.TeamPlayers != null )
 		{
-			Seekers.TeamPlayers.Remove( conn.Id );
+			if ( Seekers.TeamPlayers.Contains( conn.Id ) )
+			{
+				Seekers.TeamPlayers.Remove( conn.Id );
+			}
 		}
 
-		if ( Hiders.TeamPlayers.Contains( conn.Id ) )
+		if ( Hiders != null && Hiders.TeamPlayers != null )
 		{
-			Hiders.TeamPlayers.Remove( conn.Id );
+			if ( Hiders.TeamPlayers.Contains( conn.Id ) )
+			{
+				Hiders.TeamPlayers.Remove( conn.Id );
+			}
 		}
 	}
 

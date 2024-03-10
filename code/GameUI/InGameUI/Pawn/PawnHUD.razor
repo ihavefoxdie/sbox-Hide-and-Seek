@@ -34,7 +34,7 @@
     {
         get
         {
-            if (SyncComp != null && SyncComp.Seekers != null && SyncComp.Seekers != null)
+            if (SyncComp != null && SyncComp.Seekers != null && SyncComp.Hiders != null)
             {
                 if (SyncComp.Seekers.Contains(this.Network.OwnerConnection.Id))
                     return "S";
@@ -50,7 +50,7 @@
     {
         get
         {
-            if (SyncComp != null && SyncComp.Seekers != null && SyncComp.Seekers != null)
+            if (SyncComp != null && SyncComp.Seekers != null && SyncComp.Hiders != null)
             {
                 if (SyncComp.Seekers.Contains(this.Network.OwnerConnection.Id))
                     return "#f20000c0";
