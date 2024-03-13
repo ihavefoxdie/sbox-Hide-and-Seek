@@ -2,7 +2,7 @@
 https://asset.party/purpeliz/hide_seek_updated
 #### A game of hide and seek for s&box.
 
-Hide! Don't let seekers catch you!
+Hide! Don't let seekers catch you! <br>
 Seek! Hunt down every hider!
 
 Currently you can create sessions or join them. Prior to starting a session, you need to select a map to play on (any map from asset.party can be played on).
