@@ -9,6 +9,9 @@
 @inherits PanelComponent
 <root style="@(Loading == false ? "justify-content: space-between;" : "justify-content: center;")">
     @if(!Loading && !Connecting){
+
+
+
         <div class="menu">
             <TestingUI class="title" Texture=@LogoTexture></TestingUI>
             <div class="button-container">
@@ -21,6 +24,9 @@
                 </div>
             </div>
         </div>
+
+
+
         <div class="browser-menu" style="@(BrowserState == true ? "display:flex; opacity: 1;" : "display:none; opacity: 0;")">
             <div class="browser-header" style="@((Lobbies == null || Lobbies.Count < 1) ? "display:flex;" : "display:none;")  flex-direction: column; align-self: center; justify-content: center; font-size: 4vh; font-weight: normal; height: 100%;">
                 <div>
@@ -49,6 +55,9 @@
             }
             </div>
         </div>
+
+
+
         <div class="browser-menu" style="@(CreateState == true ? "display:flex; opacity: 1;" : "display:none; opacity: 0;")">
             <div class="browser-header" style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 3vh;">
                 <div style="align-items:center; justify-content: space-between; width: 100%;">
@@ -62,19 +71,58 @@
                             <div>Selected: @(SelectedMap)</div>
                         }
                         </div>
-                    <button class="browser-input-button" style="align-items:center; background-color: dodgerblue; 	box-shadow: 0px 0px 2vh 1vh dodgerblue; aspect-ratio: 2; width: 7vw; max-height: 5vh;" onclick=@Play>
-                        <div style="font-size: 1vw">NEXT</div><i>play_arrow</i>
-                    </button>
+                    @if (SelectedMap != null && SelectedMap != "")
+                    {
+                        <button class="browser-input-button" style="align-items:center; background-color: dodgerblue; 	box-shadow: 0px 0px 2vh 1vh dodgerblue; aspect-ratio: 2; width: 7vw; max-height: 5vh;" onclick=@(_ => ExpandSettingsMenu = !ExpandSettingsMenu)>
+                            <div style="font-size: 1vw">NEXT</div>
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="browser-input-button" style="cursor:not-allowed; opacity: 0.25; align-items:center; background-color: dodgerblue; 	box-shadow: 0px 0px 2vh 1vh dodgerblue; aspect-ratio: 2; width: 7vw; max-height: 5vh;">
+                            <div style="font-size: 1vw">NEXT</div>
+                        </button>
+                    }
                 </div>
             </div>
-            <div class="maps-panel">
-                @if(MapsFound != null && MapsFound.Length > 0)
-                {
-                    for (int i = 0; i < MapsFound.Length; i++)
+            <div>
+                <div class="maps-panel" style="min-height: 100%;">
+                    @if(MapsFound != null && MapsFound.Length > 0)
                     {
-                        <button class="browser-block" id=@(i.ToString()) onclick=@(x => {Select(x.Target);} ) style="background-image: url(@MapsFound[i].Thumb);"></button>
+                        for (int i = 0; i < MapsFound.Length; i++)
+                        {
+                            <div style="flex-direction: column">
+                                <button class="browser-block" id=@(i.ToString()) onclick=@(x => {Select(x.Target);} ) style="background-image: url(@MapsFound[i].Thumb);"></button>
+                                <div style="width:90%; justify-content: center; align-self: center;  background-color: #000000e0; border-radius: 50%; margin: 1vh 0 0 0">
+                                    <p style="font-size: 1.25vh; color: white; max-width: 85%; white-space: nowrap; text-overflow: ellipsis;">@(MapsFound[i].Ident)</p>
+                                </div>
+                            </div>
+                        }
                     }
-                }
+                </div>
+                <div class="game-options" style="@(ExpandSettingsMenu == true ? "width: 50%; opacity: 1;  transform: scaleX(1); padding: 0 0 0 3vh;" : "width: 0%; opacity: 0; transform: scaleX(0); padding: 0 0 0 0vh;")">
+                    <div style="flex-direction: column;">
+                            <div class="game-option">
+                                <p>prep. time (sec)</p>
+                                <TextEntry MaxLength=@(3) Numeric=@true MinValue=@(5) MaxValue=@(120) @ref="PrepTime" class="option-value"/>
+                            </div>
+                            <div class="game-option">
+                                <p>round length (sec)</p>
+                                <TextEntry MaxLength=@(4) Numeric=@true @ref="RoundLength" MinValue=@(30) MaxValue=@(3600) class="option-value"/>
+                            </div>
+                            <div class="game-option">
+                                <p>time before next round (sec)</p>
+                                <TextEntry MaxLength=@(2) Numeric=@true @ref="TimeBeforeNextRound" MinValue=@(5) MaxValue=@(60) class="option-value"/>
+                            </div>
+                            <div class="game-option">
+                                <p>number of rounds</p>
+                                <TextEntry MaxLength=@(2) Numeric=@true @ref="Rounds" MinValue=@(1) MaxValue=@(20)  class="option-value"/>
+                            </div>
+                        </div>
+                        <button class="browser-input-button" style="margin: 1vh; min-width: 90%;  height: 5vh; aspect-ratio:2; align-items:center; background-color: #ff6a00; 	box-shadow: 0px 0px 2vh 1vh #ff6a00; align-self: flex-end" onclick=@Play>
+                            <div style="font-size: 1.5vw; font-style: italic; font-weight: bolder">PLAY</div>
+                        </button>
+                    </div>
             </div>
         </div>
     }
@@ -89,7 +137,7 @@
         <div class="loading">
             <div class="browser-block" style="@(GetMapThumb())">
             </div>
-            <div style="flex-direction: column">
+            <div style="flex-direction: column; font-size: 2vh;">
                 Downloading: <br />
                 @if(CurrentMap != null)
                 {
@@ -108,20 +156,34 @@
     [Property] private LogoComponent Logo { get; set; }
     private CancellationTokenSource MapLoadCancelSrc;
     private CancellationToken MapLoadCancel;
-    private bool Loading = false;
-    private bool Connecting = false;
     private Texture LogoTexture { get { if (Logo.LogoTexture is null) Log.Info("Damn!"); return Logo.LogoTexture;} }
     private List<Sandbox.Network.LobbyInformation> Lobbies;
     private Package[] MapsFound;
     private Package CurrentMap;
     private TextEntry Entry;
+
+
+    //Settings
+    public TextEntry RoundLength;
+    public TextEntry PrepTime;
+    public TextEntry TimeBeforeNextRound;
+    public TextEntry Rounds;
+    private string SelectedMap;
+
+
+    //States
+    private bool ExpandSettingsMenu = false;
+    private bool Loading = false;
+    private bool Connecting = false;
     private bool BrowserState = false;
     private bool CreateState = false;
     private bool Status = true;
+
+
     private string MapQuery;
-    private string SelectedMap;
     private Panel PrevButton;
     private GameSettings _settings = new();
+
 
     private void SubmitText()
     {
@@ -191,10 +253,14 @@
         }
     }
 
-    //TODO: Create loading screen for map downloading.
     private async void Play()
     {
-        _settings.MapName = SelectedMap;
+        _settings.MapName = SelectedMap != "" ? SelectedMap : "facepunch.construct";
+        _settings.PrepTime = PrepTime != null ? Convert.ToInt32(PrepTime.FixNumeric()) : 30;
+        _settings.RoundLength = RoundLength != null ? Convert.ToInt32(RoundLength.FixNumeric()) : 30;
+        _settings.TimeBeforeNextRound = TimeBeforeNextRound != null ? Convert.ToInt32(TimeBeforeNextRound.FixNumeric()) : 30;
+        _settings.Rounds = Rounds != null ? Convert.ToInt32(Rounds.FixNumeric()) : 30;
+
         _settings.SaveSettings();
 
         CurrentMap = await Package.Fetch(SelectedMap, false);

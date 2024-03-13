@@ -15,6 +15,10 @@ public class SettingsLoaderComponent : Component
 	/// MapIdent from the settings file (either default or user's).
 	/// </summary>
 	[Property][Sync] public string MapIdent { get; private set; }
+	[Sync] public int RoundLength { get; private set; }
+	[Sync] public int PrepTime { get; private set; }
+	[Sync] public int TimeBeforeNextRound { get; private set; }
+	[Sync] public int Rounds { get; private set; }
 	[Property] public MapInstance Map { get; private set; }
 
 	protected override async Task OnLoad()
@@ -37,6 +41,11 @@ public class SettingsLoaderComponent : Component
 					}
 				}
 			}
+
+			RoundLength = _settings.RoundLength;
+			PrepTime = _settings.PrepTime;
+			Rounds = _settings.Rounds;
+			TimeBeforeNextRound = _settings.TimeBeforeNextRound;
 		}
 		Map.MapName = MapIdent;
 		Map.OnMapLoaded += (() => Log.Info( "LOADED!!" ));

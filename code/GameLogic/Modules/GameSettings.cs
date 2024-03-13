@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 
 namespace Sandbox.GameLogic.Modules;
 
@@ -11,6 +12,22 @@ public class GameSettings
 	/// Name of the map to start a session with.
 	/// </summary>
 	public string MapName { get; set; }
+	/// <summary>
+	/// Length of a round in seconds.
+	/// </summary>
+	public int RoundLength { get; set; }
+	/// <summary>
+	/// Time before seekers get enabled in seconds.
+	/// </summary>
+	public int PrepTime { get; set; }
+	/// <summary>
+	/// Time before the next round starts (after the previous has ended).
+	/// </summary>
+	public int TimeBeforeNextRound {  get; set; }
+	/// <summary>
+	/// Number of rounds in a match.
+	/// </summary>
+	public int Rounds {  get; set; }
 	/// <summary>
 	/// Seekers do not get seekers clothing and vice versa; everyone wears their default outfits.
 	/// </summary>
@@ -35,8 +52,11 @@ public class GameSettings
 	private void Init()
 	{
 		MapName = "facepunch.construct";
+		RoundLength = 300;
+		PrepTime = 30;
+		TimeBeforeNextRound = 10;
+		Rounds = 5;
 		ParanoiaMode = false;
-
 		WriteSettings( "defaultUserSettings" );
 	}
 

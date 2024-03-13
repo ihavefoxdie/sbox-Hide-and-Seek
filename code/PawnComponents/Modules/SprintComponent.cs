@@ -30,8 +30,11 @@ public class SprintComponent : Component
 	#region Methods
 	private void JumpHandler()
 	{
-		Pawn.Stats.Stamina = System.Math.Max( Pawn.Stats.Stamina - 10f, 0 );
-		_sinceSprint = Time.Now;
+		if ( Pawn.PawnController.IsOnGround )
+		{
+			Pawn.Stats.Stamina = System.Math.Max( Pawn.Stats.Stamina - 10f, 0 );
+			_sinceSprint = Time.Now;
+		}
 	}
 
 	private void SprintCheck()

@@ -24,9 +24,9 @@ public class FootComponent : Component
 	#region Methods
 	private void CheckLifted()
 	{
-		SceneTraceResult collision = Scene.Trace.Ray( FootObject.Transform.Position, FootObject.Transform.Position + Vector3.Down * 1f )
+		SceneTraceResult collision = Scene.Trace.Ray( FootObject.Transform.Position, FootObject.Transform.Position + Vector3.Down * 2f )
 			.WithoutTags( "pawn", "trigger" )
-			.Radius( 4f )
+			.Radius( 5f )
 			.Run();
 
 		CurrentSurface = collision.Surface;

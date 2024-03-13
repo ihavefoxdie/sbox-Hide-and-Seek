@@ -6,10 +6,10 @@
       "Name": "Logo",
       "Position": "-827.8008,600,219.9221",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
-          "__type": "LogoComponent",
-          "LogoTexture": null
+          "__type": "LogoComponent"
         }
       ],
       "Children": [
@@ -19,6 +19,7 @@
           "Position": "-74.15698,-113.2263,42.03223",
           "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "WorldPanel",
@@ -40,15 +41,12 @@
           "Position": "-84.22192,-71.70898,16.64258",
           "Rotation": "0,0,0.9469293,0.3214417",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "SkinnedModelRenderer",
-              "AnimationGraph": null,
               "BodyGroups": 341,
-              "BoneMergeTarget": null,
               "CreateBoneObjects": false,
-              "MaterialGroup": null,
-              "MaterialOverride": null,
               "Model": "models/citizen/citizen.vmdl",
               "RenderType": "On",
               "Tint": "1,1,1,1"
@@ -56,15 +54,9 @@
             {
               "__type": "CitizenAnimationHelper",
               "BodyWeight": 1,
-              "EyeSource": null,
               "EyesWeight": 1,
               "HeadWeight": 1,
               "Height": 1,
-              "IkLeftFoot": null,
-              "IkLeftHand": null,
-              "IkRightFoot": null,
-              "IkRightHand": null,
-              "LookAt": null,
               "LookAtEnabled": false,
               "Target": {
                 "_type": "component",
@@ -88,6 +80,7 @@
           "Position": "-253.1222,-56.5,82.28125",
           "Rotation": "0,0.06975647,0,0.9975641",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "CameraComponent",
@@ -120,6 +113,7 @@
           "Position": "-39.50708,-40.22729,68.89355",
           "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "WorldPanel",
@@ -142,6 +136,7 @@
           "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
           "Scale": "1,0.55,0.55",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "WorldPanel",
@@ -160,9 +155,10 @@
         {
           "Id": "9978bc40-4fc8-4de8-a856-3092ec1bb50f",
           "Name": "Light",
-          "Position": "-125.3557,-64.96143,68.45215",
+          "Position": "-18.58929,-31.07684,68.45216",
           "Tags": "light_spot,light,light_point",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "PointLight",
@@ -182,11 +178,11 @@
           "Rotation": "0,0,0.7071068,0.7071068",
           "Scale": "10,0.1,10",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "ModelRenderer",
               "BodyGroups": 18446744073709551615,
-              "MaterialGroup": null,
               "MaterialOverride": "materials/dev/bright_100.vmat",
               "Model": "models/dev/box.vmdl",
               "RenderType": "On",
@@ -195,26 +191,23 @@
           ]
         },
         {
-          "Id": "472719c7-029c-4983-8059-ab41d680af06",
-          "Name": "Object",
-          "Position": "0,0,0",
-          "Enabled": true
-        },
-        {
-          "Id": "9194b152-7b85-416b-8ef9-fe543a022758",
-          "Name": "fish_01",
-          "Position": "-88.4104,-32.64502,13.37305",
-          "Rotation": "-0.000000873646,-0.00000008579453,0.962691,-0.2706031",
+          "Id": "e1d7309a-deeb-4743-aeaf-abe3f716e12e",
+          "Name": "Spot Light",
+          "Position": "-191.7959,-69.24133,68.63063",
+          "Tags": "light_spot,light",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
-              "__type": "ModelRenderer",
-              "BodyGroups": 18446744073709551615,
-              "MaterialGroup": null,
-              "MaterialOverride": null,
-              "Model": "models/props_selbyen/fish_01.vmdl",
-              "RenderType": "On",
-              "Tint": "1,1,1,1"
+              "__type": "SpotLight",
+              "Attenuation": 0,
+              "ConeInner": 16.75,
+              "ConeOuter": 45,
+              "FogMode": "Enabled",
+              "FogStrength": 1,
+              "LightColor": "0.91373,0.98039,1,1",
+              "Radius": 500,
+              "Shadows": true
             }
           ]
         }
@@ -226,6 +219,7 @@
       "Position": "55.66558,255.7567,50.74578",
       "Rotation": "0.03084356,0.03084356,-0.7064338,0.7064338",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "CameraComponent",
@@ -260,6 +254,7 @@
       "Name": "Menu",
       "Position": "0,-0.0002441406,100",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "ScreenPanel",
@@ -285,6 +280,7 @@
       "Rotation": "0.1464466,0.3535534,-0.3535534,0.8535534",
       "Tags": "light_directional,light",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "DirectionalLight",
@@ -303,6 +299,7 @@
       "Position": "25.97215,60.56902,129.817",
       "Tags": "skybox",
       "Enabled": true,
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "SkyBox2D",
@@ -316,6 +313,7 @@
       "Name": "Room",
       "Scale": "10,10,0.1",
       "Enabled": true,
+      "NetworkMode": 2,
       "Children": [
         {
           "Id": "1b07f764-b7b9-40fc-a825-2629260fab75",
@@ -323,14 +321,13 @@
           "Position": "7.069365,-4.199324,35.20134",
           "Scale": "0.1,0.1,10",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "Prop",
               "Health": 5,
               "IsStatic": false,
               "Model": "models/props/couch/couch.vmdl",
-              "OnPropBreak": null,
-              "OnPropTakeDamage": null,
               "ShowCreatedComponents": false
             }
           ]
@@ -342,14 +339,13 @@
           "Rotation": "0,0,0.3826835,0.9238795",
           "Scale": "0.1,0.1,10",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "Prop",
               "Health": 0,
               "IsStatic": false,
               "Model": "models/props/trim_sheets/cabinets/cabinet_a3.vmdl",
-              "OnPropBreak": null,
-              "OnPropTakeDamage": null,
               "ShowCreatedComponents": false
             }
           ]
@@ -361,14 +357,13 @@
           "Rotation": "0.4330127,-0.4330127,-0.25,0.7500001",
           "Scale": "0.05464725,0.05464725,5.311431",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "Prop",
               "Health": 2,
               "IsStatic": false,
               "Model": "models/sbox_props/watermelon/watermelon.vmdl",
-              "OnPropBreak": null,
-              "OnPropTakeDamage": null,
               "ShowCreatedComponents": false
             }
           ]
@@ -379,14 +374,13 @@
           "Position": "0.915831,-1.299092,350.0034",
           "Scale": "0.05117966,0.05117966,5.117966",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "Prop",
               "Health": 0,
               "IsStatic": false,
               "Model": "models/citizen_props/coffeemug01.vmdl",
-              "OnPropBreak": null,
-              "OnPropTakeDamage": null,
               "ShowCreatedComponents": false
             }
           ]
@@ -398,14 +392,14 @@
           "Rotation": "-0.7071068,0.0000002753575,0.00000000000004263256,-0.7071066",
           "Scale": "0.1,0.1,10",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "PlaneCollider",
               "Center": "0,0,0",
               "IsTrigger": false,
               "Scale": "200,40",
-              "Static": true,
-              "Surface": null
+              "Static": true
             }
           ]
         },
@@ -414,13 +408,12 @@
           "Name": "Floor",
           "Position": "5.417896,0,0",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "ModelRenderer",
               "BodyGroups": 18446744073709551615,
-              "MaterialGroup": null,
               "MaterialOverride": "materials/trimsheets/wood/wood_trim_03.vmat",
-              "Model": null,
               "RenderType": "On",
               "Tint": "1,1,1,1"
             },
@@ -429,8 +422,7 @@
               "Center": "0,0,25.00004",
               "IsTrigger": false,
               "Scale": "50,50",
-              "Static": true,
-              "Surface": null
+              "Static": true
             }
           ]
         },
@@ -440,13 +432,12 @@
           "Position": "5.417896,-13.13249,0",
           "Rotation": "-0.7071067,0,0,0.7071068",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "ModelRenderer",
               "BodyGroups": 18446744073709551615,
-              "MaterialGroup": null,
               "MaterialOverride": "materials/architecture/tiles/brick_wall_large01a.vmat",
-              "Model": null,
               "RenderType": "On",
               "Tint": "1,1,1,1"
             },
@@ -455,8 +446,7 @@
               "Center": "0,0,25.00004",
               "IsTrigger": false,
               "Scale": "50,50",
-              "Static": true,
-              "Surface": null
+              "Static": true
             }
           ]
         },
@@ -467,13 +457,13 @@
           "Rotation": "0,0.7071067,0,0.7071068",
           "Tags": "light_spot,light",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "SpotLight",
               "Attenuation": 1,
               "ConeInner": 15,
               "ConeOuter": 45,
-              "Cookie": null,
               "FogMode": "Enabled",
               "FogStrength": 1,
               "LightColor": "1,0.92791,0.85581,1",
@@ -489,13 +479,13 @@
           "Rotation": "-0.2705981,0.6532815,-0.270598,0.6532816",
           "Tags": "light_spot,light",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "SpotLight",
               "Attenuation": 10,
               "ConeInner": 90,
               "ConeOuter": 19.8,
-              "Cookie": null,
               "FogMode": "Enabled",
               "FogStrength": 1,
               "LightColor": "1,0.76512,0.53023,1",
@@ -510,6 +500,7 @@
           "Position": "5.91409,7.126105,1182.333",
           "Tags": "light_point,light",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "PointLight",
@@ -527,6 +518,7 @@
           "Name": "Point Light",
           "Position": "6.946191,-1.475986,490.3665",
           "Tags": "light_point,light",
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "PointLight",
@@ -543,7 +535,7 @@
           "Id": "e7890ef4-8dec-4b49-a260-ec2ad6431145",
           "Name": "Fog",
           "Position": "5.117713,-3.361256,0",
-          "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "VolumetricFogVolume",
@@ -563,16 +555,16 @@
           "Rotation": "0,0.7071068,0,0.7071068",
           "Tags": "light_spot,light",
           "Enabled": true,
+          "NetworkMode": 2,
           "Components": [
             {
               "__type": "SpotLight",
               "Attenuation": 10,
               "ConeInner": 16.75,
               "ConeOuter": 19.38,
-              "Cookie": null,
               "FogMode": "Enabled",
               "FogStrength": 1,
-              "LightColor": "1,0.9386,0.84651,1",
+              "LightColor": "1,0.83256,0.5814,1",
               "Radius": 499.30017,
               "Shadows": true
             }
@@ -584,12 +576,11 @@
       "Id": "335fc918-c258-4538-806a-399203b52bff",
       "Name": "MMBackground",
       "Position": "0,0,100",
+      "NetworkMode": 2,
       "Components": [
         {
           "__type": "MapInstance",
           "MapName": "",
-          "OnMapLoaded": null,
-          "OnMapUnloaded": null,
           "UseMapFromLaunch": false
         }
       ]
@@ -618,12 +609,11 @@
   },
   "Title": "MainMenu",
   "Description": "Game\u0027s main menu",
-  "LastSaved": "2024-03-10T13:16:31.6267239\u002B03:00",
+  "LastSaved": "2024-03-13T18:34:45.2799364\u002B03:00",
   "__references": [
     "facepunch.cabinet_a3",
     "facepunch.couch",
     "facepunch.watermelon",
-    "facepunch.wood_trim_03",
-    "tfassets.fish_01"
+    "facepunch.wood_trim_03"
   ]
 }

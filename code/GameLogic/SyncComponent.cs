@@ -49,11 +49,16 @@ public class SyncComponent : Component, Component.INetworkListener
 		SettingsData = Scene.GetAllComponents<SettingsLoaderComponent>().Last();
 		Hiders = new();
 		Seekers = new();
+		
+		MapIdent = SettingsData.MapIdent;
+		GameHostConnection = Networking.HostConnection.Id;
+	}
+
+	protected override void OnStart()
+	{
 		MaxTime = CurrentGame.RoundLength;
 		RoundCooldown = CurrentGame.RoundCooldown;
 		PreparationTime = CurrentGame.PreparationTime;
-		MapIdent = SettingsData.MapIdent;
-		GameHostConnection = Networking.HostConnection.Id;
 	}
 
 	protected override void OnFixedUpdate()

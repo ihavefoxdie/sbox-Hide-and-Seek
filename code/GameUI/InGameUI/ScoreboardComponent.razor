@@ -34,7 +34,7 @@
                                     <img style="margin: 0.5vh 1vh 0.5vh 0; align-self: center; border-radius: 100%;" src="avatar:@Networking.Connections.Where(x => x.Id == team[i]).Last().SteamId"/>
                                     <div id="player_name" style="max-width: 10vw; max-height: 5vh; text-overflow: ellipsis;">@Networking.Connections.Where(x => x.Id == team[i]).First().DisplayName</div>
                                 </div>
-                                <div id="ping" style="max-width: 4vw; max-height: 5vh; text-overflow: ellipsis;">@Convert.ToInt32(Networking.Connections.Where(x => x.Id == team[i]).Last().Ping)</div>
+                                <div id="ping" style="max-width: 4vw; max-height: 5vh; text-overflow: ellipsis;">@Math.Round(Networking.Connections.Where(x => x.Id == team[i]).Last().Latency)</div>
                             </div>
                         }
                     </div>
@@ -51,6 +51,7 @@
                 }
             </div>
         }
+    }
 </root>
 
 @code

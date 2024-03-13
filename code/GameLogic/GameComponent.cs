@@ -1,8 +1,6 @@
 using Sandbox;
 using Sandbox.GameLogic.Modules;
-using Sandbox.Network;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 
@@ -13,7 +11,7 @@ public class GameComponent : Component, Component.INetworkListener
 {
 	#region Properties
 	[Property] public GameObject PawnUIPrefab { get; set; }
-	[Property] public MapInstance CurrentMap { get; private set; }
+	[Property] public SettingsLoaderComponent Settings { get; private set; }
 	/// <summary>
 	/// Current round class object.
 	/// </summary>
@@ -27,9 +25,9 @@ public class GameComponent : Component, Component.INetworkListener
 	/// </summary>
 	public Team Seekers { get; set; }
 	/// <summary>
-	/// Guid list for every player pawn in the scene.
+	/// NetDictionary of Guid for every player pawn object in the scene with matching connection id as a key.
 	/// </summary>
-	[Sync] public NetList<Guid> PlayerPawns { get; set; }
+	[Sync] public NetDictionary<Guid, Guid> PlayerPawns { get; set; }
 	[Sync] public bool MapLoaded { get; set; } = false;
 	/// <summary>
 	/// Tweaked network helper.
@@ -39,6 +37,7 @@ public class GameComponent : Component, Component.INetworkListener
 	/// A simple boolean that tells whether the game has begun or not.
 	/// </summary>
 	[Sync] public bool GameBegan { get; private set; } = false;
+	[Sync] private bool SeekersStatus { get; set; } = false;
 	/// <summary>
 	/// Round length limit in seconds.
 	/// </summary>
@@ -64,29 +63,41 @@ public class GameComponent : Component, Component.INetworkListener
 	protected override void OnAwake()
 	{
 		PlayerPawns = new();
+		if ( !IsProxy )
+		{
+			Settings ??= Scene.GetAllComponents<SettingsLoaderComponent>().Last();
+
+			if ( Settings != null )
+			{
+				RoundLength = Settings.RoundLength + Settings.PrepTime;
+				RoundCooldown = Settings.TimeBeforeNextRound;
+				PreparationTime = Settings.PrepTime;
+			}
+		}
 	}
 
 	protected override void OnStart()
 	{
-		//CurrentMap.IsLoaded
+		
 	}
 
 	public void OnActive( Connection conn )
 	{
-		if ( CurrentRound != null )
-		{
-			if ( GameBegan )
-				return;
-		}
-
-		if ( Networking.Connections.Count > 1 )
+		if ( Networking.Connections.Count > 1 && !GameBegan )
 		{
 			GameBegan = true;
 			InitGame();
+			return;
+		}
+
+		if ( CurrentRound != null && CurrentRound.IsStarted )
+		{
+			Seekers?.TeamPlayers.Add( conn.Id );
+			RespawnPlayer( conn.Id );
+			TogglePawn( PlayerPawns[conn.Id], SeekersStatus );
 		}
 	}
 
-	//TODO: make new players get spawned and join seekers
 	public void OnConnected( Connection conn )
 	{
 	}
@@ -95,15 +106,14 @@ public class GameComponent : Component, Component.INetworkListener
 	{
 		if ( PlayerPawns != null )
 		{
-			for ( int i = 0; i < PlayerPawns.Count; i++ )
+			if ( PlayerPawns.ContainsKey( conn.Id ) )
 			{
-				var p = Scene.Directory.FindByGuid( PlayerPawns[i] );
+				var p = Scene.Directory.FindByGuid( PlayerPawns[conn.Id] );
 				if ( p != null )
 				{
 					if ( p.Network.OwnerConnection == conn )
 					{
-						PlayerPawns.Remove( PlayerPawns[i] );
-						break;
+						PlayerPawns.Remove( conn.Id );
 					}
 				}
 			}
@@ -312,11 +322,13 @@ public class GameComponent : Component, Component.INetworkListener
 		Log.Info( "Initiating the game." );
 		CurrentRound.StartTheRound();
 
+		SeekersStatus = false;
 		//Giving hiders time to hide
-		ToggleSeekers( false );
+		ToggleSeekers( SeekersStatus );
 		Log.Info( "Seekers disabled." );
 		await Task.DelayRealtimeSeconds( PreparationTime );
-		ToggleSeekers( true );
+		SeekersStatus = true;
+		ToggleSeekers( SeekersStatus );
 		PlayStart();
 		Log.Info( "Seekers enabled." );
 	}
@@ -401,7 +413,7 @@ public class GameComponent : Component, Component.INetworkListener
 		player.Tags.Add( tag );
 		var ui = PawnUIPrefab.Clone( player, player.Transform.Position, player.Transform.Rotation, player.Transform.Scale );
 		//ui.NetworkSpawn( conn );
-		PlayerPawns.Add( player.Id );
+		PlayerPawns.Add( connection, player.Id );
 		if ( tag == "seekers" )
 		{
 		}
@@ -428,7 +440,7 @@ public class GameComponent : Component, Component.INetworkListener
 	{
 		for ( int i = 0; i < PlayerPawns.Count; i++ )
 		{
-			var gameObject = Scene.Directory.FindByGuid( PlayerPawns[i] );
+			var gameObject = Scene.Directory.FindByGuid( PlayerPawns.Values.ElementAt( i ) );
 			gameObject?.Destroy();
 		}
 		PlayerPawns.Clear();

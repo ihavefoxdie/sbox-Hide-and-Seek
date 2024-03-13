@@ -37,18 +37,21 @@ public class FootstepsComponent : Component
 	[Broadcast]
 	private void JumpSound()
 	{
-		var sound = "sounds/footsteps/footstep-concrete.sound";
-		if ( CurrentSurface != null )
+		if ( Pawn.PawnController.IsOnGround )
 		{
-			sound = CurrentSurface.Sounds.FootLaunch;
-			if ( sound == "" || sound is null )
+			var sound = "sounds/footsteps/footstep-concrete.sound";
+			if ( CurrentSurface != null )
 			{
-				sound = "sounds/footsteps/footstep-concrete.sound";
+				sound = CurrentSurface.Sounds.FootLaunch;
+				if ( sound == "" || sound is null )
+				{
+					sound = "sounds/footsteps/footstep-concrete.sound";
+				}
 			}
-		}
 
-		Sound.Play( sound, LeftFoot.FootObject.Transform.Position ).Volume = System.Math.Max( 0.5f * Pawn.PawnController.Velocity.Length / Pawn.BaseSpeed, 0.2f );
-		Sound.Play( sound, RightFoot.FootObject.Transform.Position ).Volume = System.Math.Max( 0.5f * Pawn.PawnController.Velocity.Length / Pawn.BaseSpeed, 0.2f );
+			Sound.Play( sound, LeftFoot.FootObject.Transform.Position ).Volume = System.Math.Max( 0.5f * Pawn.PawnController.Velocity.Length / Pawn.BaseSpeed, 0.2f );
+			Sound.Play( sound, RightFoot.FootObject.Transform.Position ).Volume = System.Math.Max( 0.5f * Pawn.PawnController.Velocity.Length / Pawn.BaseSpeed, 0.2f );
+		}
 	}
 
 	[Broadcast]
