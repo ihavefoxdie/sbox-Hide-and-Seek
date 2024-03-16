@@ -16,7 +16,7 @@ public class CameraMovement : Component
 	[Property][Sync] public Angles EyeAngles { get; set; }
 	[Property][Sync] public Vector3 EyePosition { get; set; }
 	[Property][Sync] public Vector3 EyeLocalPosition { get; set; }
-	[Property] public GameObject LookingAt { get; set; }
+	//[Property] public GameObject LookingAt { get; set; }
 	[Sync] public Vector3 LookingAtPos { get; set; }
 
 
@@ -49,7 +49,10 @@ public class CameraMovement : Component
 	}
 	protected override void OnAwake()
 	{
+/*		this.GameObject.Children.Add( new GameObject( true, "PointOfInterest" ) );
+		LookingAt = GameObject.Children[0];*/
 		var elements = GameObject.Parent.Children;
+
 		foreach ( var element in elements )
 		{
 			switch ( element.Name )
@@ -146,14 +149,13 @@ public class CameraMovement : Component
 				.Run();
 		if( lookingAt.Hit )
 		{
-			LookingAt.Transform.Position = lookingAt.HitPosition - lookingAt.Normal - Head.Transform.Position;
+			LookingAtPos = lookingAt.HitPosition - lookingAt.Normal - Head.Transform.Position;
 		}
 		else
 		{
-			LookingAt.Transform.Position = Head.Transform.Rotation.Forward;
+			LookingAtPos = Head.Transform.Rotation.Forward;
 		}
 
-		LookingAtPos = LookingAt.Transform.Position;
 
 	}
 	#endregion
