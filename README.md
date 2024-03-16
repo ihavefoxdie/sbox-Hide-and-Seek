@@ -11,7 +11,6 @@ As for the actual game logic, it's fully functional.
 As for nice little things, I plan on incorporating scoring system (to make scoreboard actually a scoreboard, lol!).
 
 Known issues:
-- Controls are a little inconvenient (specifically, tagging someone).
 - There are a few issues with the character component (minor movement bugs).
 - Sounds might act funny at times.
 
