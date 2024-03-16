@@ -3,6 +3,7 @@ using Sandbox.Citizen;
 using Sandbox.ModelEditor.Nodes;
 using System.Diagnostics;
 using System.Linq;
+using static Sandbox.Gizmo;
 
 namespace HideAndSeek;
 
@@ -10,7 +11,7 @@ public class TeamEquipmentComponent : Component
 {
 	#region Property
 	[Property] public float SwingCooldown { get; set; } = 0.5f;
-	[Property] public float SwingRange { get; set; } = 50f;
+	[Property] public float SwingRange { get; set; } = 200f;
 	[Property] public CameraMovement CameraMovement { get; set; }
 	private SyncComponent SyncComponent { get; set; }
 	#endregion
@@ -83,10 +84,11 @@ public class TeamEquipmentComponent : Component
 
 	private void Swing()
 	{
+		//_cameraPosition + Camera.Transform.Rotation.Forward*Distance, _cameraPosition + EyeAngles.Forward * 250
 		if ( _animationHelper == null ) return;
 		PlaySwing();
-		var trace = Scene.Trace.FromTo( CameraMovement.EyePosition, CameraMovement.EyePosition + CameraMovement.EyeAngles.WithYaw(_pawn.Model.Transform.Rotation.Yaw()).Forward * SwingRange )
-			.Size( 20f )
+		var trace = Scene.Trace.FromTo( CameraMovement.Camera.Transform.Position + CameraMovement.Camera.Transform.Rotation.Forward * CameraMovement.Distance, CameraMovement.Camera.Transform.Position + CameraMovement.EyeAngles.Forward * SwingRange )
+			.Size( 2.5f )
 			.IgnoreGameObjectHierarchy(GameObject)
 			.Run();
 

@@ -16,6 +16,9 @@ public class CameraMovement : Component
 	[Property][Sync] public Angles EyeAngles { get; set; }
 	[Property][Sync] public Vector3 EyePosition { get; set; }
 	[Property][Sync] public Vector3 EyeLocalPosition { get; set; }
+	[Property] public GameObject LookingAt { get; set; }
+	[Sync] public Vector3 LookingAtPos { get; set; }
+
 
 	[Property]
 	[Range( 0f, 2f, 0.01f, true, true )]
@@ -38,7 +41,7 @@ public class CameraMovement : Component
 
 	protected override void DrawGizmos()
 	{
-		if (!Gizmo.IsSelected) return;
+		//if (!Gizmo.IsSelected) return;
 
 		Gizmo.GizmoDraw draw = Gizmo.Draw;
 		draw.LineSphere( EyePosition, 10f );
@@ -89,7 +92,7 @@ public class CameraMovement : Component
 		eyeAngles.roll = 0f;
 		eyeAngles.pitch = eyeAngles.pitch.Clamp( -89f, 89f );
 		EyeAngles = eyeAngles;
-		Head.Transform.Rotation = Rotation.From( EyeAngles );
+		Head.Transform.Rotation = Rotation.From( eyeAngles );
 	}
 
 
@@ -98,6 +101,7 @@ public class CameraMovement : Component
 		if ( Head == null || PawnRenderer == null ) return;
 		EyePosition = Head.Transform.Position;
 		EyeLocalPosition = Head.Transform.LocalPosition;
+
 		if ( !IsFirstPerson )
 		{
 			if ( FloatyCamera )
@@ -108,7 +112,8 @@ public class CameraMovement : Component
 			}
 
 			Vector3 forward = Head.Transform.Rotation.Forward;
-			SceneTraceResult cameraTrace = Scene.Trace.Ray( _cameraPosition, _cameraPosition - (forward * Distance) )
+			Vector3 left = Head.Transform.Rotation.Left;
+			SceneTraceResult cameraTrace = Scene.Trace.Ray( _cameraPosition, _cameraPosition - (forward * Distance) - left*40 )
 				.WithoutTags( "pawn", "trigger" )
 				.Run();
 
@@ -127,13 +132,29 @@ public class CameraMovement : Component
 		{
 			PawnRenderer.RenderType = ModelRenderer.ShadowRenderType.ShadowsOnly;
 		}
+
 		//TODO: fix to avoid pawn dissappearing on for everyone on server
-/*		if ( Vector3.DistanceBetween( _cameraPosition, Model.Transform.Position ) < 20 || Vector3.DistanceBetween( _cameraPosition, Head.Transform.Position ) < 20 )
+		/*if ( Vector3.DistanceBetween( _cameraPosition, Model.Transform.Position ) < 20 || Vector3.DistanceBetween( _cameraPosition, Head.Transform.Position ) < 20 )
 		{
 			PawnRenderer.RenderType = ModelRenderer.ShadowRenderType.ShadowsOnly;
 		}*/
+
 		Camera.Transform.Position = _cameraPosition;
 		Camera.Transform.Rotation = Rotation.From( EyeAngles );
+		SceneTraceResult lookingAt = Scene.Trace.Ray( _cameraPosition + Camera.Transform.Rotation.Forward*Distance, _cameraPosition + EyeAngles.Forward * 250 )
+				.WithoutTags("maincamera")
+				.Run();
+		if( lookingAt.Hit )
+		{
+			LookingAt.Transform.Position = lookingAt.HitPosition - lookingAt.Normal - Head.Transform.Position;
+		}
+		else
+		{
+			LookingAt.Transform.Position = Head.Transform.Rotation.Forward;
+		}
+
+		LookingAtPos = LookingAt.Transform.Position;
+
 	}
 	#endregion
 }

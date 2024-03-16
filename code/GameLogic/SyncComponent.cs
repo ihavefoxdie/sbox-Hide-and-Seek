@@ -51,7 +51,7 @@ public class SyncComponent : Component, Component.INetworkListener
 		Seekers = new();
 		
 		MapIdent = SettingsData.MapIdent;
-		GameHostConnection = Networking.HostConnection.Id;
+		GameHostConnection = Connection.Host.Id;
 	}
 
 	protected override void OnStart()
@@ -65,9 +65,9 @@ public class SyncComponent : Component, Component.INetworkListener
 	{
 		if ( IsProxy )
 		{
-			if ( HostSentMessages != Networking.HostConnection.MessagesSent )
+			if ( HostSentMessages != Connection.Host.MessagesSent )
 			{
-				HostSentMessages = Networking.HostConnection.MessagesSent;
+				HostSentMessages = Connection.Host.MessagesSent;
 				SinceLastMessage = 0;
 			}
 
@@ -82,8 +82,8 @@ public class SyncComponent : Component, Component.INetworkListener
 
 			return;
 		}
-
-		if ( (Networking.HostConnection == null || GameHostConnection != Networking.HostConnection?.Id) && !DisconnectTriggered )
+		
+		if ( (Connection.Host == null || GameHostConnection != Connection.Host?.Id) && !DisconnectTriggered )
 		{
 			DisconnectTriggered = true;
 			DisconnectEveryone( "Host has left!" );

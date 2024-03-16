@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div style="flex-direction: column; width: 100%;">
-                    <div style=" justify-content: space-between; font-size: 2vh; padding: 1vh;">
+                    <div style=" justify-content: space-between; font-size: 1.5vh; padding: 1vh;">
                         <div style="align-items: center;">
                             <i style="font-size: 3vh; margin: 0.5vh 1vh 0.5vh 0;">account_circle</i>name
                         </div>
@@ -31,10 +31,10 @@
                         {
                             <div class="player" style="align-items: center; justify-content: space-between;">
                                 <div style="align-items: center;">
-                                    <img style="margin: 0.5vh 1vh 0.5vh 0; align-self: center; border-radius: 100%;" src="avatar:@Networking.Connections.Where(x => x.Id == team[i]).Last().SteamId"/>
-                                    <div id="player_name" style="max-width: 10vw; max-height: 5vh; text-overflow: ellipsis;">@Networking.Connections.Where(x => x.Id == team[i]).First().DisplayName</div>
+                                    <img style="margin: 0.5vh 1vh 0.5vh 0; align-self: center; border-radius: 100%;" src="avatar:@Connection.All.Where(x => x.Id == team[i]).Last().SteamId" />
+                                    <div id="player_name" style="max-width: 10vw; max-height: 5vh; text-overflow: ellipsis;">@Connection.All.Where(x => x.Id == team[i]).First().DisplayName</div>
                                 </div>
-                                <div id="ping" style="max-width: 4vw; max-height: 5vh; text-overflow: ellipsis;">@Math.Round(Networking.Connections.Where(x => x.Id == team[i]).Last().Latency)</div>
+                                <div id="ping" style="max-width: 4vw; max-height: 5vh; text-overflow: ellipsis;">@Math.Round(1000*Connection.All.Where(x => x.Id == team[i]).Last().Latency)</div>
                             </div>
                         }
                     </div>

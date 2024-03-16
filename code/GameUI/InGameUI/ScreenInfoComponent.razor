@@ -14,12 +14,18 @@
     }
     <div style="flex-direction: column; @(Hide == false ? "display: flex;" : "display: none;")">
         <div class="game_ui" style="opacity: @Opacity; gap: 5vw;">
-            <div class="player_count" style="font-weight:bold; background-color: dodgerblue; box-shadow: 0px 0px 1vh 0.5vh dodgerblue;">@(Hiders.Count)</div>
-            <div class="player_count" style="font-weight:bold; background-color: #f20000c0; box-shadow: 0px 0px 1vh 0.5vh #f20000c0;">@(Seekers.Count)</div>
-            <div class="game_timer">@(GetFullTime())</div>
+            <div class="game_timer" style="@(ShowTimer == true ? "opacity: 1;" : "opacity: 0;")">
+                <div style="flex-direction: row; justify-content: center; font-size: 3.5vh; width: 70%">
+                    <div style="justify-content: center; width: 50%">@($"{CurrentTimeMinutes:00}")</div>
+                    <div style="font-weight: bold; justify-content: center; width: 50%">@($"{CurrentTimeSecs:00}")</div>
+                </div>
+            </div>
         </div>
-        <div class="info" style="@(StartEventGoing == true ? "display:flex; opacity: 1;" : "display:none; opacity: 0;")">
+        <div class="info" style="@(StartEventGoing == true ? "display:flex; opacity: 1;" : "display:none; opacity: 0;") flex-direction: column;">
             <div class="message">@Message</div>
+            <div class="message" style="@(Countdown == true ? "display:flex; opacity: 1;" : "display:none; opacity: 0;") background-color: #0e0e0ebd; box-shadow: 0px 0px 1vh 0.25vh #0e0e0ebd; border-radius: 100%; backdrop-filter: blur(5vh); height: 15vh; justify-content: center; align-items: center; aspect-ratio: 1;">
+                @(Math.Round(Math.Max(SharedInfo.PreparationTime - SharedInfo.Timer, 0)))
+            </div>
         </div>
     </div>
 </root>
@@ -34,6 +40,8 @@
     private float Opacity { get {  if (SharedInfo is not null) return Convert.ToInt32(SharedInfo.IsStarted); return 0; } }
     [Sync] private string Message { get; set; }
     [Sync] private bool StartEventGoing { get; set; }
+    [Sync] private bool Countdown { get; set; } = false;
+    [Sync] private bool ShowTimer { get; set; } = false;
     private bool Hide { get; set; } = false;
 
     private string GetFullTime()
@@ -41,28 +49,25 @@
         return $"{CurrentTimeMinutes:00} : {CurrentTimeSecs:00}";
     }
 
-    private void PrepTime()
-    {
-        //SharedInfo == null ? "" : (SharedInfo.Timer - (SharedInfo.MaxTime - SharedInfo.PreparationTime))
-    }
-
     private async void StartRound()
     {
         StartEventGoing = true;
-        Message = "Get Ready!";
+        Countdown = true;
+        Message = $"Get Ready!";
 
         await Task.DelayRealtimeSeconds(SharedInfo == null ? 5 : SharedInfo.PreparationTime);
-
+        ShowTimer = true;
+        Countdown = false;
         StartEventGoing = false;
     }
 
     private async void RoundEnd(Team loser)
     {
         StartEventGoing = true;
+        ShowTimer = false;
         Message = "Team " + loser.Name + " has lost!";
 
         await Task.DelayRealtimeSeconds(SharedInfo == null ? 5 : SharedInfo.RoundCooldown);
-
         StartEventGoing = false;
     }
 

@@ -4,20 +4,20 @@ WaitingScreenComponent {
 	left: 0;
 	right: 0;
 	bottom: 0;
+	z-index: 110;
 
 	.message {
-		//background-color: #40404045;
-		//backdrop-filter: blur(20px);
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-		justify-content: flex-end;
+		justify-content: flex-start;
+		align-items: center;
+		transition: all 0.2s linear;
 
 		.title1 {
-			transition: all 0.2s linear;
 			//justify-content: flex-start;
 			font-weight: bold;
-			font-size: 18vh;
+			font-size: 9vh;
 			font-style: italic;
 			font-family: Poppins;
 			color: #fff;
@@ -25,10 +25,10 @@ WaitingScreenComponent {
 		}
 
 		.title2 {
-			transition: all 0.2s linear;
 			//justify-content: flex-start;
 			//font-weight: bold;
-			font-size: 15vh;
+			margin-top: -5vh;
+			font-size: 7vh;
 			font-family: Poppins;
 			color: #ff6a00;
 		}

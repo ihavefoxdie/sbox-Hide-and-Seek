@@ -14,10 +14,13 @@ ScreenInfoComponent {
 		transition: all 1s linear;
 
 		.message {
-			font-size: 10vh;
+			font-size: 5vh;
 			font-family: Poppins;
 			font-weight: bold;
+			font-style: italic;
 			color: #fff;
+			text-shadow: 3vh 3vh 0vh #ff6a00;
+			transition: all 1s linear;
 		}
 	}
 
@@ -35,15 +38,15 @@ ScreenInfoComponent {
 			border-radius: 10%;
 			background-color: #ffffff20;
 			backdrop-filter: blur(10px) saturate(100%);
-			min-width: 15vh;
-			padding: 1vh;
-			margin-left: 3vh;
-			font-size: 3.5vh;
+			min-width: 8vw;
+			max-width: 10vw;
+			height: 6vh;
 			font-family: Poppins;
 			color: #fff;
 			box-shadow: 0px 0px 2vh 0.5vh #ffffff20;
-			height: 6vh;
+			//height: 6vh;
 			align-items: center;
+			transition: all 1s linear;
 		}
 
 		.player_count {

@@ -17,7 +17,7 @@ public class PawnComponent : Component
 	[Property, Category( "Measurements" )] public int DuckHeightDelta { get { return -(int)(_initPawnHeight / 2f); } }
 	[Property, Category( "Measurements" )] public float InitHeight { get { return _initPawnHeight; } }
 	[Property, Category( "Measurements" )] public float JumpForce { get; set; } = 300f;
-	[Property, Category( "Measurements" )] public float Friction { get; set; } = 3f;
+	[Property, Category( "Measurements" )] public float Friction { get; set; } = 4f;
 
 	public Action JumpAction { get; set; }
 	public Action LandedAction { get; set; }
@@ -37,6 +37,7 @@ public class PawnComponent : Component
 	[Property][Sync] public bool IsSprinting { get; private set; }
 	[Property][Sync] public bool IsWalking { get; private set; }
 	[Property] public Vector3 DesiredVelocity { get; set; }
+	public Vector3 VelocityForTurn { get; set; }
 	#endregion
 
 	#region References
@@ -74,7 +75,7 @@ public class PawnComponent : Component
 		_lastRotation = Head.Transform.Rotation;
 		PawnController = Components.Get<CharacterController>();
 		AnimationHelper = Components.GetInChildren<CitizenAnimationHelper>();
-		Camera = Components.GetInChildren<CameraMovement>(true);
+		Camera = Components.GetInChildren<CameraMovement>( true );
 		_initPawnHeight = PawnController.Height;
 		JumpAction += Jump;
 	}
@@ -99,7 +100,7 @@ public class PawnComponent : Component
 
 		RotateModel();
 		PawnAnimator.AnimationUpdate( this );
-
+		VelocityForTurn = PawnController.Velocity;
 		if ( IsProxy ) return;
 		if ( Head == null ) return;
 
@@ -245,11 +246,19 @@ public class PawnComponent : Component
 	{
 		if ( Model == null || PawnController == null || Camera == null ) return;
 
-		Angles targetAngle = new( 0, Rotation.From( Camera.EyeAngles ).Yaw(), 0f );
+		//Angles targetAngle = new( 0, Camera.LookingAt.Transform.Rotation.Yaw(), 0f );
 
-		if ( PawnController.Velocity.Length > 10f )
+		Vector3 lookAt = Camera.LookingAtPos - Model.Transform.LocalPosition;
+
+		//Log.Info(ass);
+
+		if ( Math.Abs( Rotation.From(lookAt.EulerAngles.WithPitch(0).WithRoll(0)).Angle() - Model.Transform.Rotation.Angle() ) > 1 )
 		{
-			Model.Transform.Rotation = Rotation.Lerp( Model.Transform.Rotation, targetAngle, Time.Delta * 4f );
+			if ( PawnController.Velocity.IsNearZeroLength )
+			{
+				VelocityForTurn = 5f;
+			}
+			Model.Transform.Rotation = Rotation.Lerp( Model.Transform.Rotation, lookAt.EulerAngles.WithRoll( 0 ).WithPitch( 0 ), Time.Delta * 20f );
 		}
 	}
 	#endregion

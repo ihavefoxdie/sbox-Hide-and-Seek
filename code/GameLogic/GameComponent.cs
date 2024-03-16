@@ -83,8 +83,9 @@ public class GameComponent : Component, Component.INetworkListener
 
 	public void OnActive( Connection conn )
 	{
-		if ( Networking.Connections.Count > 1 && !GameBegan )
+		if ( Connection.All.Count > 1 && !GameBegan )
 		{
+			RemoveAllPawns();
 			GameBegan = true;
 			InitGame();
 			return;
@@ -95,7 +96,10 @@ public class GameComponent : Component, Component.INetworkListener
 			Seekers?.TeamPlayers.Add( conn.Id );
 			RespawnPlayer( conn.Id );
 			TogglePawn( PlayerPawns[conn.Id], SeekersStatus );
+			return;
 		}
+
+		RespawnPlayer( conn.Id  );
 	}
 
 	public void OnConnected( Connection conn )
@@ -309,13 +313,20 @@ public class GameComponent : Component, Component.INetworkListener
 	/// </summary>
 	private async void InitGame()
 	{
-		if ( Networking.Connections.Count <= 1 )
+		if ( Connection.All.Count <= 1 )
 		{
-			ToggleCam( true );
 			GameBegan = false;
+
+			//CurrentRound = null;
+			Seekers = new( "Seekers", "red" );
+			Hiders = new( "Hiders", "blue" );
+
+			if ( Connection.All.Count == 1 )
+				RespawnPlayer( Connection.All[0].Id );
+
 			return;
 		}
-		ToggleCam( false );
+		//ToggleCam( false );
 
 		OnRoundStart?.Invoke();
 		InitRound();
@@ -367,14 +378,14 @@ public class GameComponent : Component, Component.INetworkListener
 		if ( IsProxy ) { return; }
 
 		//Selecting seekers
-		int seekersCount = Math.Max( Networking.Connections.Count / 4, 1 );
+		int seekersCount = Math.Max( Connection.All.Count / 4, 1 );
 		int selected = 0;
 		int[] seekersIndexes = new int[seekersCount];
 		seekersIndexes[0] = -1;
 		while ( selected < seekersCount )
 		{
-			int index = Game.Random.Next( Networking.Connections.Count );
-			var connection = Networking.Connections.ElementAt( index );
+			int index = Game.Random.Next( Connection.All.Count );
+			var connection = Connection.All.ElementAt( index );
 			Guid connId = connection.Id;
 
 			if ( seekersIndexes.Contains( index ) )
@@ -387,13 +398,13 @@ public class GameComponent : Component, Component.INetworkListener
 		}
 
 		//assigning the remaining players to hiders team
-		for ( int i = 0; i < Networking.Connections.Count; i++ )
+		for ( int i = 0; i < Connection.All.Count; i++ )
 		{
 			if ( !seekersIndexes.Contains( i ) )
 			{
 				// Spawn this object and make the client the owner
-				RespawnPlayer( Networking.Connections[i].Id, "hiders" );
-				Hiders?.TeamPlayers.Add( Networking.Connections[i].Id );
+				RespawnPlayer( Connection.All[i].Id, "hiders" );
+				Hiders?.TeamPlayers.Add( Connection.All[i].Id );
 			}
 		}
 	}
@@ -407,7 +418,7 @@ public class GameComponent : Component, Component.INetworkListener
 	private void RespawnPlayer( Guid connection, string tag = "seekers" )
 	{
 		var startLocation = NetworkComponent.FindSpawnLocation().WithScale( 1 );
-		var conn = Networking.Connections.Where( x => x.Id == connection ).First();
+		var conn = Connection.All.Where( x => x.Id == connection ).First();
 		// Spawn this object and make the client the owner
 		var player = NetworkComponent.PlayerPrefab.Clone( startLocation, name: $"Player - {conn.DisplayName}" );
 		player.Tags.Add( tag );

@@ -1,0 +1,20 @@
+@using Sandbox;
+@using Sandbox.UI;
+@namespace HideAndSeek
+@inherits PanelComponent
+
+<root>
+    @if(SharedInfo.IsStarted)
+    {
+        <div class="title"><i>adjust</i></div>
+    }
+</root>
+
+@code
+{
+    [Property] public SyncComponent SharedInfo { get; set; }
+    /// <summary>
+    /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+    /// </summary>
+    protected override int BuildHash() => System.HashCode.Combine(SharedInfo.IsStarted);
+}

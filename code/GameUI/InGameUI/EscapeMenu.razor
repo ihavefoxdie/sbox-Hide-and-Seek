@@ -9,7 +9,7 @@
         if (Input.EscapePressed)
             Hide = !Hide;
     }
-    <div class="menu" style="@(Hide == false ? "display: flex;" : "display: none;")">
+    <div class="menu" style="@(Hide == false ? "display: flex; pointer-events: all;" : "display: none; pointer-events: none;")">
         <div class="button-panel">
             <button class="esc-menu-button" onclick=@SyncComponent.Disconnect>Disconnect</button>
             <button class="esc-menu-button" onclick=@SyncComponent.Quit>Quit</button>

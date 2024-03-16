@@ -11,7 +11,7 @@ ScoreboardComponent {
 
 	.team-name {
 		font-style: italic;
-		font-size: 4vh;
+		font-size: 3.5vh;
 		font-weight: bold;
 		padding: 1vh;
 		white-space: nowrap;
@@ -20,9 +20,9 @@ ScoreboardComponent {
 	}
 
 	.browser-menu {
-		background-color: #0e0e0e6d;
-		box-shadow: 0px 0px 2vh 0.5vh #0e0e0e6d;
-		backdrop-filter: blur(4vh);
+		background-color: #0e0e0ebd;
+		box-shadow: 0px 0px 2vh 0.5vh #0e0e0ebd;
+		backdrop-filter: blur(5vh);
 		width: 70%;
 		height: 100%;
 		border-radius: 2%;
@@ -61,7 +61,7 @@ ScoreboardComponent {
 		min-width: 100%;
 		max-height: 10%;
 		align-items: flex-start;
-		font-size: 2vh;
+		font-size: 1.5vh;
 
 		img {
 			height: 3vh;
