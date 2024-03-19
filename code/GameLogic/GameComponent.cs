@@ -38,6 +38,8 @@ public class GameComponent : Component, Component.INetworkListener
 	/// </summary>
 	[Sync] public bool GameBegan { get; private set; } = false;
 	[Sync] private bool SeekersStatus { get; set; } = false;
+	[Sync] private bool SpawnAlone { get; set; } = false;
+	[Sync] private TimeSince FirstConnection { get; set; }
 	/// <summary>
 	/// Round length limit in seconds.
 	/// </summary>
@@ -78,11 +80,13 @@ public class GameComponent : Component, Component.INetworkListener
 
 	protected override void OnStart()
 	{
-		
+
 	}
 
 	public void OnActive( Connection conn )
 	{
+		FirstConnection = 0;
+
 		if ( Connection.All.Count > 1 && !GameBegan )
 		{
 			RemoveAllPawns();
@@ -99,7 +103,11 @@ public class GameComponent : Component, Component.INetworkListener
 			return;
 		}
 
-		RespawnPlayer( conn.Id  );
+		if ( Connection.All.Count == 1 )
+		{
+			NetworkComponent.FindSpawnLocation();
+			SpawnAlone = true;
+		}
 	}
 
 	public void OnConnected( Connection conn )
@@ -142,9 +150,18 @@ public class GameComponent : Component, Component.INetworkListener
 
 	protected override void OnFixedUpdate()
 	{
-		if ( !GameBegan ) { return; }
+		if ( SpawnAlone && FirstConnection.Relative >= 5 )
+		{
+			RespawnPlayer( Connection.All[0].Id );
+			SpawnAlone = false;
+		}
 
-		if ( CurrentRound is null || Seekers is null || Hiders is null ) return;
+
+		if ( !GameBegan || CurrentRound is null || Seekers is null || Hiders is null )
+		{
+			return;
+		}
+
 
 		if ( CurrentRound.IsStarted )
 		{
@@ -187,6 +204,12 @@ public class GameComponent : Component, Component.INetworkListener
 		}
 	}
 
+	/// <summary>
+	/// Removes specific tag and adds another.
+	/// </summary>
+	/// <param name="objectID">GameObject id.</param>
+	/// <param name="remove">Tag to remove.</param>
+	/// <param name="add">Tag to add.</param>
 	[Broadcast]
 	private void SwapTags( Guid objectID, string remove, string add )
 	{
@@ -195,6 +218,7 @@ public class GameComponent : Component, Component.INetworkListener
 		playerObject.Tags.Add( add );
 	}
 
+	//TODO: make a better solution
 	[Broadcast]
 	private void AddSeekerComponent( Guid objectID )
 	{
@@ -202,6 +226,7 @@ public class GameComponent : Component, Component.INetworkListener
 		pawn.Components.Create<TeamEquipmentComponent>( true );
 	}
 
+	//TODO: make a better solution
 	[Broadcast]
 	private void RemoveSeekerComponent( Guid objectID )
 	{
@@ -302,6 +327,10 @@ public class GameComponent : Component, Component.INetworkListener
 		id.Enabled = toggle;
 	}
 
+
+	/// <summary>
+	/// Simply plays a sound.
+	/// </summary>
 	[Broadcast]
 	private void PlayStart()
 	{
@@ -358,7 +387,7 @@ public class GameComponent : Component, Component.INetworkListener
 	}
 
 	/// <summary>
-	/// Checks player count in each team.
+	/// Checks player count in each team; the one with no players - loses.
 	/// </summary>
 	/// <returns>Returns the team that has lost the round. Otherwise returns null.</returns>
 	private Team LostTeam()
@@ -442,7 +471,7 @@ public class GameComponent : Component, Component.INetworkListener
 		InitGame();
 	}
 
-	//TODO: should try disabling players instead?
+	//TODO: should try disabling players instead? the porpuse of having player objects spawn and get removed is to test the stability of the system. once it's polished, it should be more relaxed.
 	/// <summary>
 	/// Clears the scene from every player pawn.
 	/// </summary>

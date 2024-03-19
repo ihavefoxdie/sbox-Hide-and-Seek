@@ -53,22 +53,26 @@
     {
         StartEventGoing = true;
         Countdown = true;
+        StateHasChanged();
         Message = $"Get Ready!";
 
         await Task.DelayRealtimeSeconds(SharedInfo == null ? 5 : SharedInfo.PreparationTime);
         ShowTimer = true;
         Countdown = false;
         StartEventGoing = false;
+        StateHasChanged();
     }
 
     private async void RoundEnd(Team loser)
     {
+        StateHasChanged();
         StartEventGoing = true;
         ShowTimer = false;
         Message = "Team " + loser.Name + " has lost!";
 
         await Task.DelayRealtimeSeconds(SharedInfo == null ? 5 : SharedInfo.RoundCooldown);
         StartEventGoing = false;
+        StateHasChanged();
     }
 
     protected override void OnTreeFirstBuilt()
