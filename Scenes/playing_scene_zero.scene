@@ -11,12 +11,11 @@
         {
           "__type": "MapInstance",
           "__guid": "6bf17ad2-8f88-4881-9d8a-4d5068332e3b",
-          "MapName": "fishum.cporangex",
+          "MapName": "",
           "OnMapLoaded": null,
           "UseMapFromLaunch": false
         }
-      ],
-      "Children": []
+      ]
     },
     {
       "__guid": "da90d64d-8437-4b50-8b48-ea9213623366",
@@ -253,6 +252,14 @@
               "Opacity": 1,
               "Scale": 1,
               "ZIndex": 100
+            },
+            {
+              "__type": "PawnUIManager",
+              "__guid": "23574c95-0fd1-481a-83dc-8e0c1c550b23",
+              "UIPrefab": {
+                "_type": "gameobject",
+                "prefab": "prefabs/hns_pawnui.prefab"
+              }
             }
           ]
         }
@@ -282,7 +289,7 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-03-21T02:25:13.6728782\u002B03:00",
+  "LastSaved": "2024-03-22T00:06:21.4609593\u002B03:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []

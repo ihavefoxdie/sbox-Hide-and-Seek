@@ -65,7 +65,8 @@ public class CameraMovement : Component
 			}
 		}
 
-		Camera = Components.Get<CameraComponent>();
+		//TODO: causing rare exception, FIX
+		Camera = Components.Get<CameraComponent>(true);
 		_cameraPosition = Head.Transform.Position;
 		_pawnRenderer ??= Model.Components.Get<ModelRenderer>();
 	}

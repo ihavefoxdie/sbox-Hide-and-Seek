@@ -119,7 +119,6 @@ public class GameComponent : Component, Component.INetworkListener
 	{
 	}
 
-	//TODO: remove the pawn ui gameobject that belongs to the disconnecting player
 	public void OnDisconnected( Connection conn )
 	{
 		if ( PlayerPawns != null )
@@ -187,7 +186,6 @@ public class GameComponent : Component, Component.INetworkListener
 		}
 	}
 
-	//TODO: add more documentation.
 	#region Methods
 	/// <summary>
 	/// Assigns caught hider to the seekers team.
@@ -504,6 +502,11 @@ public class GameComponent : Component, Component.INetworkListener
 			gameObject?.Destroy();
 		}
 		PlayerPawns.Clear();
+
+		//For good measure (a bit of a hack? or is it!??!)
+		var pawns = Scene.Components.GetAll<PawnComponent>( FindMode.EverythingInDescendants );
+		foreach ( var pawn in pawns )
+		{ pawn.GameObject.Destroy(); }
 	}
 	#endregion
 }
