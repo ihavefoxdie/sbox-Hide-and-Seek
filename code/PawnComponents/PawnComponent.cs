@@ -1,4 +1,4 @@
-using HideAndSeek.PawnComponents.Modules;
+﻿using HideAndSeek.PawnComponents.Modules;
 using Sandbox;
 using Sandbox.Citizen;
 using System;
@@ -19,16 +19,12 @@ public class PawnComponent : Component
 	[Property, Category( "Measurements" )] public float JumpForce { get; set; } = 300f;
 	[Property, Category( "Measurements" )] public float Friction { get; set; } = 4f;
 
-	public Action JumpAction { get; set; }
-	public Action LandedAction { get; set; }
-	public Action CrouchAction { get; set; }
-	public Action SprintAction { get; set; }
-
 	[Property, Category( "Components" )] public CharacterController PawnController { get; set; }
 	[Property, Category( "Components" )] public CitizenAnimationHelper AnimationHelper { get; set; }
 	[Property, Category( "Components" )] public PawnStats Stats { get; set; }
-	[Property, Category( "Components" )] public GameObject Head { get; set; }
-	[Property, Category( "Components" )] public GameObject Model { get; set; }
+	[Property, Category( "GameObjects" )] public GameObject Head { get; set; }
+	[Property, Category( "GameObjects" )] public GameObject Model { get; set; }
+	[Property, Category( "GameObjects" )] public GameObject CameraObject { get; set; }
 	[Property, Category( "Components" )] public CameraMovement Camera { get; set; }
 
 	[Property][Sync] public float CurrentHeight { get { return PawnController.Height; } }
@@ -40,12 +36,11 @@ public class PawnComponent : Component
 	public Vector3 VelocityForTurn { get; set; }
 	#endregion
 
-	#region References
-	//private GameObject _head;
-	//private GameObject _model;
-	//private CharacterController _characterController;
-	//private CitizenAnimationHelper _animationHelper;
-	//private PawnStats _stats;
+	#region Actions
+	public Action JumpAction { get; set; }
+	public Action LandedAction { get; set; }
+	public Action CrouchAction { get; set; }
+	public Action SprintAction { get; set; }
 	#endregion
 
 	#region Member Variables
@@ -68,6 +63,9 @@ public class PawnComponent : Component
 				case "Model":
 					Model = element;
 					continue;
+				case "Camera":
+					CameraObject = element;
+					continue;
 				default: continue;
 			}
 		}
@@ -75,7 +73,8 @@ public class PawnComponent : Component
 		_lastRotation = Head.Transform.Rotation;
 		PawnController = Components.Get<CharacterController>();
 		AnimationHelper = Components.GetInChildren<CitizenAnimationHelper>();
-		Camera = Components.GetInChildren<CameraMovement>( true );
+		CameraObject.Components.Create<CameraMovement>();
+		Camera = CameraObject.Components.Get<CameraMovement>();
 		_initPawnHeight = PawnController.Height;
 		JumpAction += Jump;
 	}
@@ -245,12 +244,8 @@ public class PawnComponent : Component
 	private void RotateModel()
 	{
 		if ( Model == null || PawnController == null || Camera == null ) return;
-
-		//Angles targetAngle = new( 0, Camera.LookingAt.Transform.Rotation.Yaw(), 0f );
-
 		Vector3 lookAt = Camera.LookingAtPos - Model.Transform.LocalPosition;
 
-		//Log.Info(ass);
 
 		if ( Math.Abs( Rotation.From(lookAt.EulerAngles.WithPitch(0).WithRoll(0)).Angle() - Model.Transform.Rotation.Angle() ) > 1 )
 		{

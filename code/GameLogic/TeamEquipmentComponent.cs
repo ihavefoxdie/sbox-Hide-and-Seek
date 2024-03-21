@@ -1,9 +1,6 @@
 using Sandbox;
 using Sandbox.Citizen;
-using Sandbox.ModelEditor.Nodes;
-using System.Diagnostics;
 using System.Linq;
-using static Sandbox.Gizmo;
 
 namespace HideAndSeek;
 
@@ -24,8 +21,9 @@ public class TeamEquipmentComponent : Component
 
 	protected override void OnStart()
 	{
-		_pawn = Components.Get<PawnComponent>(true);
-		CameraMovement = Components.GetInChildren<CameraMovement>(true);
+		_pawn = Components.Get<PawnComponent>( true );
+		CameraMovement = Components.GetInChildren<CameraMovement>( true );
+		Log.Info( CameraMovement );
 		_lastSwing = 0;
 		SyncComponent = Scene.GetAllComponents<SyncComponent>().Last();
 	}
@@ -65,7 +63,7 @@ public class TeamEquipmentComponent : Component
 	{
 		if ( _animationHelper == null ) return;
 		_animationHelper.Target.Set( "b_attack", true );
-		Sound.Play( "sounds/game/swingsoundevent.sound", _pawn.Transform.Position);
+		Sound.Play( "sounds/game/swingsoundevent.sound", _pawn.Transform.Position );
 	}
 
 	[Broadcast]
@@ -75,7 +73,7 @@ public class TeamEquipmentComponent : Component
 	}
 
 	[Broadcast]
-	private void PlaySimplePunch(string soundEvent)
+	private void PlaySimplePunch( string soundEvent )
 	{
 		var play = Sound.Play( soundEvent, _pawn.Transform.Position );
 		if ( play != null )
@@ -87,12 +85,12 @@ public class TeamEquipmentComponent : Component
 		//_cameraPosition + Camera.Transform.Rotation.Forward*Distance, _cameraPosition + EyeAngles.Forward * 250
 		if ( _animationHelper == null ) return;
 		PlaySwing();
-		var trace = Scene.Trace.FromTo( CameraMovement.Camera.Transform.Position + CameraMovement.Camera.Transform.Rotation.Forward * CameraMovement.Distance, CameraMovement.Camera.Transform.Position + CameraMovement.EyeAngles.Forward * SwingRange )
-			.Size( 2.5f )
-			.IgnoreGameObjectHierarchy(GameObject)
+		var trace = Scene.Trace.FromTo( CameraMovement.EyePosition, CameraMovement.Camera.Transform.Position + CameraMovement.EyeAngles.Forward * SwingRange )
+			.Size( 5f )
+			.IgnoreGameObjectHierarchy( GameObject )
 			.Run();
 
-		if(trace.Hit)
+		if ( trace.Hit )
 		{
 			if ( trace.GameObject != null )
 			{
@@ -100,7 +98,7 @@ public class TeamEquipmentComponent : Component
 				Log.Info( parent );
 				bool check = parent.Tags.Has( "hiders" );
 				Log.Info( check );
-				if(check)
+				if ( check )
 				{
 					PlayPunch();
 					SyncComponent.OnCaught( _pawn.GameObject.Id, parent.Id );

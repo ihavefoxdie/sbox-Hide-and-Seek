@@ -1,5 +1,4 @@
 using Sandbox;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace HideAndSeek;
@@ -11,25 +10,29 @@ public class PawnSyncComponent : Component
 
 	protected override void OnStart()
 	{
-		GameObject parent = GameObject.Parent;
-		Log.Info( parent );
+		
 		var syncComp = Scene.GetAllComponents<SyncComponent>().Last();
-		Log.Info( syncComp );
-
-		if (syncComp != null )
+		var everyPawnComp = Scene.Components.GetAll<PawnComponent>(FindMode.EverythingInDescendants);
+		if ( syncComp != null )
 		{
 			SyncComp = syncComp;
 		}
-		if ( parent != null )
+		if ( everyPawnComp != null )
 		{
-			Pawn = parent.Components.Get<PawnComponent>(true);
+			var thePawnComp = everyPawnComp.Where( x => x.Network.OwnerConnection == this.Network.OwnerConnection ).Last();
+			if ( thePawnComp != null )
+			{
+				Pawn = thePawnComp;
+			}
 		}
 	}
 
 	protected override void OnUpdate()
 	{
-		if ( IsProxy ) return;
-		if ( Pawn == null ) return;
-		if ( SyncComp == null ) return;
+	}
+
+	protected override void OnFixedUpdate()
+	{
+		base.OnFixedUpdate();
 	}
 }

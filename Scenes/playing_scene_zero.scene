@@ -11,11 +11,12 @@
         {
           "__type": "MapInstance",
           "__guid": "6bf17ad2-8f88-4881-9d8a-4d5068332e3b",
-          "MapName": "",
+          "MapName": "fishum.cporangex",
           "OnMapLoaded": null,
           "UseMapFromLaunch": false
         }
-      ]
+      ],
+      "Children": []
     },
     {
       "__guid": "da90d64d-8437-4b50-8b48-ea9213623366",
@@ -33,7 +34,7 @@
             "go": "b4820a45-a2ef-440d-8b09-dd27603c72df",
             "component_type": "MapInstance"
           },
-          "MapIdent": "foxtrot.gridmap"
+          "MapIdent": "fishum.cporangex"
         }
       ]
     },
@@ -237,6 +238,23 @@
               }
             }
           ]
+        },
+        {
+          "__guid": "e97aa3e8-c4cf-4796-a9bc-2fb7f52142d7",
+          "Name": "PawnUI",
+          "Position": "0,0,0",
+          "Enabled": true,
+          "NetworkMode": 1,
+          "Components": [
+            {
+              "__type": "ScreenPanel",
+              "__guid": "40ffa572-29b2-49a5-a284-9960ea8e5118",
+              "AutoScreenScale": true,
+              "Opacity": 1,
+              "Scale": 1,
+              "ZIndex": 100
+            }
+          ]
         }
       ]
     }
@@ -264,7 +282,7 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-03-19T15:33:42.1373593\u002B03:00",
+  "LastSaved": "2024-03-21T02:25:13.6728782\u002B03:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []

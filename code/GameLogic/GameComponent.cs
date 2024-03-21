@@ -1,6 +1,7 @@
 using Sandbox;
 using Sandbox.GameLogic.Modules;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 
@@ -59,6 +60,9 @@ public class GameComponent : Component, Component.INetworkListener
 	public event Action<Team> OnTeamLost;
 	public event Action OnRoundStart;
 	public event Action OnCaught;
+	public event Action<Guid, Connection> OnPawnSpawn;
+	public event Action<Guid> OnPawnRemoval;
+	public event Action OnPawnCleanUp;
 	#endregion
 
 
@@ -89,6 +93,7 @@ public class GameComponent : Component, Component.INetworkListener
 
 		if ( Connection.All.Count > 1 && !GameBegan )
 		{
+			OnPawnCleanUp?.Invoke();
 			RemoveAllPawns();
 			GameBegan = true;
 			InitGame();
@@ -114,6 +119,7 @@ public class GameComponent : Component, Component.INetworkListener
 	{
 	}
 
+	//TODO: remove the pawn ui gameobject that belongs to the disconnecting player
 	public void OnDisconnected( Connection conn )
 	{
 		if ( PlayerPawns != null )
@@ -125,6 +131,7 @@ public class GameComponent : Component, Component.INetworkListener
 				{
 					if ( p.Network.OwnerConnection == conn )
 					{
+						OnPawnRemoval?.Invoke( PlayerPawns[conn.Id] );
 						PlayerPawns.Remove( conn.Id );
 					}
 				}
@@ -223,7 +230,7 @@ public class GameComponent : Component, Component.INetworkListener
 	private void AddSeekerComponent( Guid objectID )
 	{
 		var pawn = Scene.Directory.FindByGuid( objectID );
-		pawn.Components.Create<TeamEquipmentComponent>( true );
+		pawn.Components.Create<TeamEquipmentComponent>();
 	}
 
 	//TODO: make a better solution
@@ -289,10 +296,20 @@ public class GameComponent : Component, Component.INetworkListener
 	/// <param name="toggle">true - enable; false - disable.</param>
 	private void ToggleSeekers( bool toggle )
 	{
-		var pawns = Scene.GetAllObjects( false ).Where( x => x.Tags.Has( "seekers" ) );
-		foreach ( var pawn in pawns )
+		var items = Scene.GetAllObjects( false ).Where( x => x.Tags.Has( "seekers" ) );
+		List<GameObject> seekers = new();
+
+		foreach ( var item in items )
 		{
-			TogglePawn( pawn.Id, toggle );
+			if ( !seekers.Contains( item.Root ) )
+			{
+				seekers.Add( item.Root );
+			}
+		}
+
+		foreach ( var seeker in seekers )
+		{
+			TogglePawn( seeker.Id, toggle );
 		}
 	}
 
@@ -308,7 +325,7 @@ public class GameComponent : Component, Component.INetworkListener
 		if ( pawn != null )
 		{
 			pawn.Enabled = toggle;
-			if ( toggle == true && pawn.Tags.Has( "seekers" ) )
+			if ( toggle == true && pawn.Root.Tags.Has( "seekers" ) )
 			{
 				pawn.Components.Create<TeamEquipmentComponent>( true );
 			}
@@ -451,13 +468,15 @@ public class GameComponent : Component, Component.INetworkListener
 		// Spawn this object and make the client the owner
 		var player = NetworkComponent.PlayerPrefab.Clone( startLocation, name: $"Player - {conn.DisplayName}" );
 		player.Tags.Add( tag );
-		var ui = PawnUIPrefab.Clone( player, player.Transform.Position, player.Transform.Rotation, player.Transform.Scale );
+		//var ui = PawnUIPrefab.Clone( player, player.Transform.Position, player.Transform.Rotation, player.Transform.Scale );
+
 		//ui.NetworkSpawn( conn );
 		PlayerPawns.Add( connection, player.Id );
 		if ( tag == "seekers" )
 		{
 		}
 		player.NetworkSpawn( conn );
+		OnPawnSpawn?.Invoke( player.Id, conn );
 	}
 
 	/// <summary>
@@ -466,7 +485,7 @@ public class GameComponent : Component, Component.INetworkListener
 	private async void EndRound()
 	{
 		await Task.DelayRealtimeSeconds( RoundCooldown );
-
+		OnPawnCleanUp?.Invoke();
 		RemoveAllPawns();
 		InitGame();
 	}
@@ -481,6 +500,7 @@ public class GameComponent : Component, Component.INetworkListener
 		for ( int i = 0; i < PlayerPawns.Count; i++ )
 		{
 			var gameObject = Scene.Directory.FindByGuid( PlayerPawns.Values.ElementAt( i ) );
+			//OnPawnRemoval?.Invoke( PlayerPawns.Values.ElementAt( i ) );
 			gameObject?.Destroy();
 		}
 		PlayerPawns.Clear();

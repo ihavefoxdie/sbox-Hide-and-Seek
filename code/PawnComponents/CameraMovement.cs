@@ -12,11 +12,10 @@ public class CameraMovement : Component
 	[Property] public GameObject Model { get; private set; }
 	[Property] public ModelRenderer PawnRenderer { get { return _pawnRenderer; } }
 	[Property] public CameraComponent Camera { get; set; }
-	[Property] public bool FloatyCamera { get; set; } = true;
+	[Property] public bool FloatyCamera { get; set; } = false;
 	[Property][Sync] public Angles EyeAngles { get; set; }
 	[Property][Sync] public Vector3 EyePosition { get; set; }
 	[Property][Sync] public Vector3 EyeLocalPosition { get; set; }
-	//[Property] public GameObject LookingAt { get; set; }
 	[Sync] public Vector3 LookingAtPos { get; set; }
 
 
@@ -47,10 +46,9 @@ public class CameraMovement : Component
 		draw.LineSphere( EyePosition, 10f );
 		draw.LineCylinder( EyePosition, EyePosition + Transform.Rotation.Forward * 40f, 5f, 5f, 10 );
 	}
+
 	protected override void OnAwake()
 	{
-/*		this.GameObject.Children.Add( new GameObject( true, "PointOfInterest" ) );
-		LookingAt = GameObject.Children[0];*/
 		var elements = GameObject.Parent.Children;
 
 		foreach ( var element in elements )
@@ -67,6 +65,7 @@ public class CameraMovement : Component
 			}
 		}
 
+		Camera = Components.Get<CameraComponent>();
 		_cameraPosition = Head.Transform.Position;
 		_pawnRenderer ??= Model.Components.Get<ModelRenderer>();
 	}
