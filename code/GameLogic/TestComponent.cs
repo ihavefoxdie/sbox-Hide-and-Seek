@@ -1,6 +1,7 @@
 using Sandbox;
 using Sandbox.Utility;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading;
 
@@ -23,7 +24,7 @@ public class TestComponent : Component
 	{
 		Package package = await Package.Fetch( "construct", false );
 		var hello = package.MountAsync();
-		CancellationTokenSource src = new CancellationTokenSource();
+		CancellationTokenSource src = new();
 		CancellationToken ass = src.Token;
 		await hello.WaitAsync( ass );
 		ass.Register( () => Log.Info( "FUCK" ) );

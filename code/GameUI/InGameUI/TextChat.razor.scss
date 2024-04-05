@@ -1,0 +1,153 @@
+TextChat {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	justify-content: flex-end;
+	align-items: center;
+	flex-direction: column;
+	margin: 3vh;
+	z-index: 110;
+	gap: 20vh;
+	//pointer-events: all;
+
+	&.timeout {
+		.chat {
+			opacity: 0;
+		}
+	}
+
+	&.shifted-chat {
+		.chat {
+			.messages {
+				justify-content: flex-end;
+			}
+		}
+	}
+
+	&.open {
+		pointer-events: all;
+
+		.chat {
+			background-color: #0e0e0ebd;
+			box-shadow: 0px 0px 2vh 0.5vh #0e0e0ebd;
+			backdrop-filter: blur(5vh);
+
+			.messages {
+				background-color: #0a0a0abd;
+				box-shadow: 0px 0px 2vh 0.5vh #0a0a0abd;
+			}
+
+			.input {
+				background-color: dodgerblue;
+			}
+
+			.submit {
+				opacity: 1;
+
+				&:hover {
+					background-color: #ff6a00;
+					width: 15%;
+					//max-width: 100%;
+					padding-right: 0.5vh;
+					sound-in: sounds/ui/hoversoundevent.sound;
+				}
+
+				&:active {
+					background-color: #ffa362;
+					sound-in: sounds/ui/clicksoundevent.sound;
+				}
+			}
+		}
+	}
+
+	.voice {
+		align-self: flex-end;
+		width: 30%;
+		font-family: Poppins;
+		text-overflow: ellipsis;
+		flex-direction: column;
+
+		.active-voice {
+			gap: 10vw;
+			align-items: center;
+			font-size: 1vw;
+			align-self: flex-end;
+			margin: 0 0 1vh 0;
+			background-color: #ff6a00;
+			box-shadow: 0px 0px 2vh 0.5vh #ff6a00;
+			padding: 1vh;
+			width: 50%;
+			height: 5vh;
+			transition: all 0.2s ease-in-out;
+			border-radius: 2%;
+
+			&:intro {
+				opacity: 0;
+			}
+		}
+	}
+
+	.chat {
+		align-self: flex-end;
+		flex-direction: column;
+		background-color: #0000;
+		box-shadow: 0px 0px 2vh 0.5vh #0000;
+		backdrop-filter: blur(0vh);
+		width: 30%;
+		height: 30%;
+		border-radius: 2%;
+		padding: 1vh;
+		transition: all 0.1s linear;
+		font-family: Poppins;
+		color: #fff;
+		gap: 2vh;
+
+		.messages {
+			text-shadow: 1vh 1vh 2vh #000000b6;
+			width: 100%;
+			height: 100%;
+			padding: 1vh;
+			background-color: #0000;
+			box-shadow: 0px 0px 2vh 0.5vh #0000;
+			flex-direction: column;
+			overflow-y: scroll;
+			gap: 8vh;
+			transition: all 0.1s linear;
+
+			.message {
+				flex-shrink: 0;
+				//min-height: 2vh;
+				gap: 10vw;
+				font-size: 1.5vh;
+			}
+		}
+
+		.submit {
+			font-size: 0.8vw;
+			font-family: Poppins;
+			color: #fff;
+			background-color: #ff6a0000;
+			transition: all 0.2s linear;
+			font-weight: bold;
+			width: 14%;
+			min-width: 14%;
+			align-items: center;
+			align-self: center;
+			justify-content: center;
+			padding-right: 0vh;
+			height: 100%;
+			opacity: 0;
+		}
+
+		.input {
+			background-color: #0000;
+			transition: all 0.2s linear;
+			margin: 0 1vh 0 0;
+			font-size: 1vw;
+			width: 88%;
+			text-align: right;
+		}
+	}
+}

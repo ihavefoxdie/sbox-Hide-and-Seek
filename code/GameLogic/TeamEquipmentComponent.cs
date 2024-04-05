@@ -23,7 +23,7 @@ public class TeamEquipmentComponent : Component
 	{
 		_pawn = Components.Get<PawnComponent>( true );
 		CameraMovement = Components.GetInChildren<CameraMovement>( true );
-		Log.Info( CameraMovement );
+
 		_lastSwing = 0;
 		SyncComponent = Scene.GetAllComponents<SyncComponent>().Last();
 	}
@@ -95,9 +95,8 @@ public class TeamEquipmentComponent : Component
 			if ( trace.GameObject != null )
 			{
 				var parent = trace.GameObject.Parent;
-				Log.Info( parent );
 				bool check = parent.Tags.Has( "hiders" );
-				Log.Info( check );
+
 				if ( check )
 				{
 					PlayPunch();

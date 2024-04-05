@@ -19,7 +19,7 @@ public class PawnUIManager : Component
 	/// This boolean signifies component readiness.
 	/// </summary>
 	public bool GreenLight = false;
-
+	
 	protected override void OnStart()
 	{
 		base.OnStart();

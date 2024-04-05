@@ -1,0 +1,182 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Linq;
+@using System.Collections.Generic;
+
+@namespace HideAndSeek
+@inherits PanelComponent
+@implements Component.INetworkListener
+
+<root>
+    <div class="voice">
+        @{
+            for(int i = 0; i < Talkers.Count; i++)
+            {
+                <div class="active-voice">
+                    <img style="height: 3vh; aspect-ratio: 1;" src="avatar:@Connection.All.Where(x => x.DisplayName == Connection.Find(Talkers[i]).DisplayName).FirstOrDefault()?.SteamId" />
+                    @Connection.Find(Talkers[i]).DisplayName
+                </div>
+                if (i >= 5)
+                    break;
+            }
+        }
+    </div>
+	<div class="chat">
+        <div class="messages">
+            @{
+                for(int i = 0; i < Messages.Count; i++)
+                {
+                    <div class="message" style="">
+                        <div style="gap: 5vw; align-items: center;">
+                            <img style="height: 2vh; aspect-ratio: 1; border-radius: 100%;" src="avatar:@Connection.All.Where(x => x.DisplayName == Messages[i].user).FirstOrDefault()?.SteamId" />
+                            <div style="color:lightblue">@Messages[i].user</div>
+                        </div>
+                        <div>@Messages[i].message</div>
+                    </div>
+                }
+            }
+        </div>
+        <div style="width: 100%; justify-content: space-between; margin: 1vh 0 0 0;">
+            <TextEntry class="input" @ref="MessageInput" onsubmit=@(Submit)></TextEntry>
+            <button class="submit" onclick=@(Submit)>Submit</button>
+        </div>
+    </div>
+</root>
+
+@code
+{
+    [Property, TextArea] public string MyStringValue { get; set; }
+    private record Message(string user, string message, RealTimeSince sinceSent);
+
+    private TextEntry MessageInput { get; set; }
+    private List<Message> Messages { get; set; } = new();
+    private List<Guid> Talkers { get; set; } = new();
+    private RealTimeSince SinceUpdate;
+    public void AddMessage(string user, string message)
+    {
+        message = message.Truncate(300);
+
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            return;
+        }
+
+        Log.Info($"{user}: {message}");
+
+        Messages.Add(new(user, message, 0f));
+        StateHasChanged();
+    }
+
+    protected override void OnUpdate()
+    {
+        if(Input.Down("Voice"))
+        {
+            if (!Talkers.Contains(Connection.Local.Id))
+            {
+                AddTalker(Connection.Local.Id);
+            }
+        }
+        else
+        {
+            if (Talkers.Contains(Connection.Local.Id))
+            {
+                RemoveTalker(Connection.Local.Id);
+            }
+        }
+
+        if(Messages.Count > 5)
+        {
+            AddClass("shifted-chat");
+        }
+        else
+        {
+            RemoveClass("shifted-chat");
+        }
+
+        if (MessageInput is null)
+            return;
+
+        Panel.AcceptsFocus = false;
+
+        if (Input.Pressed("chat"))
+        {
+            SinceUpdate = 0;
+            MessageInput.Focus();
+        }
+
+        if (Messages.Count > 300)
+        {
+            while (Messages.Count > 300)
+            {
+                Messages.RemoveAt(301);
+            }
+            StateHasChanged();
+        }
+
+        if (SinceUpdate.Relative > 30 && !MessageInput.HasFocus)
+        {
+            SetClass("timeout", true);
+        }
+        else
+        {
+            RemoveClass("timeout");
+        }
+        SetClass("open", MessageInput.HasFocus);
+    }
+
+    private void Submit()
+    {
+        if (string.IsNullOrWhiteSpace(MessageInput.Text))
+            return;
+
+        SendText(Sandbox.Utility.Steam.PersonaName, MessageInput.Text);
+        MessageInput.Text = "";
+    }
+
+    [Broadcast]
+    private void AddTalker( Guid connId )
+    {
+        Talkers.Insert(0, connId);
+        StateHasChanged();
+    }
+
+    [Broadcast]
+    private void RemoveTalker( Guid connId )
+    {
+        Talkers.Remove(connId);
+        StateHasChanged();
+    }
+
+    [Broadcast]
+    private void SendText( string user, string message)
+    {
+        SinceUpdate = 0;
+        AddMessage(user, message);
+    }
+
+    void INetworkListener.OnConnected(Connection channel)
+    {
+        if (IsProxy) return;
+
+        SendText("Server", $"{channel.DisplayName} has joined the game");
+    }
+
+    void INetworkListener.OnDisconnected(Connection channel)
+    {
+        if (IsProxy) return;
+
+        if(Talkers.Contains(channel.Id))
+        {
+            RemoveTalker(channel.Id);
+            StateHasChanged();
+        }
+
+        SendText("Server", $"{channel.DisplayName} has left the game");
+    }
+
+    /// <summary>
+	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+	/// </summary>
+	protected override int BuildHash() => System.HashCode.Combine( MyStringValue );
+}

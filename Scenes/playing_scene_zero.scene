@@ -11,11 +11,12 @@
         {
           "__type": "MapInstance",
           "__guid": "6bf17ad2-8f88-4881-9d8a-4d5068332e3b",
-          "MapName": "",
+          "MapName": "fishum.cporangex",
           "OnMapLoaded": null,
           "UseMapFromLaunch": false
         }
-      ]
+      ],
+      "Children": []
     },
     {
       "__guid": "da90d64d-8437-4b50-8b48-ea9213623366",
@@ -235,6 +236,11 @@
                 "go": "975f4de1-1fef-45c9-98b6-ef89c63730ff",
                 "component_type": "SyncComponent"
               }
+            },
+            {
+              "__type": "TextChat",
+              "__guid": "f89c7350-9e63-41df-bdda-ec6fab2ca41b",
+              "MyStringValue": "Test string"
             }
           ]
         },
@@ -289,7 +295,7 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-03-22T00:06:21.4609593\u002B03:00",
+  "LastSaved": "2024-04-03T21:02:19.9225141\u002B03:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []
