@@ -1,28 +1,34 @@
 {
-  "Id": "46883838-ec55-4141-b581-832c6abd1ffe",
+  "__guid": "46883838-ec55-4141-b581-832c6abd1ffe",
   "GameObjects": [
     {
-      "Id": "61b16920-7dd1-4d60-949a-0474ddd8cd4d",
+      "__guid": "61b16920-7dd1-4d60-949a-0474ddd8cd4d",
+      "Flags": 0,
       "Name": "Logo",
       "Position": "-827.8008,600,219.9221",
       "Enabled": true,
       "NetworkMode": 2,
+      "NetworkInterpolation": true,
       "Components": [
         {
-          "__type": "LogoComponent"
+          "__type": "HideAndSeek.LogoComponent",
+          "__guid": "508c2636-ce04-4ef5-b0ce-96634cd2c706"
         }
       ],
       "Children": [
         {
-          "Id": "b965e2a6-2360-4500-83b3-a117dcdbc9b7",
+          "__guid": "b965e2a6-2360-4500-83b3-a117dcdbc9b7",
+          "Flags": 0,
           "Name": "\u0026",
           "Position": "-74.15698,-113.2263,42.03223",
           "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "WorldPanel",
+              "__type": "Sandbox.WorldPanel",
+              "__guid": "106c329d-9c97-42f3-bce7-e42730a77613",
               "HorizontalAlign": "Center",
               "LookAtCamera": false,
               "PanelSize": "2048,1024",
@@ -31,20 +37,24 @@
             },
             {
               "__type": "HideTitle",
+              "__guid": "84d1dc03-6bfc-480b-ab8f-c5e380c8309b",
               "MyStringValue": "\u0026"
             }
           ]
         },
         {
-          "Id": "8f1bfb68-23c0-497c-9848-95aa2762a851",
+          "__guid": "8f1bfb68-23c0-497c-9848-95aa2762a851",
+          "Flags": 0,
           "Name": "Pawn",
           "Position": "-84.22192,-71.70898,16.64258",
           "Rotation": "0,0,0.9469293,0.3214417",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "SkinnedModelRenderer",
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "30d84a85-70cd-4050-8e63-f95a6fd31c98",
               "BodyGroups": 341,
               "CreateBoneObjects": false,
               "Model": "models/citizen/citizen.vmdl",
@@ -52,7 +62,8 @@
               "Tint": "1,1,1,1"
             },
             {
-              "__type": "CitizenAnimationHelper",
+              "__type": "Sandbox.Citizen.CitizenAnimationHelper",
+              "__guid": "5ae55a8d-0a61-48f9-9015-e1483cd8fab1",
               "BodyWeight": 1,
               "EyesWeight": 1,
               "HeadWeight": 1,
@@ -60,14 +71,17 @@
               "LookAtEnabled": false,
               "Target": {
                 "_type": "component",
+                "component_id": "30d84a85-70cd-4050-8e63-f95a6fd31c98",
                 "go": "8f1bfb68-23c0-497c-9848-95aa2762a851",
                 "component_type": "SkinnedModelRenderer"
               }
             },
             {
               "__type": "MainMenuDresser",
+              "__guid": "65f4bcbd-9e95-48d8-a9a5-c37f4da7aefa",
               "PawnModelRenderer": {
                 "_type": "component",
+                "component_id": "30d84a85-70cd-4050-8e63-f95a6fd31c98",
                 "go": "8f1bfb68-23c0-497c-9848-95aa2762a851",
                 "component_type": "SkinnedModelRenderer"
               }
@@ -75,15 +89,18 @@
           ]
         },
         {
-          "Id": "de0c9c75-606a-4e8c-8050-ab28fa723a97",
+          "__guid": "de0c9c75-606a-4e8c-8050-ab28fa723a97",
+          "Flags": 0,
           "Name": "2nd Camera",
           "Position": "-253.1222,-56.5,82.28125",
           "Rotation": "0,0.06975647,0,0.9975641",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "CameraComponent",
+              "__type": "Sandbox.CameraComponent",
+              "__guid": "c6ec3a89-b0d1-4856-8a59-80c79c46af5b",
               "BackgroundColor": "0,0.68333,1,1",
               "ClearFlags": "All",
               "FieldOfView": 60,
@@ -99,24 +116,29 @@
               "ZNear": 10
             },
             {
-              "__type": "LogoCamera"
+              "__type": "HideAndSeek.LogoCamera",
+              "__guid": "5331e314-26dc-4b43-9109-4cefd68cc43a"
             },
             {
-              "__type": "Blur",
+              "__type": "Sandbox.Blur",
+              "__guid": "a0a1619e-d970-4af9-b9f4-608b55ef7945",
               "Size": 0.12
             }
           ]
         },
         {
-          "Id": "9700d4f8-d38a-45b3-b3b7-89462949fed3",
+          "__guid": "9700d4f8-d38a-45b3-b3b7-89462949fed3",
+          "Flags": 0,
           "Name": "Hide",
           "Position": "-39.50708,-40.22729,68.89355",
           "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "WorldPanel",
+              "__type": "Sandbox.WorldPanel",
+              "__guid": "11ac2dcc-5264-44be-8dcb-cc2866619f66",
               "HorizontalAlign": "Center",
               "LookAtCamera": false,
               "PanelSize": "4096,1024",
@@ -125,21 +147,25 @@
             },
             {
               "__type": "HideTitle",
+              "__guid": "780f442b-484c-4760-bbc8-0aac27dc80b8",
               "MyStringValue": "Hide"
             }
           ]
         },
         {
-          "Id": "5da02ea9-251f-4afc-8c67-c84c9a75b1b6",
+          "__guid": "5da02ea9-251f-4afc-8c67-c84c9a75b1b6",
+          "Flags": 0,
           "Name": "Seek",
           "Position": "-106.5,-40,41",
           "Rotation": "0.06975647,0.000000003049152,0.9975641,-0.00000004360491",
           "Scale": "1,0.55,0.55",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "WorldPanel",
+              "__type": "Sandbox.WorldPanel",
+              "__guid": "b29117eb-1306-41ce-92ac-e9066b88f2a1",
               "HorizontalAlign": "Center",
               "LookAtCamera": false,
               "PanelSize": "4096,1024",
@@ -148,20 +174,24 @@
             },
             {
               "__type": "HideTitle",
+              "__guid": "7d4fdad8-dc6c-489c-8358-31504ec7a07d",
               "MyStringValue": "Seek"
             }
           ]
         },
         {
-          "Id": "9978bc40-4fc8-4de8-a856-3092ec1bb50f",
+          "__guid": "9978bc40-4fc8-4de8-a856-3092ec1bb50f",
+          "Flags": 0,
           "Name": "Light",
           "Position": "-18.58929,-31.07684,68.45216",
           "Tags": "light_spot,light,light_point",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "PointLight",
+              "__type": "Sandbox.PointLight",
+              "__guid": "c7cbe85e-39a5-4fc4-a1b9-0813c1d19a98",
               "Attenuation": 0,
               "FogMode": "Enabled",
               "FogStrength": 1,
@@ -172,16 +202,19 @@
           ]
         },
         {
-          "Id": "58cf8cc6-7780-4b5d-b997-4e859dd39aa1",
+          "__guid": "58cf8cc6-7780-4b5d-b997-4e859dd39aa1",
+          "Flags": 0,
           "Name": "Wall",
           "Position": "-31.99805,-53.28638,-45.63086",
           "Rotation": "0,0,0.7071068,0.7071068",
           "Scale": "10,0.1,10",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "ModelRenderer",
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "f8c693cf-0137-44bd-acb6-e44e36e7d487",
               "BodyGroups": 18446744073709551615,
               "MaterialOverride": "materials/dev/bright_100.vmat",
               "Model": "models/dev/box.vmdl",
@@ -191,15 +224,18 @@
           ]
         },
         {
-          "Id": "e1d7309a-deeb-4743-aeaf-abe3f716e12e",
+          "__guid": "e1d7309a-deeb-4743-aeaf-abe3f716e12e",
+          "Flags": 0,
           "Name": "Spot Light",
           "Position": "-191.7959,-69.24133,68.63063",
           "Tags": "light_spot,light",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "SpotLight",
+              "__type": "Sandbox.SpotLight",
+              "__guid": "dc8bf995-91ab-46b8-ad25-f903719fcac5",
               "Attenuation": 0,
               "ConeInner": 16.75,
               "ConeOuter": 45,
@@ -214,15 +250,18 @@
       ]
     },
     {
-      "Id": "daf78a65-6743-4d3b-a14b-12c704cbfdd7",
+      "__guid": "daf78a65-6743-4d3b-a14b-12c704cbfdd7",
+      "Flags": 0,
       "Name": "Main Camera",
       "Position": "55.66558,255.7567,50.74578",
       "Rotation": "0.03084356,0.03084356,-0.7064338,0.7064338",
       "Enabled": true,
       "NetworkMode": 2,
+      "NetworkInterpolation": true,
       "Components": [
         {
-          "__type": "CameraComponent",
+          "__type": "Sandbox.CameraComponent",
+          "__guid": "7a205c08-d66e-4580-b327-8f208403375f",
           "BackgroundColor": "0.33333,0.46275,0.52157,1",
           "ClearFlags": "All",
           "FieldOfView": 40,
@@ -238,10 +277,12 @@
           "ZNear": 20
         },
         {
-          "__type": "MainMenuCamera"
+          "__type": "MainMenuCamera",
+          "__guid": "3f163ac0-c725-456e-8a22-7b73aed41cb6"
         },
         {
-          "__type": "DepthOfField",
+          "__type": "Sandbox.DepthOfField",
+          "__guid": "5119141d-4248-421b-8937-9496c6d4873e",
           "BackBlur": true,
           "BlurSize": 100,
           "FocalDistance": 300,
@@ -250,23 +291,28 @@
       ]
     },
     {
-      "Id": "8689d842-22b2-46cd-9ed7-7d4828c71931",
+      "__guid": "8689d842-22b2-46cd-9ed7-7d4828c71931",
+      "Flags": 0,
       "Name": "Menu",
       "Position": "0,-0.0002441406,100",
       "Enabled": true,
       "NetworkMode": 2,
+      "NetworkInterpolation": true,
       "Components": [
         {
-          "__type": "ScreenPanel",
+          "__type": "Sandbox.ScreenPanel",
+          "__guid": "22845972-b5d1-45a2-94b1-cb063d4e75f2",
           "AutoScreenScale": true,
           "Opacity": 1,
           "Scale": 1,
           "ZIndex": 100
         },
         {
-          "__type": "MenuUI",
+          "__type": "HideAndSeek.MenuUI",
+          "__guid": "fea80779-1322-43e4-9c81-b1d88117a325",
           "Logo": {
             "_type": "component",
+            "component_id": "508c2636-ce04-4ef5-b0ce-96634cd2c706",
             "go": "61b16920-7dd1-4d60-949a-0474ddd8cd4d",
             "component_type": "LogoComponent"
           }
@@ -274,16 +320,19 @@
       ]
     },
     {
-      "Id": "7b6577a2-1ee7-4263-bd07-c9fef05506f9",
+      "__guid": "7b6577a2-1ee7-4263-bd07-c9fef05506f9",
+      "Flags": 0,
       "Name": "Sun",
       "Position": "-50,100,500",
       "Rotation": "0.1464466,0.3535534,-0.3535534,0.8535534",
       "Tags": "light_directional,light",
       "Enabled": true,
       "NetworkMode": 2,
+      "NetworkInterpolation": true,
       "Components": [
         {
-          "__type": "DirectionalLight",
+          "__type": "Sandbox.DirectionalLight",
+          "__guid": "971c4a2b-5933-4f26-8455-4717c0a132b6",
           "__enabled": false,
           "FogMode": "Enabled",
           "FogStrength": 1,
@@ -294,108 +343,128 @@
       ]
     },
     {
-      "Id": "61546da5-ec7b-4682-bd6f-b2501bf0a6d8",
+      "__guid": "61546da5-ec7b-4682-bd6f-b2501bf0a6d8",
+      "Flags": 0,
       "Name": "2D Skybox",
       "Position": "25.97215,60.56902,129.817",
       "Tags": "skybox",
       "Enabled": true,
       "NetworkMode": 2,
+      "NetworkInterpolation": true,
       "Components": [
         {
-          "__type": "SkyBox2D",
-          "SkyMaterial": "materials/skybox/light_test_sky_sunset_2.vmat",
+          "__type": "Sandbox.SkyBox2D",
+          "__guid": "832d9fda-049b-47f9-a87f-39c81c1cb851",
+          "SkyMaterial": "materials/error.vmat",
           "Tint": "1,1,1,1"
         }
       ]
     },
     {
-      "Id": "28ae404d-a79b-4e57-ac21-8a8dc14fd130",
+      "__guid": "28ae404d-a79b-4e57-ac21-8a8dc14fd130",
+      "Flags": 0,
       "Name": "Room",
       "Scale": "10,10,0.1",
       "Enabled": true,
       "NetworkMode": 2,
+      "NetworkInterpolation": true,
       "Children": [
         {
-          "Id": "1b07f764-b7b9-40fc-a825-2629260fab75",
+          "__guid": "1b07f764-b7b9-40fc-a825-2629260fab75",
+          "Flags": 0,
           "Name": "couch",
           "Position": "7.069365,-4.199324,35.20134",
           "Scale": "0.1,0.1,10",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "Prop",
+              "__type": "Sandbox.Prop",
+              "__guid": "292e3054-c5ac-4024-9735-86ea2f391a6e",
+              "BodyGroups": 18446744073709551615,
               "Health": 5,
               "IsStatic": false,
-              "Model": "models/props/couch/couch.vmdl",
-              "ShowCreatedComponents": false
+              "Model": "models/props/couch/couch.vmdl"
             }
           ]
         },
         {
-          "Id": "d844209f-2ad4-4782-8de3-9808418afdb5",
+          "__guid": "d844209f-2ad4-4782-8de3-9808418afdb5",
+          "Flags": 0,
           "Name": "cabinet_a3",
           "Position": "1.062615,-3.149684,28.85449",
           "Rotation": "0,0,0.3826835,0.9238795",
           "Scale": "0.1,0.1,10",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "Prop",
+              "__type": "Sandbox.Prop",
+              "__guid": "e43c59cf-d108-4434-b6f7-4df060670575",
+              "BodyGroups": 18446744073709551615,
               "Health": 0,
               "IsStatic": false,
-              "Model": "models/props/trim_sheets/cabinets/cabinet_a3.vmdl",
-              "ShowCreatedComponents": false
+              "Model": "models/props/trim_sheets/cabinets/cabinet_a3.vmdl"
             }
           ]
         },
         {
-          "Id": "5d4956ab-5a40-4a7c-a39f-460538426a89",
+          "__guid": "5d4956ab-5a40-4a7c-a39f-460538426a89",
+          "Flags": 0,
           "Name": "watermelon",
           "Position": "7.106848,-1.784664,263.8444",
           "Rotation": "0.4330127,-0.4330127,-0.25,0.7500001",
           "Scale": "0.05464725,0.05464725,5.311431",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "Prop",
+              "__type": "Sandbox.Prop",
+              "__guid": "6cc758b7-6164-43a8-8c85-7ddcacb3f431",
+              "BodyGroups": 18446744073709551615,
               "Health": 2,
               "IsStatic": false,
-              "Model": "models/sbox_props/watermelon/watermelon.vmdl",
-              "ShowCreatedComponents": false
+              "Model": "models/sbox_props/watermelon/watermelon.vmdl"
             }
           ]
         },
         {
-          "Id": "14bc6dc9-bcee-4f56-9937-eb7383e164a8",
+          "__guid": "14bc6dc9-bcee-4f56-9937-eb7383e164a8",
+          "Flags": 0,
           "Name": "coffeemug01",
           "Position": "0.915831,-1.299092,350.0034",
           "Scale": "0.05117966,0.05117966,5.117966",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "Prop",
+              "__type": "Sandbox.Prop",
+              "__guid": "2a9a3094-bafe-4ca3-bc08-18f30dc6853b",
+              "BodyGroups": 18446744073709551615,
               "Health": 0,
               "IsStatic": false,
-              "Model": "models/citizen_props/coffeemug01.vmdl",
-              "ShowCreatedComponents": false
+              "Model": "models/citizen_props/coffeemug01.vmdl"
             }
           ]
         },
         {
-          "Id": "cf615e11-40c8-4403-8481-98cce4e20f7e",
+          "__guid": "cf615e11-40c8-4403-8481-98cce4e20f7e",
+          "Flags": 0,
           "Name": "Invisible Wall",
           "Position": "5.370417,11.5655,219.4479",
           "Rotation": "-0.7071068,0.0000002753575,0.00000000000004263256,-0.7071066",
           "Scale": "0.1,0.1,10",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "PlaneCollider",
+              "__type": "Sandbox.PlaneCollider",
+              "__guid": "e12a4eb4-643e-429f-a831-e1cccb1165cd",
               "Center": "0,0,0",
               "IsTrigger": false,
               "Scale": "200,40",
@@ -404,21 +473,25 @@
           ]
         },
         {
-          "Id": "f4e69e0b-abff-4fb1-b4f4-8f06515ef878",
+          "__guid": "f4e69e0b-abff-4fb1-b4f4-8f06515ef878",
+          "Flags": 0,
           "Name": "Floor",
           "Position": "5.417896,0,0",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "ModelRenderer",
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "65e37a4a-b99b-41a8-bb2b-94e3ee395945",
               "BodyGroups": 18446744073709551615,
               "MaterialOverride": "materials/trimsheets/wood/wood_trim_03.vmat",
               "RenderType": "On",
               "Tint": "1,1,1,1"
             },
             {
-              "__type": "PlaneCollider",
+              "__type": "Sandbox.PlaneCollider",
+              "__guid": "478fd24d-36c8-46bd-b120-5f6503d3d512",
               "Center": "0,0,25.00004",
               "IsTrigger": false,
               "Scale": "50,50",
@@ -427,22 +500,26 @@
           ]
         },
         {
-          "Id": "380b4b07-92a2-4ed9-900d-06a86d160bf4",
+          "__guid": "380b4b07-92a2-4ed9-900d-06a86d160bf4",
+          "Flags": 0,
           "Name": "Wall",
           "Position": "5.417896,-13.13249,0",
           "Rotation": "-0.7071067,0,0,0.7071068",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "ModelRenderer",
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "77702a52-a4eb-4a3d-8300-a7cc71ef10c5",
               "BodyGroups": 18446744073709551615,
-              "MaterialOverride": "materials/architecture/tiles/brick_wall_large01a.vmat",
+              "MaterialOverride": "materials/trimsheets/wood/wood_trim_03.vmat",
               "RenderType": "On",
               "Tint": "1,1,1,1"
             },
             {
-              "__type": "PlaneCollider",
+              "__type": "Sandbox.PlaneCollider",
+              "__guid": "a1dc6164-8528-45b1-acdb-c1a93a725cc2",
               "Center": "0,0,25.00004",
               "IsTrigger": false,
               "Scale": "50,50",
@@ -451,16 +528,19 @@
           ]
         },
         {
-          "Id": "9d2304e0-5f03-409b-b785-416b5730a251",
+          "__guid": "9d2304e0-5f03-409b-b785-416b5730a251",
+          "Flags": 0,
           "Name": "Spot Light",
           "Position": "4.16785,12.42526,2458.532",
           "Rotation": "0,0.7071067,0,0.7071068",
           "Tags": "light_spot,light",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "SpotLight",
+              "__type": "Sandbox.SpotLight",
+              "__guid": "339a127f-7f3e-409a-a57d-8514d7c7513d",
               "Attenuation": 1,
               "ConeInner": 15,
               "ConeOuter": 45,
@@ -473,16 +553,19 @@
           ]
         },
         {
-          "Id": "8a9b8ccb-9359-4cf4-b634-bcceba8c94a5",
+          "__guid": "8a9b8ccb-9359-4cf4-b634-bcceba8c94a5",
+          "Flags": 0,
           "Name": "Spot Light",
           "Position": "4.525403,32.90296,2268.956",
           "Rotation": "-0.2705981,0.6532815,-0.270598,0.6532816",
           "Tags": "light_spot,light",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "SpotLight",
+              "__type": "Sandbox.SpotLight",
+              "__guid": "06d5b75d-c319-44bc-a5f5-7aaf821b6ce1",
               "Attenuation": 10,
               "ConeInner": 90,
               "ConeOuter": 19.8,
@@ -495,15 +578,18 @@
           ]
         },
         {
-          "Id": "4ee880fd-b686-4a6c-9f4c-9c37a520b6aa",
+          "__guid": "4ee880fd-b686-4a6c-9f4c-9c37a520b6aa",
+          "Flags": 0,
           "Name": "Point Light",
           "Position": "5.91409,7.126105,1182.333",
           "Tags": "light_point,light",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "PointLight",
+              "__type": "Sandbox.PointLight",
+              "__guid": "dc2ad089-0206-4b57-8194-8312cdba1483",
               "Attenuation": 1,
               "FogMode": "Enabled",
               "FogStrength": 1,
@@ -514,14 +600,17 @@
           ]
         },
         {
-          "Id": "4ae3387a-1c74-4d65-9d71-b8d6444481df",
+          "__guid": "4ae3387a-1c74-4d65-9d71-b8d6444481df",
+          "Flags": 0,
           "Name": "Point Light",
           "Position": "6.946191,-1.475986,490.3665",
           "Tags": "light_point,light",
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "PointLight",
+              "__type": "Sandbox.PointLight",
+              "__guid": "749b354f-514c-4f6f-808e-41c60b5ba263",
               "Attenuation": 10,
               "FogMode": "Enabled",
               "FogStrength": 1,
@@ -532,13 +621,16 @@
           ]
         },
         {
-          "Id": "e7890ef4-8dec-4b49-a260-ec2ad6431145",
+          "__guid": "e7890ef4-8dec-4b49-a260-ec2ad6431145",
+          "Flags": 0,
           "Name": "Fog",
           "Position": "5.117713,-3.361256,0",
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "VolumetricFogVolume",
+              "__type": "Sandbox.VolumetricFogVolume",
+              "__guid": "b4e017e2-db6f-448e-b3fa-7025bd177fd5",
               "Bounds": {
                 "Mins": "-150,-150,-150",
                 "Maxs": "150,150,150"
@@ -549,16 +641,19 @@
           ]
         },
         {
-          "Id": "0aca87e7-7b38-4f2b-b62f-b7db1fbefc77",
+          "__guid": "0aca87e7-7b38-4f2b-b62f-b7db1fbefc77",
+          "Flags": 0,
           "Name": "Spot Light",
           "Position": "6.706504,-2.897856,1087.057",
           "Rotation": "0,0.7071068,0,0.7071068",
           "Tags": "light_spot,light",
           "Enabled": true,
           "NetworkMode": 2,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "SpotLight",
+              "__type": "Sandbox.SpotLight",
+              "__guid": "7d65d6c1-6fe0-48e7-b4da-0524c1271ba3",
               "Attenuation": 10,
               "ConeInner": 16.75,
               "ConeOuter": 19.38,
@@ -573,13 +668,16 @@
       ]
     },
     {
-      "Id": "335fc918-c258-4538-806a-399203b52bff",
+      "__guid": "335fc918-c258-4538-806a-399203b52bff",
+      "Flags": 0,
       "Name": "MMBackground",
       "Position": "0,0,100",
       "NetworkMode": 2,
+      "NetworkInterpolation": true,
       "Components": [
         {
-          "__type": "MapInstance",
+          "__type": "Sandbox.MapInstance",
+          "__guid": "0ee7b5a7-0d2a-429a-8b4e-333cb4771b05",
           "MapName": "",
           "UseMapFromLaunch": false
         }
@@ -588,9 +686,9 @@
   ],
   "SceneProperties": {
     "FixedUpdateFrequency": 50,
-    "Lerping": true,
     "MaxFixedUpdates": 5,
     "NetworkFrequency": 30,
+    "NetworkInterpolation": true,
     "ThreadedAnimation": true,
     "TimeScale": 1,
     "UseFixedUpdate": true,
@@ -609,7 +707,9 @@
   },
   "Title": "MainMenu",
   "Description": "Game\u0027s main menu",
-  "LastSaved": "2024-03-13T18:34:45.2799364\u002B03:00",
+  "LastSaved": "2024-05-12T15:26:44.544397\u002B03:00",
+  "ResourceVersion": 1,
+  "__version": 1,
   "__references": [
     "facepunch.cabinet_a3",
     "facepunch.couch",

@@ -3,13 +3,15 @@
   "GameObjects": [
     {
       "__guid": "b4820a45-a2ef-440d-8b09-dd27603c72df",
+      "Flags": 0,
       "Name": "Map",
       "Position": "603.5001,-341.5693,705.9443",
       "Enabled": true,
       "NetworkMode": 2,
+      "NetworkInterpolation": true,
       "Components": [
         {
-          "__type": "MapInstance",
+          "__type": "Sandbox.MapInstance",
           "__guid": "6bf17ad2-8f88-4881-9d8a-4d5068332e3b",
           "MapName": "fishum.cporangex",
           "OnMapLoaded": null,
@@ -20,13 +22,15 @@
     },
     {
       "__guid": "da90d64d-8437-4b50-8b48-ea9213623366",
+      "Flags": 0,
       "Name": "GameData",
       "Position": "4735.98,8.712184,-235.1386",
       "Enabled": true,
       "NetworkMode": 1,
+      "NetworkInterpolation": true,
       "Components": [
         {
-          "__type": "SettingsLoaderComponent",
+          "__type": "HideAndSeek.SettingsLoaderComponent",
           "__guid": "0a0de40a-22e1-4d76-a89f-006c0250f264",
           "Map": {
             "_type": "component",
@@ -40,14 +44,16 @@
     },
     {
       "__guid": "bceb8e2d-118f-4fe4-8a9f-2205510f16ac",
+      "Flags": 0,
       "Name": "Game",
       "Position": "-2770.62,2902,-1998",
       "Rotation": "0,0,0.7071068,-0.7071068",
       "Enabled": true,
       "NetworkMode": 1,
+      "NetworkInterpolation": true,
       "Components": [
         {
-          "__type": "CameraComponent",
+          "__type": "Sandbox.CameraComponent",
           "__guid": "17f9744f-b7ff-4bbc-88d2-506bd9bf6b2b",
           "__enabled": false,
           "BackgroundColor": "0.33333,0.46275,0.52157,1",
@@ -65,7 +71,7 @@
           "ZNear": 10
         },
         {
-          "__type": "NetworkComponent",
+          "__type": "HideAndSeek.NetworkComponent",
           "__guid": "f0e920f6-0a7f-49c7-a793-40ed0b28f5f4",
           "PlayerPrefab": {
             "_type": "gameobject",
@@ -75,7 +81,7 @@
           "StartServer": true
         },
         {
-          "__type": "GameComponent",
+          "__type": "HideAndSeek.GameComponent",
           "__guid": "c1443292-e671-41a4-8749-112e7d48bf1d",
           "NetworkComponent": {
             "_type": "component",
@@ -98,7 +104,7 @@
           }
         },
         {
-          "__type": "DepthOfField",
+          "__type": "Sandbox.DepthOfField",
           "__guid": "a09a63cc-fb12-4056-be12-ecbe2a18ac1f",
           "BackBlur": true,
           "BlurSize": 100,
@@ -106,7 +112,7 @@
           "FrontBlur": false
         },
         {
-          "__type": "SceneCameraComponent",
+          "__type": "HideAndSeek.SceneCameraComponent",
           "__guid": "a123f0e0-1dc1-4d57-991e-cdcff6e0765a",
           "Camera": {
             "_type": "component",
@@ -125,13 +131,15 @@
     },
     {
       "__guid": "975f4de1-1fef-45c9-98b6-ef89c63730ff",
+      "Flags": 0,
       "Name": "GameUI",
       "Position": "-1215.657,580.4098,1189.077",
       "Enabled": true,
       "NetworkMode": 1,
+      "NetworkInterpolation": true,
       "Components": [
         {
-          "__type": "SyncComponent",
+          "__type": "HideAndSeek.SyncComponent",
           "__guid": "e064d6b1-3875-41cc-83f9-6a3fd8afaccf",
           "CurrentGame": {
             "_type": "component",
@@ -155,13 +163,15 @@
       "Children": [
         {
           "__guid": "ec3ca7bf-c930-4f0a-8dda-d3ad305da1f5",
+          "Flags": 0,
           "Name": "GeneralUI",
           "Position": "0,0,0",
           "Enabled": true,
           "NetworkMode": 1,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "ScreenPanel",
+              "__type": "Sandbox.ScreenPanel",
               "__guid": "9daf843e-c247-44fd-a4b4-9e841b9d4a49",
               "AutoScreenScale": true,
               "Opacity": 1,
@@ -169,7 +179,7 @@
               "ZIndex": 100
             },
             {
-              "__type": "EscapeMenu",
+              "__type": "HideAndSeek.EscapeMenu",
               "__guid": "f525eb55-abd6-470b-9573-d25bb6342398",
               "SharedInfo": {
                 "_type": "component",
@@ -179,7 +189,7 @@
               }
             },
             {
-              "__type": "SystemNotificationsComponent",
+              "__type": "HideAndSeek.SystemNotificationsComponent",
               "__guid": "5ec2d61e-da7f-4aa2-99b9-15a83d97eb32",
               "Message": "",
               "SharedInfo": {
@@ -190,7 +200,7 @@
               }
             },
             {
-              "__type": "ScoreboardComponent",
+              "__type": "HideAndSeek.ScoreboardComponent",
               "__guid": "23207944-8a41-4c44-83cf-f1a5092d2539",
               "Hiders": [],
               "Seekers": [],
@@ -202,7 +212,7 @@
               }
             },
             {
-              "__type": "ScreenInfoComponent",
+              "__type": "HideAndSeek.ScreenInfoComponent",
               "__guid": "7ec1b4fa-c42b-43ff-a7b4-51d547de8402",
               "CurrentTimeMinutes": 0,
               "CurrentTimeSecs": 0,
@@ -216,7 +226,7 @@
               }
             },
             {
-              "__type": "WaitingScreenComponent",
+              "__type": "HideAndSeek.WaitingScreenComponent",
               "__guid": "7ab947d5-d354-4262-91cb-83aa79d03908",
               "First": "Waiting for more",
               "Second": "players to join...",
@@ -228,7 +238,7 @@
               }
             },
             {
-              "__type": "ReticleComponent",
+              "__type": "HideAndSeek.ReticleComponent",
               "__guid": "58e4f29d-92d1-44a2-ae2d-8724e85d16f9",
               "SharedInfo": {
                 "_type": "component",
@@ -238,7 +248,7 @@
               }
             },
             {
-              "__type": "TextChat",
+              "__type": "HideAndSeek.TextChat",
               "__guid": "f89c7350-9e63-41df-bdda-ec6fab2ca41b",
               "MyStringValue": "Test string"
             }
@@ -246,13 +256,15 @@
         },
         {
           "__guid": "e97aa3e8-c4cf-4796-a9bc-2fb7f52142d7",
+          "Flags": 0,
           "Name": "PawnUI",
           "Position": "0,0,0",
           "Enabled": true,
           "NetworkMode": 1,
+          "NetworkInterpolation": true,
           "Components": [
             {
-              "__type": "ScreenPanel",
+              "__type": "Sandbox.ScreenPanel",
               "__guid": "40ffa572-29b2-49a5-a284-9960ea8e5118",
               "AutoScreenScale": true,
               "Opacity": 1,
@@ -260,7 +272,7 @@
               "ZIndex": 100
             },
             {
-              "__type": "PawnUIManager",
+              "__type": "HideAndSeek.PawnUIManager",
               "__guid": "23574c95-0fd1-481a-83dc-8e0c1c550b23",
               "UIPrefab": {
                 "_type": "gameobject",
@@ -274,9 +286,9 @@
   ],
   "SceneProperties": {
     "FixedUpdateFrequency": 50,
-    "Lerping": true,
     "MaxFixedUpdates": 5,
     "NetworkFrequency": 30,
+    "NetworkInterpolation": true,
     "ThreadedAnimation": true,
     "TimeScale": 1,
     "UseFixedUpdate": true,
@@ -295,7 +307,7 @@
   },
   "Title": "playing_scene_zero",
   "Description": "",
-  "LastSaved": "2024-04-03T21:02:19.9225141\u002B03:00",
+  "LastSaved": "2024-05-13T12:56:49.8497164\u002B03:00",
   "ResourceVersion": 1,
   "__version": 1,
   "__references": []
